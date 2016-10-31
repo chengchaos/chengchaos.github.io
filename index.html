@@ -11,6 +11,8 @@ layout: default
             {{ post.title }}
             <div class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</div>
           </a>
+          <hr />
+          <a href="{{ site.baseurl }}"{{ post.url }}">{{ title }}</a>
       </li>
     {% endfor %}
   </ul>
