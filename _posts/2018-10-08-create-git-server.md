@@ -39,7 +39,7 @@ $ sudo adduser git
 先选定一个目录作为Git仓库，假定是/srv/sample.git，在/srv目录下输入命令：
 
 ```bash
-$ sudo git init --base simple.git
+$ sudo git init --bare simple.git
 ```
 
 Git就会创建一个裸仓库，裸仓库没有工作区，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以.git结尾。然后，把owner改为git：
