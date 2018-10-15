@@ -12,9 +12,9 @@ MySQL 修改默认字符集和排序规则……
 ## 一、查看当前数据库字符集和排序规则
 
 
-MySQL8.0 创建用户和授权和之前不太一样了，其实严格上来讲也不能说是不一样，只能说更严谨了。MySQL8.0 需要先创建用户和设置密码，然后再进行授权。
 
-```mysql
+
+```bash
 -- 查看字符集:
 root@localhost [(none)]> SHOW VARIABLES LIKE 'collation_%';
 +----------------------+--------------------+
@@ -69,7 +69,7 @@ skip-character-set-client-handshake
 
 再次查看：
 
-```mysql
+```bash
 root@localhost [(none)]> show variables like 'collation_%';
 +----------------------+--------------------+
 | Variable_name        | Value              |
