@@ -82,6 +82,6 @@ warning: You appear to have cloned an empty repository.
 
 ---
 
-If you like TeXt, don't forget to give me a star :star2:.
+Power by TeXt.
 
 <iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
