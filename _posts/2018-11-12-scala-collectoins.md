@@ -4,7 +4,10 @@ key: 20181112
 tags: scala
 ---
 
+
 Scala 的集合类博大精深，与 Java 的集合类相比大相径庭，这会减慢 Java 开发人员转向 Scala 的学习速度。
+
+本文是我学习《Scala 变成实战》 （Alexander，A. 著）的读书笔记。
 
 <!--more-->
 
@@ -39,7 +42,7 @@ v.map(_ * 2)    // Vector(2, 4, 6)
 
 `Iterable`  特质定义了一个迭代器，可以一次性循环一个集合的元素，当使用迭代器时，集合只可以被循环一次，因为在迭代的过程中每个元素都被改变了。
 
-## 序列 (Sequences)
+### 序列 (Sequences)
 
 Scala 包含了大量的序列。
 
@@ -71,7 +74,7 @@ scala> val seq = scala.collection.immutable.LinearSeq(1, 2, 3)
 seq: scala.collection.immutable.LinearSeq[Int] = List(1, 2, 3)
 ```
 
-## Map 
+### Map 
 
 和 Java 中的 Map 类似，下面是常见的 Map 类图：
 
@@ -99,7 +102,7 @@ m: scala.collection.mutable.Map[Int, String] = Map(2 -> b, 1 -> a)
 
 
 
-## Set
+### Set
 
 就像 Java 中的 Set， Scala 中的 Set 是一个没有重复元素的集合。
 
@@ -128,15 +131,15 @@ s: scala.collection.mutable.Set[Int] = Set(1, 2, 3)
 ```
 
 
-## 更多的集合类
+### 更多的集合类
 
 还有很多集合特质和类，包括 `Stream`, `Quere`, `Stack`, `Range` 。都可以在集合类上创建视图（就像一个数据库视图），用迭代器，以及使用 `Option`, `Some` 和 `None` 
 
 
-## 严格（strict）和惰性（lazy）集合
+### 严格（strict）和惰性（lazy）集合
 
 
-# 选择一个集合类
+## 选择一个集合类
 
 常见的问题主要有三种集合类可供选择：
 
@@ -149,7 +152,7 @@ s: scala.collection.mutable.Set[Int] = Set(1, 2, 3)
 除了这三个主要的集合类之外，还有其他有用的集合类型，如 `Stack`, `Queue` 和 `Range`。还有一些用起来像集合的类，如元组、枚举、`Option`/`Some`/`None` 以及 `Try/Success/Failure` 类。
 
 
-## 选择 `Sequence`
+### 选择 `Sequence`
 
 当使用 sequence 是，有两个主要的选择：
 
@@ -210,7 +213,7 @@ s: scala.collection.mutable.Set[Int] = Set(1, 2, 3)
 也可以在 IDE 中通过查看方法的返回类型了解更多。例如，在 Eclipse 中创建一个新的 Vector 时，然后查看 Vector 实例的可用方法，看到方法返回的类型，有 `GenSeqLike`, `IndexedSeqLike`, `IterableLike`, `TraversableLike` 和 `TraversableOne` 。没有必要指明方法返回的类型 —— 当然不是在开始就指定，但通常识别出真正返回的东西的意图是个很好的实践，所以一旦习惯了就可以声明更具体的类型了。
 
 
-## 选择 `map`
+### 选择 `map`
 
 用 map 比用 sequence 更简单。有基本可变和不可变的 map 类，`SorteedMap` 特质用于将元素按键排序， `LinkedHashMap` 用于按插入顺序存储元素，还有一些其他的用于特殊用途的 map 类。
 
@@ -230,7 +233,7 @@ s: scala.collection.mutable.Set[Int] = Set(1, 2, 3)
 也可以混入 `SynchronizedMap` 特质来创建一个你想要的线程安全的 map 实现。
 
 
-## 选择 `set`
+### 选择 `set`
 
 用 set 和用 map 很相似。有基本的可变和不可变的 set，返回按键排序的 `SortedSet`，按插入顺序存储的 `LinkedHashSet` 以及一些其他特殊用途的 set 。
 
@@ -246,7 +249,7 @@ s: scala.collection.mutable.Set[Int] = Set(1, 2, 3)
 | SortedSet | √ | √ | 一个基础特质（用 SortedSet 做变量，返回 TreeSet） |
 
 
-## 表现类似集合的类型
+### 表现类似集合的类型
 
 Scala 提供了很多其他的集合类型，还有一些表现的想集合的类型，尽管他们不是集合。
 
@@ -258,7 +261,7 @@ Scala 提供了很多其他的集合类型，还有一些表现的想集合的�
 | `Tuple` | 支持异构的集合元素。没有一个叫“元组”的类，元组由 `Tuple1` 到 `Tuple22` 组成，支持从 1 到 22 个元素 |
 
 
-## 严格（strict）与惰性（lazy）集合
+### 严格（strict）与惰性（lazy）集合
 
 
 
