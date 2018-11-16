@@ -4,10 +4,11 @@ key: 20181112
 tags: scala
 ---
 
+本文是我学习[《Scala 编程实战》 （Alexander，A. 著）]( https://www.amazon.cn/dp/B06X9SDVB8/ref=sr_1_1?ie=UTF8&qid=1542361298&sr=8-1&keywords=Scala+%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98 )的读书笔记。
 
+![Scala 编程实战 封面]( https://images-cn.ssl-images-amazon.com/images/I/417LU7wGg%2BL.jpg )
 Scala 的集合类博大精深，与 Java 的集合类相比大相径庭，这会减慢 Java 开发人员转向 Scala 的学习速度。
 
-本文是我学习《Scala 变成实战》 （Alexander，A. 著）的读书笔记。
 
 <!--more-->
 

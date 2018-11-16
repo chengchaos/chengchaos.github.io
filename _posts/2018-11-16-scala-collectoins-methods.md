@@ -4,7 +4,9 @@ key: 20181116
 tags: scala scala-collection
 ---
 
-本文是我学习《Scala 变成实战》 （Alexander，A. 著）的读书笔记。
+本文是我学习[《Scala 编程实战》 （Alexander，A. 著）]( https://www.amazon.cn/dp/B06X9SDVB8/ref=sr_1_1?ie=UTF8&qid=1542361298&sr=8-1&keywords=Scala+%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98 )的读书笔记。
+
+![Scala 编程实战 封面]( https://images-cn.ssl-images-amazon.com/images/I/417LU7wGg%2BL.jpg )
 
 Scala 集合里有大量的方法可以使用个，那如何选择这些方法来解决问题呢？
 
