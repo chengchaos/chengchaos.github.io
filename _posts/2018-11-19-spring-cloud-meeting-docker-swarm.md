@@ -18,7 +18,7 @@ tags: spring-cloud docker-swarm
 - 第一台主机名： vbc701, IP: 192.168.1.11
 - 第二台主机名： vbc702, IP: 192.168.1.12
 
-然后分别安装 Docker，运行内网互通，运行内网 ssh 登录，安装 Java 环境 …… Sonds boring.
+然后分别安装 Docker，允许内网互通，允许内网 ssh 登录，安装 Java 环境 …… Sonds boring.
 
 
 ## 创建 docker swarm
@@ -55,7 +55,7 @@ This node joined a swarm as a worker.
 创建了一个 Spring Cloud 的 demo，有 3 个微服务，其中 Eureka 对外保留 8761 端口用于注册，serv1 服务对外暴露 8101 端口，serv2 服务对外暴露 8102 端口。他们都注册到 Eureka 上，通过 serv1 的 `/hello-serv2` 调用 serv2 服务上的 hello
 
 
-Eureka 的配置文件，重点是 **`EUREKA_SERVER_ADDRESS1`** 这个变量，将来使用环境变量传递到容器中。
+Eureka 的配置文件，重点是 **`EUREKA_SERVER_ADDRESS1`** 这个变量，将来使用环境变量的方式传递到容器中。
 
 ```yaml
 
@@ -178,7 +178,7 @@ networks:
       name: springcloud-overlay
 ```
 
-重点是 **`external`** 的设置。
+重点是 **`external`** 的设置，这样这些微服务才可以在同一个网络内，才可以互相通信。
 
 
 
