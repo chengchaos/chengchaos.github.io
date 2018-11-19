@@ -213,7 +213,6 @@ Maps 中还有一些附加的方法，如下表所示，表中的符号说明如
 
 ---
 
-traversable : /'trævɝsəbl/ adj. 能越过的，能横过的；可否认的，可反驳的；
 
 If you like TeXt, don't forget to give me a star :star2:.
 
