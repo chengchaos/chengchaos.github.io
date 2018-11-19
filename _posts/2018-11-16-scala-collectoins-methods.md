@@ -8,6 +8,7 @@ tags: scala scala-collection
 
 ![Scala 编程实战 封面]( https://images-cn.ssl-images-amazon.com/images/I/417LU7wGg%2BL.jpg )
 
+
 Scala 集合里有大量的方法可以使用个，那如何选择这些方法来解决问题呢？
 
 <!--more-->
