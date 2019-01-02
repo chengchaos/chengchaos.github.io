@@ -11,6 +11,8 @@ tags: Akka
 - 使用 Router 和 Actor 进行多核变成
 - 使用 Dispatcher 隔离性能风险
 
+> 贾森·古德温(Jason Goodwin). Akka入门与实践（异步图书）  
+
 <!--more-->
 
 “纵向扩展”的意思是：当我们给单个系统添加额外的资源（CPU 或内存）时，应用程序能够利用新添加的资源。
@@ -319,11 +321,225 @@ system.actorOf(Props[MyActor].withDispatcher("my-pinned-dispatcher"))
 
 只使用一个资源池来随意分配工作可能会导致应用程序的某些很耗费资源的操作占尽了所有资源，而最重要的基本使用场景却无法得到资源。
 
-要甘山这种情况，可以把用于遵行高风险任务的资源和运行重要任务的资源隔离开来。如果我们新建一些 Dispatcher，把运行时间比较长或者是会阻塞线程的任务都分配给这些 Dispatcher，就可以确保应用程序的剩余部分仍然能够保持响应的即时性。我们希望能够把所有需要大量计算、运行时间较长的任务分离到单独的 Dispatcher 中，确保在糟糕的情况下仍然能够有资源区运行其他人物。
+要改善这种情况，可以把用于遵行高风险任务的资源和运行重要任务的资源隔离开来。如果我们新建一些 Dispatcher，把运行时间比较长或者是会阻塞线程的任务都分配给这些 Dispatcher，就可以确保应用程序的剩余部分仍然能够保持响应的即时性。我们希望能够把所有需要大量计算、运行时间较长的任务分离到单独的 Dispatcher 中，确保在糟糕的情况下仍然能够有资源区运行其他人物。
 
 要采取这种方法，就必须首先分析应用程序的性能，理解应用程序在什么地方可能会阻塞线程，耗尽系统资源。我们需要对应用程序执行的任务进行分类。
 
-阻塞 IO 会有它自己的 Dispatcher，包含 50 或 100 个线程，会阻塞线程、等待 IO 的操作要和异步线程池分隔开来，原因在于一定拿所有线程都处于等待 IO 的状态，那么应用程序中的其他操作都无法继续执行。者可能是最重要的一点：**千万不要把阻塞 IO 操作放在 akka 的 Dispatcher 中**。
+阻塞 IO 会有它自己的 Dispatcher，包含 50 或 100 个线程，会阻塞线程、等待 IO 的操作要和异步线程池分隔开来，原因在于一旦所有线程都处于等待 IO 的状态，那么应用程序中的其他操作都无法继续执行。这可能是最重要的一点：**千万不要把阻塞 IO 操作放在 akka 的 Dispatcher 中**。
+
+
+### 5.5.5 Default Dispatcher
+
+
+有好多种使用 `Default Dispatcher` 的方法。既可以把所有工作都分离出去，只由 Akka 本身来使用 `Default Dispatcher`，也可以只在 `Default Dispatcher` 中执行异步操作，把高风险操作移到其他地方执行。无论怎么选择，都不要能够阻塞 `Default Dispatcher` 的线程，而且要对于运行在 `Default Dispatcher` 中的人物多加小心，防止资源饥饿的情况发生。
+
+要创建或者使用 `Default Dispathcer/ThreadPool` 的话，其实不需要做什么。古国需要的话，只要在 classpath 内的 `application.conf` 文件中定义并配置 `Default Dispatcher` 即可。如下：
+
+
+```conf
+akka {
+	actor {
+		default-dispatcher {
+			# Min number of threads to cap
+			# factor-based parallelism number to
+			parallelism-min = 8
+			# The parallelism factor is used to determine thread pool size using the 
+			# following formula: ceil( available processors * factor). Resulting size 
+			# is then bounded by the parallelism- min and parallelism- max values. 
+			parallelism- factor = 3. 0 
+			# Max number of threads to cap factor- based parallelism number to 
+			parallelism- max = 64 
+			# Throughput for default Dispatcher, set to 1 for as fair as possible 
+			throughput = 10
+		}
+	}
+}
+
+```
+
+我们可以在自己的 `application.conf`   文件中定义任意值覆盖默认配置：
+
+```conf
+akka {
+	actor {
+		default-dispatcher {
+			throughput = 1
+		}
+	}
+}
+```
+
+默认情况下，Actor 完成的所有工作都会在这个 Dispatcher 中执行。如果需要获取 `ExecutionContext` 并在其中创建 Future，那么可以通过 ActorSystem 访问到默认的线程池，然后将其传递给 Future：
+
+```java
+/* java */
+ActorSystem system = ActorSystem.create();
+CompletableFuture.runAsync(() -> System.out.println("run in ec", 
+	system.dispatcher());
+
+/* scala */
+implicit val ec = system.dispatcher
+val future = Future(() => println("run in ec)
+```
+
+> 对于在 default Dispatcher 中的 Future 的执行操作要小心。这些操作会消耗 Actor 自身的时间。
+
+在 Scala 中，扩展了 Actor 的类中已经包含了一个 `implicit val` 的 Dispatcher，所以在 Actor 中使用 Future 的时候就不需要再指定 Dispatcher 了。不过在 Actor 中使用 Future 的情况其实不是很多，要记住相对于 `ask` 应该优先使用 `tell`。所以如果发现有好多在 Actor 中使用 Future 的情况，那么可能需要衡量一下方法是否合理。
+
+
+
+### 5.5.6 使用 Future 的阻塞 IO Dispatcher
+
+
+如果需要执行阻塞操作，那么不应该将这些操作放在 Default Dispatcher 中执行，这一应用程序执行阻塞操作的时候仍然能够继续运行。
+
+……
+
+对于这种情况，最简单的解决方案就是使用另一个 Dispatcher，用另一些线程来执行阻塞操作。
+
+首先，在 `application.conf` 文件中创建一个 Dispatcher， 并多给他分配一些资源：
+
+```conf
+blocking-io-dispatcher {
+	type = Dispatcher
+	executor = "fork-join-executor"
+	fork-join-executor {
+		parallelism-factor = 50.0
+		parallelism-min = 10
+		parallelism-max = 100
+	}
+}
+```
+
+这个 Dispatcher 最多可以在每个 CPU 核中创建 50 个线程，加起来一共最少 10 个线程，最多 100 个线程。杜宇一个配置合理、有索引的数据库来说，100 个线程的上限已经相当大了。
+
+对于数据库执行阻塞 IO 操作时，如果发现某些查询运行时间很长，应该检查执行计划，优化数据库表的设计和查询语句，而不是增加线程。每个线程都有内存开销，所以不哟啊随随便便地增加更多线程。只有已经对数据库表的查询、表以及分区进行了不断的评估、修改以及优化直至最优，才可以开始考虑修改线程池的大小。
+
+既然我们已经配置好了一个 Dispatcher，现在就需要能够访问到这个 Dispatcher，然后在其中运行阻塞查询。可以在 ActorSystem 中查询，得到这个 Dispatcher 的引用。如下：
+
+```java
+
+/* java */
+Executor ex = context().system().dispatchers().lookup("blocking-io-dispatcher");
+
+/* scala */
+val ec: ExecutionContext = context
+	.system
+	.dispatchers
+	.lookup("blocking-io-dispatcher")
+```
+
+一旦得到了 Dispatcher 的引用，就可以使用（以及 Future API） 在 Dispatcher 中执行操作了。
+
+```java
+
+/* java */
+CompletableFuture<UserProfile> future = CompletableFuture
+	.supplyAsync(() -> userProfileRepository.findById(id), ex);
+
+/* scala */
+val future: Future[UserProfile] = Future {
+	userProfileRepository.findById(id)
+}(ec)
+```
+
+在 Scala 和 Java 的 Future API 中，我们只需做一件事：把 Dispatcher 的引用作为 Future 的第二个参数传递进去，Dispatcher 会负责剩余的所有工作。一旦有了结果，Future 就会完成。
+
+也可以使用 Future 来获取计算密集型任务的结果，将执行计算的过程移到另一个 Dispatcher 中，确保 Actor 能够继续执行。
+
+
+### 5.5.7 将 Actor 分配给另一个 Dispatcher
+
+我们可以把 Actor 完全交给另一个 Dispatcher，不仅仅是 Actor 中的某些任务。这种做法适合用于任何任务负载较重的 Actor。
+
+有两种可用的方法：
+
+- 定义一个 Dispatcher，用于 Actor Pool；
+- 使用 BalancingPool Router (Router 内部使用了 BalancingDispatcher)。
+
+**在 Actor 中使用配置好的 Dispatcher**
+
+首先，我们及那个在 application.conf 中创建另一个 Dispatcher，这次分配的线程数量少一些：
+
+```conf
+article-parsing-dispatcher {
+	# Dispatcer is the name of the event-based dispatcher
+	type = Dispatcher
+	# What kind of ExecutionService to use
+	executor = "fork-join-executor"
+	# Configuration for the fork join pool
+	fork-join-executor {
+		# Min number of threads to cap factor-based parallelism number to
+		parallelism-min = 2
+		# Parallelism (threads) ... ceil(vaaliable processors * factor)
+		parallelism-factor = 2.0
+		# Max number of threads to cap factor-based parallelism number to
+		parallelism-max = 8
+	}
+	throughput = 50
+}
+```
+
+现在，要创建 Actor 并将其分配给刚配置好的 Dispatcher， 只需在创建 Props 的时候直接调用 `withDispatcher` 方法即可：
+
+```java
+
+/* Java */
+List<ActorRef> routees = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8)
+		.stream()
+		.map(x -> system.actorOf(Props.create(ArticleParseActor.class).withDispatcher("article-parsing-dispatcher")))
+		.collect(Collectors.toList());
+
+/* Scala */
+val actors: List[ActorRef] = (0 to 7).map(x => {
+	system.actorOf(Props(classOf[ArticleParseActor])
+		.withDispatcher("article-parsing-dispatcher"))
+}).toList
+
+```
+
+现在就可以使用通过这种方法创建的 actor 做任何想做的事情了。例如，我们可以创建一个使用这些 Actor 的 Router，这样就能够轻松地使用这些 Actor 执行并行操作了。
+
+```java
+/* Java */
+
+Iterable<String> routeeAddresses = routees
+		.stream()
+		.map(x -> x.path().toStringWithoutAddress())
+		.collect(Collectors.toList());
+ActorRef workRouter = system.actorOf(new RoundRobinGroup(routeeAddresses).props());
+
+/* Scala */
+val workerRouter = system.actorOf(RoundRobingGroup(
+		actors.map(x => x.path.toStringWithoutAdress).toList).props(), "workerRouter")
+workerRouter.tell(new ParseArticle(TestHelper.file), self());
+```
+
+
+**使用 BalancingPool/BalancingDispatcher**
+
+
+……
+
+
+### 5.5.8 优化并行
+
+要确定硬件上的最优并行度，方法只有一种：测试（measuring）。如果没有真正地进行测试以及调整，那么关于时间花在什么地方以及改变如何影响系统的所有猜想基本上都是错误的。
+
+The Only way to know for sure what impact a change has is to **measure**!
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
