@@ -67,6 +67,16 @@ docker run -it --log-opt max-size=10m --log-opt max-file=3 alpine ash
 ```
 
 
+命令参数说明
+
+```bash
+    du :  estimate file space usage 
+    -d, --max-depth=N : 目录深度
+    -h, --human-readable : 人类可读
+```
+
+
+
 > 写这篇笔记的时候，原文找不到了，以后找到了再补上。
 
 
