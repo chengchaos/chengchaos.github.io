@@ -76,9 +76,7 @@ docker run -it --log-opt max-size=10m --log-opt max-file=3 alpine ash
 ```
 
 
-
-> 写这篇笔记的时候，原文找不到了，以后找到了再补上。
-
+参考原文： [Docker日志太多导致磁盘占满](https://colobu.com/2018/10/22/no-space-left-on-device-for-docker/)
 
 - 
 

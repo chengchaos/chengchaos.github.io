@@ -675,7 +675,7 @@ CompletableFuture.supplyAsync(() -> someWork(), executor);
 
 - Java 8 in Action 
 - [Java CompletableFuture 详解](https://colobu.com/2016/02/29/Java-CompletableFuture/)
-
+- [Java 8: Definitive guide to CompletableFuture](https://www.javacodegeeks.com/2013/05/java-8-definitive-guide-to-completablefuture.html)
 
 
 If you like TeXt, don't forget to give me a star :star2:.
