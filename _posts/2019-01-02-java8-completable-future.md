@@ -160,7 +160,44 @@ public T join()
 CompletableFuture 类中的 `join` 方法和 Future 接口中的 `get` 有相同的含义，并且也声明在
 Future 接口中，它们唯一的不同是 `join` 不会抛出任何检测到的异常。
 
+**错误处理**
 
+如果没有意外，上面发的代码工作得很正常。但是，如果任务执行中产生了异常会如何呢？
+
+非常不行，这种情况下会得到一个相当糟糕的结果：异常会被限制在执行任务的线程的范围内，最终会杀死该线程，而这会导致等待 `get` 方法返回结果的线程永久地被阻塞。
+
+客户端可以使用重载坂本的　`get` 方法，他使用一个超时参数来避免发生这样的情况。这是一种值的推荐的做法，应该尽量在代码中添加超时判断的逻辑，避免发生类似的问题。
+
+使用这种方法至少能放置程序永久地等待下去，超时发生时，程序会得到通知，发生了　`TimeoutException`。不过，也因为如此，我们不能知道执行任务的线程内部到底发生了什么。
+
+
+为了能获取任务线程内部发生的异常，我们需要使用 `CompletableFuture` 的 `completeExceptionally` 方法，将导致 `CompletableFuture` 内部发生问题的异常抛出。这样，当执行任务发生异常时，调用 `get()` 方法的线程将会收到一个 `ExceutionException` 异常，该异常接受一个包含失败原因的 `Exception` 参数。
+
+```java
+public static void test2() throws Exception {
+    CompletableFuture<String> completableFuture = new CompletableFuture();
+    new Thread(new Runnable() {
+        @Override
+	public void run() {
+	    try {
+	        System.out.println("task doning ...");
+		try {
+		    Thread.sleep(3000);
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
+		}
+		throw new RuntimeException("抛出一个异常");
+	    } catch (Exception e) {
+	        completableFuture.completeExceptionlly(e);
+	    }	  
+	}
+    }).start();
+
+    String result = completableFuture.get();
+    System.err.println("计算结果: "+ result);
+    
+}
+```
 
 ### 工厂方法
 
@@ -676,7 +713,7 @@ CompletableFuture.supplyAsync(() -> someWork(), executor);
 - Java 8 in Action 
 - [Java CompletableFuture 详解](https://colobu.com/2016/02/29/Java-CompletableFuture/)
 - [Java 8: Definitive guide to CompletableFuture](https://www.javacodegeeks.com/2013/05/java-8-definitive-guide-to-completablefuture.html)
-
+- [Java8新特性8--使用CompletableFuture构建异步应用](https://www.jianshu.com/p/4897ccdcb278)
 
 If you like TeXt, don't forget to give me a star :star2:.
 
