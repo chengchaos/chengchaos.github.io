@@ -1,7 +1,7 @@
 ---
 title: Redis-数据类型
 key: 20190222
-tags: java, spring cloud, spring cloud ribbon
+tags: redis
 ---
 
 使用 Redis 进行设计和开发时，首先应该考虑 Redis 原生支持的哪些数据类型最适合我们的场景。
@@ -16,25 +16,42 @@ tags: java, spring cloud, spring cloud ribbon
 127.0.0.1:6379> set "mykey" chengchao
 127.0.0.1:6379> get "mykey" 
 "chengchao"
-### get 不存在的 key 返回 nil：
+```
+
+** `get` 不存在的 key 返回 nil**
+
+```sh
 127.0.0.1:6379> get yourkey
 (nil)
-### strlen 返回字符串长度：
+```
+
+** `strlen` 返回字符串长度：**
+
+```sh
 127.0.0.1:6379> strlen mykey 
 (integer) 9
-### 不存在的 key 执行 strlen， 返回 0：
+```
+
+**不存在的 key 执行 strlen， 返回 0：**
+
+```sh
 127.0.0.1:6379> strlen yourkey 
 (integer) 0
 127.0.0.1:6379> get "Extreme Pizza"
 "300 Broadway"
-### 使用 append 命令向一个 key 的字符串末尾追加字符串：
+```
+
+**使用 append 命令向一个 key 的字符串末尾追加字符串：**
+
+```sh
 127.0.0.1:6379> append "Extreme Pizza" " 10011"
 (integer) 18
 127.0.0.1:6379> get "Extreme Pizza"
 "300 Broadway 10011"
-### 使用 setrange 命令可以覆盖字符串值的一部分：
-127.0.0.1:6379> 
 ```
+
+**使用 setrange 命令可以覆盖字符串值的一部分：**
+
 
 如果某个 key 已经存在，那么 `SET` 命令会覆盖之前的值。
 
