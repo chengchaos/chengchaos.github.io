@@ -18,14 +18,14 @@ tags: redis
 "chengchao"
 ```
 
-** `get` 不存在的 key 返回 nil**
+**`get` 不存在的 key 返回 nil**
 
 ```sh
 127.0.0.1:6379> get yourkey
 (nil)
 ```
 
-** `strlen` 返回字符串长度：**
+**`strlen` 返回字符串长度：**
 
 ```sh
 127.0.0.1:6379> strlen mykey 
