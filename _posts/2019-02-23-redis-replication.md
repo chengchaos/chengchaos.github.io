@@ -25,7 +25,7 @@ Redis 的复制机制是 RedisCluster 的基础，RedisCluster 在此基础上�
 - 3） 直接使用命令： `slaveof {masterHost} {masterPort}`
 
 
-测试一下：准备一份配置文件，可以将 redis.conf 复制一份并重命名为 redis-slave.conf 然后进行修改：
+使用配置文件的方式测试一下：准备一份配置文件，可以将 redis.conf 复制一份并重命名为 redis-slave.conf 然后进行修改：
 
 ```sh
 port 6380
