@@ -65,16 +65,16 @@ tags: redis
     $ make hiredis lua jemalloc linenoise
     $ cd ..
     $ make
-    ...
+    ......
     It's a good idea to run 'make test' ;)
-    ...
+    ......
     $ make PREFIX=/work/redis install
 
 ```
 
 2 直接安装
 
-```base
+```bash
     $ sudo apt-get update
     $ sudo apt-get install redis-server
     $ which redis-server
