@@ -1,7 +1,7 @@
 ---
 title: Java 8 CompletableFuture 学习笔记
 key: 20190102
-tags: java8, CompletableFuture
+tags: java java8 CompletableFuture
 ---
 
 CompletableFuture 是 Java 8 引入的相当碉堡的函数式异步编程辅助类。

@@ -1,7 +1,7 @@
 ---
 title: Spring Cloud Ribbon 學習筆記
 key: 20190116
-tags: java, spring cloud, spring cloud ribbon
+tags: java spring-cloud spring-cloud-ribbon
 ---
 
 Spring Cloud Ribbon 是一个基於 HTTP 和 TCP 的客戶端負載均衡工具，它基於 Netflix Ribbon 實現。通過 Spring Cloud 的封裝，可以讓我們輕鬆地將面嚮服務的 REST 請求自動轉換成客戶端負載均衡的服務調用。

@@ -22,6 +22,7 @@ CentOS 7 主机修改 hostname。
 ```
 
 
+以上。
 
 << EOF >>
 

@@ -1,7 +1,7 @@
 ---
 title: Monads 和 Monoids 学习笔记
 key: 20190108
-tags: scala, fp, monads, monoids
+tags: scala FP monads monoids
 ---
 
 找到一个非常好的 Scala 的学习博客：[写点什么](http://hongjiang.info/)。

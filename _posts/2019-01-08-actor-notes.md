@@ -1,7 +1,7 @@
 ---
 title: Actor 学习笔记
 key: 20190108
-tags: scala, akka, actor
+tags: scala akka actor
 ---
 
 维基百科这样定义Actor模型：
