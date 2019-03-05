@@ -15,9 +15,7 @@ tags: Redis
 
 运行 Redis 最常见的操作系统是 Linux。在启动 Redis 实例之前，通常需要将一些 Linux 内核和操作系统级别的参数设置为前挡的值，以便在生产环境中发挥最高性能。
 
-### 步骤
-
-**1.设置与内存相关的内核参数**
+### 1.设置与内存相关的内核参数
 
 使用如下命令设置内核参数：
 
@@ -98,7 +96,7 @@ CentOS7 的基本默认设置为 30，具体如下：
 
 
 
-**2.禁用透明大页(transparent_hugepage)**
+### 2.禁用透明大页(transparent_hugepage)
 
 使用如下命令：
 
@@ -143,7 +141,7 @@ fi
 
 
 
-**3.网络的优化**
+### 3.网络的优化
 
 ```bash
 ~ $ sudo sysctl -w net.core.somaxconn=65535
@@ -166,7 +164,7 @@ fi
 在Hadoop 1.0中，参数 ipc.server.listen.queue.size 控制了服务端socket的监听队列长度，即backlog长度，默认值是128。而Linux的参数 net.core.somaxconn 默认值同样为128。当服务端繁忙时，如NameNode或JobTracker，128是远远不够的。这样就需要增大backlog，例如我们的3000台集群就将 ipc.server.listen.queue.size 设成了32768，为了使得整个参数达到预期效果，同样需要将kernel参数 net.core.somaxconn 设成一个大于等于32768的值。
 
 
-**4.打开文件数**
+### 4.打开文件数
 
 ```
 ~ $ su - redis
