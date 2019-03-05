@@ -8,8 +8,14 @@ titles:
 key: page-about
 ---
 
-![chengchao](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-home.png)
+![chengchao](https://chengchaos.github.io/assets/images/fire-dragon.jpg)
 
 差不多就酱。
+
+
+```sh
+
+$ docker tag 8dff0b38bca7 fma/openjdk_8-jdk-alpine:v1    
+```
 
 << EOF >>
