@@ -202,7 +202,8 @@ redis hard nofile 288000
 sysctl 下有2个可配置选项：
 
 ```bash
-vm.panic_on_oom = 0              # 内存不够时内核是否直接panic   vm.oom_kill_allocating_task = 1  # oom-killer是否选择当前正在申请内存的进程进行kill
+vm.panic_on_oom = 0              # 内存不够时内核是否直接panic
+vm.oom_kill_allocating_task = 1  # oom-killer是否选择当前正在申请内存的进程进行kill
 ```
 
 
