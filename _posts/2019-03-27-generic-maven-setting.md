@@ -20,43 +20,43 @@ tags: maven
         <java.version>1.8</java.version>
         <scala.version>2.11.12</scala.version>
         <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
-		<platform-bom.version>Cairo-SR5</platform-bom.version>
+        <platform-bom.version>Cairo-SR5</platform-bom.version>
         <spring-cloud.version>Finchley.SR2</spring-cloud.version>
         <docker.image.prefix>sinogold</docker.image.prefix>
         <mysql.version>8.0.12</mysql.version>
     </properties>
 
     <!-- 仓库 -->
-	<repositories>
-		<repository>
-			<id>fma-group</id>
-			<url>http://pts-tsp.futuremove.cn/nexus/repository/fma-group/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-		</repository>
+    <repositories>
+        <repository>
+            <id>fma-group</id>
+            <url>http://pts-tsp.futuremove.cn/nexus/repository/fma-group/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </repository>
         <!-- scala -->
-		<repository>
-			<id>scalaz</id>
-			<name>scalaz</name>
-			<url>http://dl.bintray.com/scalaz/releases</url>
-		</repository>
-		<repository>
-			<id>mvnrepository</id>
-			<name>Derbysoft Release Repository</name>
-			<url>http://search.maven.org/remotecontent?filepath=</url>
-		</repository>
-		<repository>
-			<id>jahia</id>
-			<name>mvnrepository</name>
-			<url>http://maven.jahia.org/maven2</url>
-		</repository>
-	</repositories>
+        <repository>
+            <id>scalaz</id>
+            <name>scalaz</name>
+            <url>http://dl.bintray.com/scalaz/releases</url>
+        </repository>
+        <repository>
+            <id>mvnrepository</id>
+            <name>Derbysoft Release Repository</name>
+            <url>http://search.maven.org/remotecontent?filepath=</url>
+        </repository>
+        <repository>
+            <id>jahia</id>
+            <name>mvnrepository</name>
+            <url>http://maven.jahia.org/maven2</url>
+        </repository>
+    </repositories>
 
     
     <dependencyManagement>
@@ -77,25 +77,25 @@ tags: maven
 
     <build>
         <finalName>my-project</finalName>
-		<!-- To define the plugin version in your parent POM -->
-		<pluginManagement>
-			<!--
-			https://github.com/davidB/scala-maven-plugin
-			-->
-			<plugins>
-				<plugin>
-					<groupId>net.alchim31.maven</groupId>
-					<artifactId>scala-maven-plugin</artifactId>
-					<version>4.0.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<!-- To use the plugin goals in your POM or parent POM -->
+        <!-- To define the plugin version in your parent POM -->
+        <pluginManagement>
+            <!--
+            https://github.com/davidB/scala-maven-plugin
+            -->
+            <plugins>
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>4.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <!-- To use the plugin goals in your POM or parent POM -->
 
         <plugins>
             <!-- spring-boot -->
@@ -105,36 +105,36 @@ tags: maven
             </plugin>
 
             <!-- scala -->
-			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>scala-maven-plugin</artifactId>
-				<version>4.0.1</version>
-				<executions>
-					<execution>
-						<id>compile-scala</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>add-source</goal>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>test-compile-scala</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>add-source</goal>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<scalaVersion>${scala.version}</scalaVersion>
-					<jvmArgs>
-						<jvmArg>-Xms64m</jvmArg>
-						<jvmArg>-Xmx1024m</jvmArg>
-					</jvmArgs>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.0.1</version>
+                <executions>
+                    <execution>
+                        <id>compile-scala</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile-scala</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
 
             <!-- Docker maven plugin -->
             <plugin>
