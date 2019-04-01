@@ -76,7 +76,7 @@ $ bin/kafka-server-start.sh config/server.properties
 **创建一个测试主题：**
 
 ```bash
-$ bin/kafka-topic.sh --create \
+$ bin/kafka-topics.sh --create \
   --zookeeper localhost:2181 \
   --replication-factor 1 \
   --partitions 1 \
@@ -332,6 +332,108 @@ Kafka 使用 Zookeeper 来保存 broker、主题和分区的元数据信息。
 虽然多个 Kafka 集群可以共享一个 Zookeeper 群组， 但如果有可能的话， 不建议把 Zookeeper 共享给其他应用程序。Kafka 对 Zookeeper 的延迟和超时比较敏感， 与 Zookeeper 群组之间的一个通信异常就可能导致 Kafka 服务器出现无法预测的行为。这样很容易让多个 broker 同时离线，如果它们 Zookeeper 之间断开连接，也会导致分区离线。这也会给集群控制器带来压力，在服务器离线一段时间之后，当控制器尝试关闭一个服务器时，会表现出一些细小的错误。其他的应用程序因重度使用或进行不恰当的操作给 Zookeeper 群组带来压力，所以最好让它们使用自己的 Zookeeper 群组。
 
 
+## kafka-topics.sh 
+
+```bash
+$ $ bin/kafka-topics.sh 
+Create, delete, describe, or change a topic.
+Option                                   Description                            
+------                                   -----------                            
+--alter                                  修改主题的分区数和（或）复制作业的配置.         
+--config <String: name=value>            A topic configuration override for the 
+                                           topic being created or altered.The   
+                                           following is a list of valid         
+                                           configurations:                      
+                                                cleanup.policy                        
+                                                compression.type                      
+                                                delete.retention.ms                   
+                                                file.delete.delay.ms                  
+                                                flush.messages                        
+                                                flush.ms                              
+                                                follower.replication.throttled.       
+                                           replicas                             
+                                                index.interval.bytes                  
+                                                leader.replication.throttled.replicas 
+                                                max.message.bytes                     
+                                                message.format.version                
+                                                message.timestamp.difference.max.ms   
+                                                message.timestamp.type                
+                                                min.cleanable.dirty.ratio             
+                                                min.compaction.lag.ms                 
+                                                min.insync.replicas                   
+                                                preallocate                           
+                                                retention.bytes                       
+                                                retention.ms                          
+                                                segment.bytes                         
+                                                segment.index.bytes                   
+                                                segment.jitter.ms                     
+                                                segment.ms                            
+                                                unclean.leader.election.enable        
+                                         See the Kafka documentation for full   
+                                           details on the topic configs.        
+--create                                 创建一个新 topic.                    
+--delete                                 删除一个 topic                         
+--delete-config <String: name>           A topic configuration override to be   
+                                           removed for an existing topic (see   
+                                           the list of configurations under the 
+                                           --config option).                    
+--describe                               列出给定主题的详细信息.     
+--disable-rack-aware                     Disable rack aware replica assignment  
+--force                                  抑制（Suppress）控制台提示               
+--help                                   Print usage information.               
+--if-exists                              if set when altering or deleting       
+                                           topics, the action will only execute 
+                                           if the topic exists                  
+--if-not-exists                          if set when creating topics, the       
+                                           action will only execute if the      
+                                           topic does not already exist         
+--list                                   List all available topics.             
+--partitions <Integer: # of partitions>  The number of partitions for the topic 
+                                           being created or altered (WARNING:   
+                                           If partitions are increased for a    
+                                           topic that has a key, the partition  
+                                           logic or ordering of the messages    
+                                           will be affected                     
+--replica-assignment <String:            A list of manual partition-to-broker   
+  broker_id_for_part1_replica1 :           assignments for the topic being      
+  broker_id_for_part1_replica2 ,           created or altered.                  
+  broker_id_for_part2_replica1 :                                                
+  broker_id_for_part2_replica2 , ...>                                           
+--replication-factor <Integer:           正在创建的主题中的每个分区的复制因子  .      
+  replication factor>                     
+--topic <String: topic>                  要创建、更改或描述的主题。除了 --create 选项之外，还可以接受正则表达式
+--topics-with-overrides                  if set when describing topics, only    
+                                           show topics that have overridden     
+                                           configs                              
+--unavailable-partitions                 if set when describing topics, only    
+                                           show partitions whose leader is not  
+                                           available                            
+--under-replicated-partitions            if set when describing topics, only    
+                                           show under replicated partitions     
+--zookeeper <String: hosts>              REQUIRED: The connection string for    
+                                           the zookeeper connection in the form 
+                                           host:port. Multiple hosts can be     
+                                           given to allow fail-over.  
+```
+
+
+**创建主题**
+
+```bash
+$ bin/kafka-topics.sh --create   \
+  --zookeeper localhost:2181/chengchao   \
+  --replication-factor 1   \
+  --partitions 1   \
+  --topic test2
+Created topic "test2".
+
+```
+
+**列出主题**
+
+```bash
+$ bin/kafka-topics.sh --zookeeper localhost:2181/chengchao --list
+```
 
 << EOF >>
 
