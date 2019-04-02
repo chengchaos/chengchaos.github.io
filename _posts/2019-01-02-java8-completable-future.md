@@ -74,7 +74,7 @@ Future 的另一个优点是它比更底层的 Thread 更易用。要使用 Futu
     }
 ```
 
-可以使用 `isDone` 方法检查计算是否完成，或者使用 `get` 阻塞住调用线程，直到计算完成返回结果，你也可以使用 `cancel` 方法停止任务的执行。
+可以使用 `isDone` 方法检查计算是否完成，或者使用 `get` 阻塞住调用线程，直到计算完成返回结果，也可以使用 `cancel` 方法停止任务的执行。
 
 虽然 Future 以及相关使用方法提供了异步执行任务的能力，但是对于结果的获取却是很不方便，只能通过阻塞或者轮询的方式得到任务的结果。阻塞的方式显然和我们的异步编程的初衷相违背，轮询的方式又会耗费无谓的 CPU 资源，而且也不能及时地得到计算结果，为什么不能用观察者设计模式当计算结果完成及时通知监听者呢？
 
@@ -164,14 +164,16 @@ Future 接口中，它们唯一的不同是 `join` 不会抛出任何检测到�
 
 如果没有意外，上面发的代码工作得很正常。但是，如果任务执行中产生了异常会如何呢？
 
-非常不行，这种情况下会得到一个相当糟糕的结果：异常会被限制在执行任务的线程的范围内，最终会杀死该线程，而这会导致等待 `get` 方法返回结果的线程永久地被阻塞。
+非常不幸，这种情况下会得到一个相当糟糕的结果：异常会被限制在执行任务的线程的范围内，最终会杀死该线程，而这会导致等待 `get` 方法返回结果的线程永久地被阻塞。
 
-客户端可以使用重载坂本的　`get` 方法，他使用一个超时参数来避免发生这样的情况。这是一种值的推荐的做法，应该尽量在代码中添加超时判断的逻辑，避免发生类似的问题。
+客户端可以使用重载坂本的　`get` 方法，使用一个超时参数来避免发生这样的情况。这是一种值的推荐的做法，应该尽量在代码中添加超时判断的逻辑，避免发生类似的问题。
 
-使用这种方法至少能放置程序永久地等待下去，超时发生时，程序会得到通知，发生了　`TimeoutException`。不过，也因为如此，我们不能知道执行任务的线程内部到底发生了什么。
+使用这种方法至少能防止程序永久地等待下去，超时发生时，程序会得到通知，发生了　`TimeoutException`。不过，也因为如此，我们不能知道执行任务的线程内部到底发生了什么
 
 
-为了能获取任务线程内部发生的异常，我们需要使用 `CompletableFuture` 的 `completeExceptionally` 方法，将导致 `CompletableFuture` 内部发生问题的异常抛出。这样，当执行任务发生异常时，调用 `get()` 方法的线程将会收到一个 `ExceutionException` 异常，该异常接受一个包含失败原因的 `Exception` 参数。
+为了能获取任务线程内部发生的异常，我们需要使用 `CompletableFuture` 的 `completeExceptionally` 方法，该方法接受一个包含失败原因的 `Exception` 参数。可以把导致 `CompletableFuture` 内部发生问题的异常带出去。这样，当执行任务发生异常时，调用 `get()` 方法的线程就会收到一个 `ExceutionException` 异常。
+
+【CompletableFuture 的 get 方法需要捕获的 ExecutionException 都是任务执行期间发生的？】
 
 ```java
 public static void test2() throws Exception {
@@ -188,6 +190,10 @@ public static void test2() throws Exception {
 		}
 		throw new RuntimeException("抛出一个异常");
 	    } catch (Exception e) {
+            // 发生异常，使用 completeExceptionlly 方法
+            // 把异常风窗起来
+            // get 这个 Future 的方法会得到
+            // 一个 ExceutionException
 	        completableFuture.completeExceptionlly(e);
 	    }	  
 	}
@@ -225,9 +231,9 @@ public static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier, Executo
 `supplyAsync` 方法以 `Supplier<U>` 函数式接口类型为参数，CompletableFuture 的计算结果类型为 `U`。
 
 
-## 计算结果完成时的处理
+## 完成
 
-> `whenComplete` 和 `exceptionally` 和 `handle`
+**`whenComplete` 和 `exceptionally` 和 `handle`**
 
 当 CompletableFuture 的计算结果完成，或者抛出异常的时候，我们可以执行特定的 Action。主要是下面的方法：
 
@@ -295,7 +301,7 @@ public <U> CompletableFuture<U> handleAsync(BiFunction<? super T,Throwable,? ext
 
 ## 转换
 
-> `thenApply`
+**`thenApply`**
 
 
 CompletableFuture 可以作为 monad （单子）和 functor （函子，起作用的东西）。由于回调风格的实现，我们不必因为等待一个计算完成而阻塞着调用线程，而是告诉CompletableFuture当计算完成的时候请执行某个function。而且我们还可以将这些操作串联起来，或者将CompletableFuture组合起来。
@@ -364,7 +370,7 @@ System.out.println(f.get()); //"1000"
 
 ## 消费
 
-前面的方法是当计算完成的时候，会生成新的计算结果(`thenApply`, `handle`)，或者返回同样的计算结果 `whenComplete`，CompletableFuture 还提供了一种处理结果的方法，只对结果执行 Action,而不返回新的计算值，因此计算值为 `Void`:
+前面的方法是当计算完成的时候，会生成新的计算结果(`thenApply`, `handle`)，或者返回同样的计算结果 `whenComplete`；此外 CompletableFuture 还提供了一种处理结果的方法，只对结果执行某些操作（Action）,而不返回新的计算值，因此计算值为 `Void`:
 
 ```java
 public CompletableFuture<Void> thenAccept(Consumer<? super T> action)
@@ -452,6 +458,9 @@ public CompletableFuture<Void> thenRunAsync(Runnable action, Executor executor)
 
 ## 组合 Compose
 
+**组成 `thenCompose`** ：一个接着一个的执行。
+
+
 ```java
 public <U> CompletableFuture<U> thenCompose(Function<? super T,? extends CompletionStage<U>> fn)
 public <U> CompletableFuture<U> thenComposeAsync(Function<? super T,? extends CompletionStage<U>> fn)
@@ -459,10 +468,10 @@ public <U> CompletableFuture<U> thenComposeAsync(Function<? super T,? extends Co
 ```
 
 
-这一组方法接受一个 Function 作为参数，这个 Function 的输入是当前的 CompletableFuture 的计算值，返回结果将是一个新的 CompletableFuture （将前一个结果作为下一个计算的参数，它们之间存在着先后顺序）。因此它的功能类似:
+这一组方法接受一个 Function 作为参数，这个 Function 的输入是当前的 CompletableFuture 的计算值，返回结果将是一个新的 CompletableFuture （将前一个结果作为下一个计算的参数，它们之间存在着<span style='color:red'>**先后顺序**</span>）。因此它的功能类似:
 
 ```
-    A +--> B +---> C
+    A +--> B(a1) +---> C(b1)
 ```
 
 记住，`thenCompose` 返回的对象并不是函数 `fn` 返回的对象，如果原来的 CompletableFuture 还没有计算出来，它就会生成一个新的组合后的 CompletableFuture。
@@ -502,7 +511,7 @@ public <U> CompletableFuture<U> thenComposeAsync(Function<? super T,? extends Co
 
 ```
 
-
+**联合 `thenCombine`** ：两个同时执行，然后用他们各自的结果再去执行下一个。
 
 ```java
 public <U,V> CompletableFuture<V> thenCombine(CompletionStage<? extends U> other, BiFunction<? super T,? super U,? extends V> fn)
@@ -510,14 +519,14 @@ public <U,V> CompletableFuture<V> 	thenCombineAsync(CompletionStage<? extends U>
 public <U,V> CompletableFuture<V> thenCombineAsync(CompletionStage<? extends U> other, BiFunction<? super T,? super U,? extends V> fn, Executor executor)
 ```
 
-这一组方法 `thenCombine` 用来复合另外一个` CompletionStage` 的结果。它的功能类似：
+这一组方法 `thenCombine` 用来<span style='color:red'>**复合**</span>另外一个` CompletionStage` 的结果。它的功能类似：
 
 ```
-	A +
+	A1 +
 	  |
-	  +------> C
+	  +------> C(a1, a2)
 	  +------^
-	B +
+	A2 +
 ```
 
 
@@ -675,7 +684,7 @@ github 有多个项目可以实现 Java CompletableFuture 与其它 Future (如 
 
 ## 使用定制的执行器
 
-Brian Goetz建议，线程池大小与处理器的利用率之比可以使用下面的公式进行估算：
+Brian Goetz 建议，线程池大小与处理器的利用率之比可以使用下面的公式进行估算：
 
 ```
 Nthreads = NCPU * UCPU * (1 + W/C)
