@@ -1,7 +1,7 @@
 ---
 title: elasticsearch 创建索引
 key: 2019-05-29
-tags: elasticsearch-create-index
+tags: elasticsearch indices 
 ---
 
 2000 年一月一日的样子我现在还记得.
@@ -11,7 +11,7 @@ tags: elasticsearch-create-index
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html
 
-默认情况下, 如果操作的索引不存在会被自动创建出来, 并且应用上一个配置好的 index templates. 此外, 若果映射不粗在, 索引操作也会创建一个来. 如果有需要, 新的字段和对象将会自动添加到映射定义中. 
+默认情况下, 如果操作的索引不存在会被自动创建出来, 并且应用上一个配置好的 index templates. 此外, 若果映射不存在, 索引操作也会创建一个来. 如果有需要, 新的字段和对象将会自动添加到映射定义中. 
 
 自动创建索引的功能是由 `action.auto_create_index` 属性来设置的. 其默认值为 `true` 意味着索引总是会自动创建. 只允许对匹配某些模式的索引自动创建，方法是将该设置的值更改为这些模式的逗号分隔列表, 也可以通过在列表中使用 `+` 或 `-` 前缀模式显式地允许和禁止。如果设置为 `false` 则被禁用.
 
