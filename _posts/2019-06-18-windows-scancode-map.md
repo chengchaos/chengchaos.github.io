@@ -1,5 +1,5 @@
 ---
-title: 修改键盘键位的布局.md
+title: 修改键盘键位的布局
 key: 2019-06-18
 tags: windows scancode-map keyboard-layout
 ---
