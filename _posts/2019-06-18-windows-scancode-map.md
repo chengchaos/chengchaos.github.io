@@ -2,6 +2,7 @@
 title: 修改键盘键位的布局
 key: 2019-06-18
 tags: windows scancode-map keyboard-layout
+
 ---
 
 在 Windows XP/Windows 2000 系统中，提供了一种新的键盘扫描码映射方法，使你能随意地设置键盘键位的布局，这就是注册表中的 “Scancode Map”, 我们巧妙利用 “Scancode Map” 就可将普通键盘改造成随心随意的个性化键盘。
