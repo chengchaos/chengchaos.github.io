@@ -8,20 +8,16 @@ tags: kafka
 
 <!--more-->
 
-## 操作系统
+## 所需依赖
 
-我们使用 CentOS 7
+- 操作系统： 我们使用 CentOS 7
 
-## Java
+- Java：使用 JDK1.8+
 
-使用 JDK1.8+
-
-## Zookeeper
-
-Kafka 使用 Zookeeper 保存集群的元数据信息和消费者信息。Kafka 自带了一个 Zookeeper。
+- Zookeeper：Kafka 使用 Zookeeper 保存集群的元数据信息和消费者信息。Kafka 自带了一个 Zookeeper。
 
 
-### Zookeeper 单机版
+### Zookeeper 单机版配置
 
 编辑 zoo.cfg
 
@@ -197,8 +193,7 @@ Kafka 集群通过分区对主题进行横向扩展，所以当有新的 broker 
 
 > 以上两个设置任意一个达到，消息就会被删除。
 
-
-**4. `log.segment.bytes'**
+**4. `log.segment.bytes`**
 
 当消息到达 broker 时，它们被追加到分区的当前日志片段上。
 
@@ -228,7 +223,7 @@ Kafka 集群通过分区对主题进行横向扩展，所以当有新的 broker 
 
 一个 Kafka 集群需要多少个 broker 需要考虑：
 
-1. 需要多少磁盘来报了数据，单个 broker 有多少空间可用。
+1. 需要多少磁盘来保存数据，单个 broker 有多少空间可用。
 
 例如：整个集群需要报了 10T 的数据，每个 broker 可以保存 2TB，那么至少需要 5 个 broker。如果启用了数据复制，那么至少还需要一倍的空间。（10 个 brokker）。
 
@@ -434,6 +429,10 @@ Created topic "test2".
 ```bash
 $ bin/kafka-topics.sh --zookeeper localhost:2181/chengchao --list
 ```
+
+
+
+
 
 << EOF >>
 
