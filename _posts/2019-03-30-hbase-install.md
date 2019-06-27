@@ -4,7 +4,7 @@ key: 20190330
 tags: bigdata hbase
 ---
 
-我的 HBase 的学习笔记。
+我的 HBase 的学习笔记。:lizard:
 
 <!--more-->
 
@@ -76,13 +76,13 @@ HBase 不适用
         <value>file:///works/datas/hdfs/</value>
     </property>
     <property>
-        <name>dfs.defaultFS</name>
-        <value>hdfs:/mycentos7:9000</value>
+        <name>fs.defaultFS</name>
+        <value>hdfs://mycentos7:8020</value>
 	<commit>早期的端口是 9000，新版本的端口是 8020. Why ?</commit>
     </property>
 <!--
     <property>
-        <name>dfs.defaultFS</name>
+        <name>fs.defaultFS</name>
         <value>hdfs://0.0.0.0:9000</value>
     </property>
 -->
@@ -141,11 +141,6 @@ export JAVA_HOME='/usr/java/default'
         <value>/works/datas/hbase-zk-data</value>
     </property>
 
-    <property>
-        <name>hbase.cluster.distributed</name>
-        <value>true</value>
-    </property>
-
     <!-- ZooKeeper 会话超时。Hbase 把这个值传递给 zk 集群，向它推荐一个会话的最大超时时间 --> 
     <property> 
         <name>zookeeper.session.timeout</name> 
@@ -165,6 +160,8 @@ export JAVA_HOME='/usr/java/default'
 可以通过 web 浏览器访问主机的 16010 端口查看
 
 http://192.168.1.4:16010/
+
+是 60010 么？
 
 
 ## Java 对 HBase 操作
@@ -187,7 +184,7 @@ http://192.168.1.4:16010/
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase-client</artifactId>
-			<version>1.2.11</version>
+			<version>1.2.0</version>
 		</dependency>
 
 ```
@@ -200,3 +197,4 @@ http://192.168.1.4:16010/
 If you like TeXt, don't forget to give me a star :star2:.
 
 <iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+=

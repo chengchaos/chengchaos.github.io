@@ -15,32 +15,15 @@ MySQL的卸载一般使用终端的方式操作（安装包中有安装文件，
 
 ##  命令：
 
+```bash
+$ sudo rm -rf /usr/local/mysql*
+$ sudo rm -rf /Library/StartupItems/MySQLCOM
+$ sudo rm -rf /Library/PreferencePanes/MySQL.prefPane
+$ rm -rf ~/Library/PreferencePanes/My*
+$ sudo rm -rf /Library/Receipts/mysql*
+$ sudo rm -rf /Library/Receipts/MySQL*
+$ sudo rm -rf /var/db/receipts/com.mysql.*
 ```
-sudo rm /usr/local/mysql
-sudo rm -rf /usr/local/mysql*
-sudo rm -rf /Library/StartupItems/MySQLCOM
-sudo rm -rf /Library/PreferencePanes/My*
-vim /etc/hostconfig  
-```
-
-
-
-
-执行完上面命令后使用的是Vim指令，复制上述命令，保存，退出即可。
-
-继续完成下列指令：
-
-```
-rm -rf ~/Library/PreferencePanes/My*
-sudo rm -rf /Library/Receipts/mysql*
-sudo rm -rf /Library/Receipts/MySQL*
-sudo rm -rf /var/db/receipts/com.mysql.*
-```
-
-
-
-
-
 
 最后打开系统偏好设置，最下方MySQL图标消失。
 
