@@ -294,7 +294,9 @@ Send(on F9 key) E0 43
 
 ## 我的
 
+
 我把右 ctrl 和 Caps-Lock 键进行了互换, menu 换成 win,  左 alt 和 左 win 进行了互换. reg 文件如下:
+
 
 ```
 Windows Registry Editor Version 5.00
@@ -306,6 +308,51 @@ Windows Registry Editor Version 5.00
 5c,e0,5d,e0,\
 5B,E0,38,00,\
 38,00,5b,e0,\
+00,00,00,00
+
+```
+
+
+
+我又做了修改：， 将 Tab 改成 CapsLk
+
+```
+Left Ctrl       00 1D
+Caps Lock       00 3A
+Right Ctrl      E0 1D
+Right Windows   E0 5C
+Left Alt        00 38
+Left Windows    E0 5B
+Tab             00 0F
+
+
+tap ==> Cap
+0f,00,3a,00
+这样的效果是： cap 可以当 tab， tab 还是 tab
+
+CAP --> TAP
+3A,00,0F,00
+
+Cap ==> Ctrl
+3a,00,1d,e0
+左 alt 和 左 win 进行了互换: 
+Left Alt        00 38
+Left Windows    E0 5B
+38,00,5b,e0,\
+0F,00,00,3a,\
+ 
+```
+
+```
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+"Scancode Map"=hex:00,00,00,00,00,00,00,00,07,00,00,00,\
+38,00,5b,e0,\
+5b,e0,38,00,\
+1d,e0,3a,00,\
+3a,00,0f,00,\
+0f,00,1d,e0,\
 00,00,00,00
 
 ```
