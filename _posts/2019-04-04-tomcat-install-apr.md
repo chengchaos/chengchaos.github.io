@@ -11,6 +11,8 @@ tags: tomcat apr
 <!--more-->
 
 ```bash
+$ yum groups list
+$ sudo yum y groupinstall 'Development Tools'
 $ sudo yum -y install openssl-devel apr apr-devel apr-util apr-util-devel apr-util-openssl
 $ cd bin
 $ tar -xzvf tomcat-native.tar.gz 
@@ -41,6 +43,18 @@ more information, such as the ld(1) and ld.so(8) manual pages.
 ----------------------------------------------------------------------
 ```
 
+**编辑 .bashrc 文件：**
+
+```bash
+
+$ vim ~/.bashrc
+
+export LD_LIBRARY_PATH='/usr/local/apr/lib'
+
+:wq
+$ source ~/.bashrc
+
+```
 
 << EOF >>
 
