@@ -108,7 +108,7 @@ export JAVA_HOME=/usr/local/jvm/jdk
 
 
 
-**格式化 HDFS **
+**格式化 HDFS :**
 
 
 
@@ -240,7 +240,7 @@ chengchao@chaosubuntu:/works/apps/hadoop/etc/hadoop$ jps
 
 
 
-**:yarn-site.xml**
+**yarn-site.xml**
 
 
 
