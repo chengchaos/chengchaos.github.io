@@ -1,5 +1,5 @@
 ---
-title: Golang Corss Compliation
+title: Golang 交叉编译
 key: 2020-06-06
 tags: go golang
 ---
