@@ -1,8 +1,6 @@
 ---
 # Only the main Sass file needs front matter (the dashes are enough)
 ---
-@charset "utf-8";
-
 
 @import
 
@@ -26,35 +24,51 @@
     "common/function",
     "common/classes",
     "common/reset",
+    "common/print",
     "common/components/button",
+    "common/components/image",
     "common/components/card",
+    "common/components/gallery",
+    "common/components/hero",
     "common/components/menu",
+    "common/components/modal",
     "common/components/toc",
     "common/components/item",
+    "common/components/swiper",
 
     "animate/fade-in",
     "animate/fade-in-down",
     "animate/fade-in-up",
 
-    "components/article-content",
-    "components/article-info",
+    "components/main",
+    "components/header",
+    "components/footer",
     "components/article-list",
+    "components/article-info",
+    "components/article-header",
+    "components/article-content",
+    "components/article-footer",
     "components/author-links",
     "components/author-profile",
-    "components/footer",
-    "components/header",
-    "components/main",
     "components/tags",
     "components/search",
+    "components/lightbox",
+    "components/extensions",
+
 
     "additional/alert",
+    "additional/tag",
     "additional/photo-frame",
 
-    "layout/archive",
-    "layout/article",
     "layout/base",
+    "layout/page",
+
+    "layout/article",
+    "layout/articles",
+    "layout/archive",
     "layout/home",
     "layout/landing",
-    "layout/page",
-    "layout/404"
+    "layout/404",
+
+    "custom"
 ;

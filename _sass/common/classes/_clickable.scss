@@ -1,4 +1,4 @@
-@mixin clickable($clr, $bg-clr, $hover-clr: default, $hover-bg-clr: default, $active-clr: default, $active-bg-clr: default, $focus-clr: default, $focus-bg-clr: default, $theme: default) {
+@mixin clickable($clr, $bg-clr, $hover-clr: default, $hover-bg-clr: default, $active-clr: default, $active-bg-clr: default, $focus-clr: default, $focus-bg-clr: default, $theme: default, $ignore-path: default) {
 
   @if $theme == default {
     @if $bg-clr == null and $hover-bg-clr == null {
@@ -16,25 +16,40 @@
     }
   }
 
+  @if $ignore-path == default {
+    $ignore-path: false;
+  } @else {
+    $ignore-path: true;
+  }
+
+  @include transition(map-get($clickable, transition));
+  @if $ignore-path == false {
+    svg {
+      path {
+        @include transition(map-get($clickable, transition));
+      }
+    }
+  }
+
   // hover
   @if $hover-clr == default {
     @if $hover-bg-clr == null {
-      @if $theme == 'light' {
+      @if $theme == "light" {
         $hover-clr: darken($clr, 14%);
       }
-      @if $theme == 'dark' {
+      @if $theme == "dark" {
         $hover-clr: lighten($clr, 18%);
       }
     } @else if $hover-bg-clr == default {
-      $hover-clr: $clr
+      $hover-clr: $clr;
     }
   }
 
   @if $hover-bg-clr == default {
-    @if $theme == 'light' {
+    @if $theme == "light" {
       $hover-bg-clr: darken($bg-clr, 14%);
     }
-    @if $theme == 'dark' {
+    @if $theme == "dark" {
       $hover-bg-clr: lighten($bg-clr, 18%);
     }
   }
@@ -42,10 +57,10 @@
   // active
   @if $active-clr == default {
     @if $active-bg-clr == null {
-      @if $theme == 'light' {
+      @if $theme == "light" {
         $active-clr: darken($hover-clr, 15%);
       }
-      @if $theme == 'dark' {
+      @if $theme == "dark" {
         $active-clr: lighten($hover-clr, 16%);
       }
     } @else if $active-bg-clr == default {
@@ -54,10 +69,10 @@
   }
 
   @if $active-bg-clr == default {
-    @if $theme == 'light' {
+    @if $theme == "light" {
       $active-bg-clr: darken($hover-bg-clr, 15%);
     }
-    @if $theme == 'dark' {
+    @if $theme == "dark" {
       $active-bg-clr: lighten($hover-bg-clr, 16%);
     }
   }
@@ -80,8 +95,10 @@
     @if $bg-clr {
       background-color: $bg-clr;
     }
-    svg path {
-      fill: $clr;
+    @if $ignore-path == false {
+      svg path {
+        fill: $clr;
+      }
     }
   }
   @include hover() {
@@ -89,8 +106,10 @@
     @if $hover-bg-clr {
       background-color: $hover-bg-clr;
     }
-    svg path {
-      fill: $hover-clr;
+    @if $ignore-path == false {
+      svg path {
+        fill: $hover-clr;
+      }
     }
   }
   @include active() {
@@ -98,8 +117,10 @@
     @if $active-bg-clr {
       background-color: $active-bg-clr;
     }
-    svg path {
-      fill: $active-clr;
+    @if $ignore-path == false {
+      svg path {
+        fill: $active-clr;
+      }
     }
   }
   @include focus() {
@@ -108,8 +129,31 @@
       background-color: $focus-bg-clr;
       box-shadow: 0 0 0 2px rgba($focus-bg-clr, .4);
     }
-    svg path {
-      fill: $focus-clr;
+    @if $ignore-path == false {
+      svg path {
+        fill: $focus-clr;
+      }
+    }
+  }
+  @include disabled() {
+    @if $theme == "light" {
+      color: rgba($clr, .2) !important;
+    }
+    @if $theme == "dark" {
+      color: rgba($clr, .4) !important;
+    }
+    @if $bg-clr {
+      background-color: $bg-clr !important;
+    }
+    @if $ignore-path == false {
+      svg path {
+        @if $theme == "light" {
+          fill: rgba($clr, .2) !important;
+        }
+        @if $theme == "dark" {
+          fill: rgba($clr, .4) !important;
+        }
+      }
     }
   }
 }

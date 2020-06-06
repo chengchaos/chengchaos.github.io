@@ -1,5 +1,95 @@
 # Change Log
 
+## 2.2.6 (2019-02-02)
+
+### Enhancements
+
+- Add [commit linter](https://commitlint.js.org/)
+- Add [EditorConfig](https://editorconfig.org/)
+- Update npm packages
+
+### Bug Fixes
+
+- Fix some spelling errors in documents
+- Fix some errors in configs
+
+## 2.2.5 (2019-12-08)
+
+### Enhancements
+
+- Update to Jekyll 4.0
+- Add custom snippets for main/top, main/bottom, article/top,  article/bottom, etc
+- Add Medium, Zhihu social icons
+- Add Google Custom Search support
+- Add Korean locale (@ssosso)
+- Add French locale (@ctrl-q)
+- Add Docker support
+
+## 2.2.4 (2018-12-10)
+
+### Enhancements
+
+- Swiper component support mouse move
+- Add lightbox (modal image gallery)
+- Add Valine comment system (@Lloyar)
+
+### Bug Fixes
+
+- Fix some spelling errors in documents (@Krinkle)
+
+## 2.2.3 (2018-11-11)
+
+### Enhancements
+
+- Add Swiper component
+- Add AddThis sharing service (@liao961120)
+- Add extensions for demos (CodePen)
+- Add special stylesheets for print
+
+## 2.2.2 (2018-10-21)
+
+### Enhancements
+
+- Add extensions for audios (SoundCloud, Netease Cloud Music), videos (YouTube, TED, bilibili) and slide(SlideShare)
+- Add AddToAny sharing service
+
+## 2.2.1 (2018-10-02)
+
+### Enhancements
+
+- Update screenshots
+- Landing layout `data.sections` item's `image` add `full_width` setting
+- Remove `header.type` and add `header.background` setting
+- Page layout sidebar use document scroll when viewport width < 1024px, this enhance the user experience on a phone or a pad
+- Telegram social icon (@WangQiru)
+- Search panel use dark background
+
+## 2.2.0 (2018-09-16)
+
+### Enhancements
+
+- `article_header` setting for page layout
+- Articles layout
+- New grid system
+- Image, card, item and hero components
+- Tag additional style
+- chart.js update to 2.7.2, mathjax update to 2.7.4 and mermaid update to 8.0.0-rc.8
+
+### Bug Fixes
+
+- Replace Lenna test image
+
+## 2.1.0 (2018-08-26)
+
+### Enhancements
+
+- Search panel (Click search icon in the header or press `s` or `/` key to search)
+- Npm social icon (@WangQiru)
+
+### Bug Fixes
+
+- Google analytics may not work, use gtag.js
+
 ## 2.0.2 (2018-07-29)
 
 ### Enhancements
@@ -24,11 +114,11 @@
 
 ### Bug Fixes
 
-- `mathjax` and `mermaid` config may not work
+- `mathjax` and `mermaid` setting may not work
 
 ## 2.0.0 (2018-07-01)
 
-Breaking changes, please check [Update form 1.x to 2.x](https://tianqi.name/jekyll-TeXt-theme/docs/en/update-form-1-to-2) for details
+Breaking changes, please check [Update from 1.x to 2.x](https://tianqi.name/jekyll-TeXt-theme/docs/en/update-from-1-to-2) for details
 
 ### Enhancements
 
@@ -40,10 +130,10 @@ Breaking changes, please check [Update form 1.x to 2.x](https://tianqi.name/jeky
 
 ### Enhancements
 
-- `text_color_theme` config
+- `text_color_theme` setting
 - Long pagination
 - Additional styles (Alert, Image)
-- Mathjax autoNumber config (@liao961120)
+- Mathjax `autoNumber` setting (@liao961120)
 - Article heading anchor
 - Previous and next post
 - Search
@@ -55,14 +145,14 @@ Breaking changes, please check [Update form 1.x to 2.x](https://tianqi.name/jeky
 - New TOC style
 - Gitalk support (@WangQiru)
 - Mermaid support
-- `site.paths` & `site.nav_lists` support absolute URL
+- `site.paths` and `site.nav_lists` configs support absolute URL
 
 ## 1.4.2 (2017-12-10)
 
 ### Enhancements
 
 - Use new liquid syntax `{%-` `-%}` to avoid unnecessary output whitespace
-- Add paths.base config
+- Add `paths.base` setting
 
 ## 1.4.1 (2017-12-05)
 
@@ -78,7 +168,7 @@ Breaking changes, please check [Update form 1.x to 2.x](https://tianqi.name/jeky
 
 ### Enhancements
 
-- Multi-language support
+- Internationalization
 
 ### Bug Fixes
 
@@ -91,14 +181,14 @@ Breaking changes, please check [Update form 1.x to 2.x](https://tianqi.name/jeky
 - Article tag supports special characters
 - Excerpts type (HTML | TEXT)
 - Titles on the phone become smaller
-- Styles change (table, code, blockquote)
+- Change styles for table, code and blockquote
 
 ## 1.2.2 (2017-11-04)
 
 ### Enhancements
 
 - MathJax Support
-- Add “Read more” link at the end of article excerpt.
+- Add “Read more” link at the end of article excerpt
 - 404 page
 
 ### Bug Fixes
@@ -115,7 +205,7 @@ Breaking changes, please check [Update form 1.x to 2.x](https://tianqi.name/jeky
 
 ### Bug Fixes
 
-- Issues 4: View count display error when the post key include `-` (@yuxianda)
+- Pageview display error when the post key include `-` (@yuxianda)
 - Email url error
 
 ## 1.2.0 (2017-10-22)
@@ -127,7 +217,7 @@ Breaking changes, please check [Update form 1.x to 2.x](https://tianqi.name/jeky
 
 ### Bug Fixes
 
-- Fix article TOC ’s display error at proper situation
+- Fix article TOC’s display error at proper situation
 - Fix footer social buttons not in the center bug
 
 ## 1.1.0 (2017-10-19)
