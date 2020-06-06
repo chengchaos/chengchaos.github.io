@@ -6,9 +6,28 @@ tags: MySQL8 utf8mb4
 
 
 
+
+
 MySQL 修改默认字符集和排序规则……
 
 <!--more-->
+
+
+
+## ERROR 1820 (HY000)
+
+新装的 mysql8
+
+```sql
+mysql> show databases;
+ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
+mysql> alter user user() identified by "NpdKM0Eky/_f"
+    -> ;
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+
 ## 一、查看当前数据库字符集和排序规则
 
 
