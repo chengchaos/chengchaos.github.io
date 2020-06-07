@@ -18,7 +18,7 @@ tags: vim go
 
 
 
-## Vim 插件（Vundle.vim)
+## 安装 Vundle.vim 插件
 
 
 
@@ -66,7 +66,7 @@ Vundle 开始安装插件，安装完成后现实 `Done!`
 
 
 
-**安装 vim-go 插件：**
+## 安装 vim-go 插件
 
 https://github.com/fatih/vim-go
 
@@ -88,7 +88,7 @@ Vundle 开始安装插件，安装完成后现实 `Done!`
 
 
 
-**安装 go.tools Binaries：**
+## 安装 go.tools Binaries
 
 
 
@@ -122,11 +122,11 @@ vim-go 安装说明中提到所有必要的 binary 需要先安装好，比如 g
 
 
 
-### 其他插件
+## 其他插件
 
 
 
-**YCM：**
+### YCM
 
 
 
@@ -136,7 +136,7 @@ https://github.com/ycm-core/YouCompleteMe
 
 
 
-**ultisnips:**
+### ultisnips
 
 
 
@@ -164,7 +164,7 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 
 
-**molokai theme:**
+### molokai theme
 
 ```bash
 $ mkdir -p ~/.vim/colors
@@ -195,7 +195,7 @@ colorscheme molokai
 
 
 
-- 参考文档： https://www.cnblogs.com/chris-cp/p/5846640.html
+- 参考文档： [go-vim配置](https://www.cnblogs.com/chris-cp/p/5846640.html)
 
 .
 
