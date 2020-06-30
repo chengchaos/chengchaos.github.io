@@ -77,14 +77,14 @@ MongoDB server version: 4.2.1
 
 
 
-```
-# 切换数据库，类似于 use 操作
+```javascript
+// 切换数据库，类似于 use 操作
 db.getSiblingDB("xxx")
 
-# 在对应的数据库上执行指令
+// 在对应的数据库上执行指令
 db.getSiblingDB("xxx").runCommand({xxxx})
 
-# 倘若是需要在 admin 数据库上执行指令，更简单
+// 倘若是需要在 admin 数据库上执行指令，更简单
 db.adminCommand({xxx})
 ```
 
