@@ -8,23 +8,13 @@ tags: mongo
 
 
 
-boolean 值为 `true` 或者 `false ，首字母不能大写
-
-`systemLog.path` 为一个文件名，不能为一个文件夹，如果该文件已存在，会创建一个新的带日期的文件。有了这个基础，启动时就可以看启动日志文件来查看到底是哪里的配置有问题不能启动
-
-`processManagement.pidFilePath` 为一个文件地址，不存在也没问题。
-
-`net.ssl` 最好全部注释掉，暂时不用 ssl
-
-`security` 下最好也注释掉，否则需要配置全部安全内容，以及 `keyFile` 一定要存在。
-
-`storage.repairPath` 一定要是 `storage.dbPath` 的子目录，且目录需要存在。　　
-
-`replication` 是复制，副本启动，注释掉
-
-记得注释掉一个引擎
-
-这样就可以启动了
+- boolean 值为 `true` 或者 `false` ，首字母不能大写
+- `systemLog.path` 为一个文件名，不能为一个文件夹，如果该文件已存在，会创建一个新的带日期的文件。有了这个基础，启动时就可以看启动日志文件来查看到底是哪里的配置有问题不能启动
+- `processManagement.pidFilePath` 为一个文件地址，不存在也没问题。
+- `net.ssl` 最好全部注释掉，暂时不用 ssl
+- `security` 下最好也注释掉，否则需要配置全部安全内容，以及 `keyFile` 一定要存在。
+- `storage.repairPath` 一定要是 `storage.dbPath` 的子目录，且目录需要存在。　　
+- `replication` 是复制，副本启动，注释掉 记得注释掉一个引擎 这样就可以启动了
 
 
 
