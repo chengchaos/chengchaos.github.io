@@ -46,8 +46,11 @@ docker pull registry.docker-cn.com/library/ubuntu:16.04
 对于使用 [systemd](https://www.freedesktop.org/wiki/Software/systemd/) 的系统，请在 `/etc/docker/daemon.json` 中写入如下内容（如果文件不存在请新建该文件）
 
 > 为了避免运行 Docker 是使用端口映射导致的在防火墙上开孔，又增加了 `"iptables":false` 
->
-> 
+
+
+
+
+
 
 ```json
 {
@@ -55,7 +58,8 @@ docker pull registry.docker-cn.com/library/ubuntu:16.04
     "https://registry.docker-cn.com",
     "https://hub-mirror.c.163.com"
   ],
-  "iptables" : false
+  "iptables" : false,
+   "graph" : "/works/system/docker"
 }
 ```
 ### 检查加速器是否生效
@@ -73,6 +77,19 @@ $ sudo docker info
   https://registry.aliyuncs.com/
 ```
 
+### 修改 Docker 镜像在系统中的默认保存位置：
+
+```bash
+sudo   vim   /usr/lib/systemd/system/docker.service 
+# 在文本内容：ExecStart=/usr/bin/dockerd 后面下面添加如下内容：
+--graph /data/tools/docker
+···
+
+另外就是在 daemon.json 文件中添加：
+
+```
+ "graph" : "/works/system/docker"
+```
 参考：
 
 - 镜像加速器 [https://yeasy.gitbook.io/docker_practice/install/mirror](https://yeasy.gitbook.io/docker_practice/install/mirror)
