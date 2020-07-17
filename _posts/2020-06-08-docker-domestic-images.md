@@ -83,13 +83,15 @@ $ sudo docker info
 sudo   vim   /usr/lib/systemd/system/docker.service 
 # 在文本内容：ExecStart=/usr/bin/dockerd 后面下面添加如下内容：
 --graph /data/tools/docker
-···
+```
 
 另外就是在 daemon.json 文件中添加：
 
 ```
  "graph" : "/works/system/docker"
 ```
+
+
 参考：
 
 - 镜像加速器 [https://yeasy.gitbook.io/docker_practice/install/mirror](https://yeasy.gitbook.io/docker_practice/install/mirror)
