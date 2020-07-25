@@ -20,13 +20,234 @@ tags: go golang mysql
 
 ## 库：
 
+### sql.Register
+
+这个存在于 `database/sql` 的函数时用来注册数据库驱动的，当第三方开发者开发数据库驱动的时候，都会实现 `init` 函数，在 `init` 里面会调用这个 `Register(name string, driver driver.Driver)` 完成驱动的注册。
+
+下面时 mymysql , sqlite3 的驱动的调用：
+
+```go
+
+// https://github.com/mattn/go-sqlte3
+func init() {
+	sql.Register("sqlite3", &SQLiteDriver{})
+}
+
+// https://github.com/mikespook/mymysql
+// Driver autumatically registered in database/sql
+var d = Driver{ 
+	proto : "tcp",
+	raddr : "127.0.0.1:3306",
+}
+
+func init() {
+	Register("SET NAMES utf8")
+	sql.Register("mymysql", &d)
+}
+```
+
+
+
+### driver.Driver
+
+Driver 是一个数据库驱动的接口，他定义了一个方法：`Open(name string)` ，这个方法返回一个而数据库的 `Conn` 接口。
+
+```go
+type Driver interface {
+	Open(name string) (Conn, error)
+}
+```
+
+返回的 `Conn` 只能用来进行一次 goroutine 的操作。
+
+第三方驱动都会定义这个函数，解析 name 参数获取相关数据库的连接信息，然后使用他们来初始化一个 `Conn` 并返回。
+
+### driver.Conn
+
+`Conn` 是一个数据库链接的接口定义，它定义了一系列的方法，这个 `Conn` 只能应用在一个 goroutine 里面，不能用在多个 goroutine 里面。
+
+
+```go
+type Conn interface {
+	Prepare(query string) (Stmt, error)
+	Close() error
+	Begin() (Tx, error)
+}
+```
+
+`Prepare` 方法返回与当前链接相关的执行 SQL 语句的准备状态，可以进行查询、删除等操作。
+
+`Close` 方法关闭当前的连接，执行释放链接所持有的资源等清理工作。因为驱动都实现了 `database/sql` 里面建议的连接池，所以用户不用再去实现缓存 conn 之类的工作。
+
+`Begin` 方法返回一个代表事务处理的 `Tx`，可以通过它进行查询、更新等操作，或者对事务进行提交、回滚等操作。
+
+
+### driver.Stmt
+
+`Stmt` 是一种准备好的状态，和 `Conn` 相关联，而且只能应用于一个 goroutine 中。
+
+```go
+type Stmt interface {
+
+	// Close 方法关闭当前的连接状态，但是如果当前正在执行 Query，
+	// Query 还是有效反回 Rows 数据。
+	Close() error
+
+	// 返回当前预留参数的个数，当返回值 大于等于 0 时，数据库驱动会
+	// 智能检查调用者的参数，当数据库驱动不知道预留参数的时候，
+	// 返回 -1 。
+	NumInput() int
+
+	// 执行 Prepare 准备好的 SQL，传入参数执行
+	// update / insert 等操作， 返回 Result 。
+	Exec(args []Value) (Result, error)
+
+	// 执行 Prepare 准备好的 SQL，传入参数执行 
+	// select 操作，返回 Rows 。
+	Query(args []Value) (Rows, error)
+}
+```
+
+### driver.Tx
+
+事务处理一般就两个过程，提交或者回滚。
+
+```go
+type Tx interface {
+	Commit() error
+	Rollback() error
+}
+```
+
+### driver.Execer
+
+这是一个 `Conn` 可选择实现的接口。
+
+```go
+type Execer interface {
+	Exec(query string, args []Value) (Result, error)
+}
+```
+
+如果这个接口没有定义，那么在调用 `DB.Exec` 时，就会先调用 `Prepare` 返回 `Stmt`，然后再执行 `Stmt` 的 `Exec` ，最后关闭 `Stmt` 。
+
+### driver.Result
+
+这是执行 update / insert 等擦欧总返回的结果的接口定义。
+
+```go
+type Result interface {
+
+	// 返回由数据库执行插入操作得到的自增 ID
+	LastINsertId() (int6t4, error)
+
+	// 返回执行操作影响的数据条目数。
+	RowsAffected() (int64, error)
+}
+```
+
+### driver.Rows
+
+这是执行查询操作返回的结果集接口定义。
+
+```go
+type Rows interface {
+
+	// 返回查询数据库表的字段信息，和 SQL 查询的字段一一对应。
+	Columns() []string
+
+	// 关闭 Rows 迭代器。
+	Close() error
+
+	// 用来返回下一条数据，把结果赋值给 dest。
+	// dest 里面的元素必须是 driver？
+	// Value 的值除了 string，返回的数据中所有的 string 都 
+	// 必须要转换成 []byte 。
+	// 如果没有数据了，Next 函数最后返回 io.EOF。
+	Next(dest []Value) error
+}
+```
+
+### driver.RowsAffected
+
+`RowsAffected` 其实就是一个 int64 的别名，但是它实现了 `Result` 接口，以底层实现 `Result` 的表示方式。
+
+```go
+type RowsAffected int64
+
+func (RowsAffected) LastInsertId() (int64, error)
+func (v RowsAffected) RowsAffected() (int64, error)
+```
+
+### driver.Value
+
+其实就是一个空接口，它可以容纳任何数据。
+
+```go
+type Value interface{}
+```
+
+drive 的 Value 是驱动必须能够操作的 Value，Value 要么是 nil，要么是下面的任意一种：
+
+- int64
+- float64
+- bool
+- []byte
+- string [*] 除了 Rows.Next 返回的不能是 string。
+- time.Time
+
+### driver.ValueConverter
+
+`ValueConverter` 接口定义了如何把一个普通的值转化成 `driver.Value` 的接口。
+
+```go
+type ValueConverter interface {
+	ConvertValue(v interface{}) (Value, error)
+}
+```
+
+在开发的数据库驱动包中实现这个接口的函数在很多地方会使用到。例如：
+
+- 转化 `driver.value` 到数据库表相应的字段，（例如 int64 如何转换成 uint16 ）
+- 把数据库查询结果转化成 `driver.Value`  。
+- 在 `Scan` 函数里面如何把 `driver.Value` 值转化成用于定义的值。
+
+### driver.Valuer
+
+`Valuer` 接口定义了返回一个 `driver.Value` 的方法。
+
+```go
+type Valuer interface {
+	Value() (Value, error)
+}
+```
+
+很多类型都实现了这个 `Value` 方法，用来自身于 `driver.Value` 的转化。
+
+
+
 ### database/sql :
 
-database/sql 是 golang 的标准库之一，它提供了一系列接口方法，用于访问关系数据库。它并不会提供数据库特有的方法，那些特有的方法交给数据库驱动去实现。
+database/sql 是 golang 的标准库之一，它在 `dataqbase/sql/driver` 提供的接口的基础上定义了一些更高阶的方法，用以简化数据库操作。
+
+（它并不会提供数据库特有的方法，那些特有的方法交给数据库驱动去实现。）
 
 database/sql库提供了一些 type。这些类型对掌握它的用法非常重要。
 
 - DB :  数据库对象。 
+
+上面我了解到， `Open` 方法返回的 DB 对象，里面有一个 freeConn，它就是那个简易的连接池。他的实现相当简单或者说简陋，就是当执行 `DB.prepare` 的时候会 `defer db.putConn(ci, err)` ，也就是把这个连接放入连接池，每次调用 conn 的时候会先判断 freeConn 的长度是否大于 0，是则说明有可以复用的 conn，直接拿出来用；否则创建一个 conn ，然后再返回。
+
+
+```go
+type DB struct {
+	driver driver.Driver
+	dsn string
+	mu sync.Mutex // protects freeConn and closed
+	freeConn []driver.Conn
+	closed bool
+}
+```
 
 `sql.DB` 类型代表了数据库连接池。和其他语言不一样，它并不是数据库连接。golang 中的连接来自内部实现的连接池，连接的建立是惰性的，当你需要连接的时候，连接池会自动帮你创建。通常你不需要操作连接池。一切都有go来帮你完成。
 
@@ -42,7 +263,7 @@ sql.DB表示是数据库抽象，因此你有几个数据库就需要为每一�
 
 语句。`sql.Stmt` 类型表示 SQL 查询语句，例如 DDL，DML 等类似的 SQL 语句。可以把当成 prepare 语句构造查询，也可以直接使用 `sql.DB` 的函数对其操作。
 
-### go-sql-driver/mysql
+## go-sql-driver/mysql
 
 对于其他语言，查询数据的时候需要创建一个连接，而对于 golang 则是需要创建一个数据库抽象对象。连接将会在查询需要的时候，由连接池创建并维护。使用`sql.Open` 函数创建数据库对象。它的第一个参数是数据库驱动名，第二个参数是一个连接字串（符合DSN风格，可以是一个 TCP 连接，一个  unix socket 等）。
 
@@ -169,6 +390,14 @@ func main() {
 }
 
 ```
+
+## SQLite
+
+SQLite 是一个开源的嵌入式关系型数据库，实现自包容、零配置、支持事务的 SQL 数据库引擎。
+
+### 驱动
+
+SQLite Administrator :  [http://sqliteadmin.orbmu2k.de/](http://sqliteadmin.orbmu2k.de/)
 
 << EOF >>
 
