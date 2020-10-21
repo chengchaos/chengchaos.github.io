@@ -24,6 +24,11 @@ Strictly speaking, 严格的说。
 
 No pain, no gain! （没有付出就没有收获。）
 
+
+The guys who win the fights over their girlfriends all end up single.
+
+
+
 参考：
 
 - https://blogs.oracle.com/javamagazine/the-unsafe-class-unsafe-at-any-speed
