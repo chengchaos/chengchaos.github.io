@@ -114,7 +114,7 @@ Hello World
 
 在 Maven 中，可以明确定义项目版本，构建时会将这个版本包含在 war 或 jar 等制品的文件名称中，推送到 Maven 私服中也需要设置 group artifactId version 信息，那么 Gradle 中如何定义呢？
 
-Gradle 中，对应 Maven 的三个参数，将 artifactId 变成了 `rootProject.name`，那么只需额外定义 group 与 version
+Gradle 中，对应 Maven 的三个参数，将 `artifactId` 变成了 `rootProject.name`，那么只需额外定义 group 与 version
 
 在 build.gradle 中设置
 
