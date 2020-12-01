@@ -29,16 +29,17 @@ tags: maven
     <!-- 仓库 -->
     <repositories>
         <repository>
-            <id>fma-group</id>
-            <url>http://pts-tsp.futuremove.cn/nexus/repository/fma-group/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
             </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <!-- 自己的仓库就应该 always update -->
+                <!-- <enabled>true</enabled>-->
+                <!-- <updatePolicy>always</updatePolicy>-->
+            </snapshots>
         </repository>
         <!-- scala -->
         <repository>
@@ -70,6 +71,26 @@ tags: maven
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.11</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.0-jre</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>reflectasm</artifactId>
+                <version>1.11.9</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -86,12 +107,27 @@ tags: maven
                 <plugin>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
-                    <version>4.0.1</version>
+                    <version>4.4.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.8.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -108,7 +144,7 @@ tags: maven
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>4.0.1</version>
+                <version>4.4.0</version>
                 <executions>
                     <execution>
                         <id>compile-scala</id>
@@ -158,7 +194,7 @@ tags: maven
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -170,7 +206,7 @@ tags: maven
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20.1</version>
+                <version>2.22.2</version>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>
@@ -180,7 +216,7 @@ tags: maven
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>default-resources</id>
@@ -214,7 +250,7 @@ tags: maven
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -246,6 +282,34 @@ tags: maven
     </profiles>
 
 ```
+
+配置 ~/.m2/settings.xml
+
+```xml
+  <servers>
+    <server>
+       <id>maven-releases</id>
+       <username>admin</username>
+       <password>password</password>
+    </server>
+    <server>
+       <id>maven-snapshots</id>
+       <username>admin</username>
+       <password>password</password>
+    </server>
+  </servers>
+
+  <mirrors>
+    <mirror>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+  　　<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <mirrorOf>central</mirrorOf>        
+    </mirror>
+  </mirrors>
+```
+
+以上是 2020 年 12 月 1 日更新的。
 
 << EOF >>
 
