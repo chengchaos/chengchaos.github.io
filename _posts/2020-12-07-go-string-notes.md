@@ -133,7 +133,8 @@ fmt.Println(strings.Map(func(r rune) rune {
 ### 分割
 
 ```go
-
+// 删除割集中包含的所有前端和尾部
+strings.Trim(s string, cutset string) string
 ```
 
 转自：
