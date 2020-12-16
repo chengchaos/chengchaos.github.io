@@ -559,6 +559,29 @@ func process(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
+### Form 字段
+
+由于使用广泛，net/http 库已经提供了一套函数用于解析 Form。通过调用 Request 结构提供的方法，我们可以将 URL、body 等数据提取到 Request 的 Form、PostForm h和 MultipartForm 等字段当中。这些字段里的数据也是键值对形式存储的。
+
+使用 Request 结构的方法获取表单的一般步骤是：
+
+1. 调用 `ParseForm` 方法或者调用 `ParseMultipartForm` 方法，对请求进行语法分析。
+2. 根据前面的方法方法相应的 Form 字段、PostForm 字段或者 MultiparstForm 字段。
+
+另外就是使用 FormValue 方法。因为 FormValue 方法会在需要的时候自动调用 ParseForm 方法或者 ParseMultipartForm 方法，**所以，执行 FormValue 方法之前，不需要手动调用上面提到的两个语法分析方法.**
+
+
+
+### 文件
+
+
+
+【待续】
+
+
+
+### JSON
+
 
 
 
