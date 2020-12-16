@@ -8,45 +8,37 @@ tags: go golang mysql
 
 ![2839526_203626093214_2.jpg](https://upload-images.jianshu.io/upload_images/1881763-4c4fdeaae686f126.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-
-
 这是一个描述 go 语言中如何操作 MySQL 数据库的初级教程。适合刚刚接触 go 语言的开发者。
-
-
 
 <!--more-->
 
-
-
-## 库：
+## 库
 
 ### sql.Register
 
 这个存在于 `database/sql` 的函数时用来注册数据库驱动的，当第三方开发者开发数据库驱动的时候，都会实现 `init` 函数，在 `init` 里面会调用这个 `Register(name string, driver driver.Driver)` 完成驱动的注册。
 
-下面时 mymysql , sqlite3 的驱动的调用：
+下面是 mymysql , sqlite3 的驱动的调用：
 
 ```go
 
 // https://github.com/mattn/go-sqlte3
 func init() {
-	sql.Register("sqlite3", &SQLiteDriver{})
+    sql.Register("sqlite3", &SQLiteDriver{})
 }
 
 // https://github.com/mikespook/mymysql
 // Driver autumatically registered in database/sql
 var d = Driver{ 
-	proto : "tcp",
-	raddr : "127.0.0.1:3306",
+    proto : "tcp",
+    raddr : "127.0.0.1:3306",
 }
 
 func init() {
-	Register("SET NAMES utf8")
-	sql.Register("mymysql", &d)
+    Register("SET NAMES utf8")
+    sql.Register("mymysql", &d)
 }
 ```
-
-
 
 ### driver.Driver
 
@@ -54,7 +46,7 @@ Driver 是一个数据库驱动的接口，他定义了一个方法：`Open(name
 
 ```go
 type Driver interface {
-	Open(name string) (Conn, error)
+    Open(name string) (Conn, error)
 }
 ```
 
@@ -66,21 +58,19 @@ type Driver interface {
 
 `Conn` 是一个数据库链接的接口定义，它定义了一系列的方法，这个 `Conn` 只能应用在一个 goroutine 里面，不能用在多个 goroutine 里面。
 
-
 ```go
 type Conn interface {
-	Prepare(query string) (Stmt, error)
-	Close() error
-	Begin() (Tx, error)
+
+    // 与当前链接相关的执行 SQL 语句的准备状态，可以进行查询、删除等操作。
+    Prepare(query string) (Stmt, error)
+    // 关闭当前的连接，执行释放链接所持有的资源等清理工作。因为驱动都实现了 
+    // database/sql  里面建议的连接池，所以用户不用再去实现缓存 conn 之类的工作。
+    Close() error
+    // 返回一个代表事务处理的 `Tx`，可以通过它进行查询、更新等操作，
+    // 或者对事务进行提交、回滚等操作。
+    Begin() (Tx, error)
 }
 ```
-
-`Prepare` 方法返回与当前链接相关的执行 SQL 语句的准备状态，可以进行查询、删除等操作。
-
-`Close` 方法关闭当前的连接，执行释放链接所持有的资源等清理工作。因为驱动都实现了 `database/sql` 里面建议的连接池，所以用户不用再去实现缓存 conn 之类的工作。
-
-`Begin` 方法返回一个代表事务处理的 `Tx`，可以通过它进行查询、更新等操作，或者对事务进行提交、回滚等操作。
-
 
 ### driver.Stmt
 
@@ -89,22 +79,22 @@ type Conn interface {
 ```go
 type Stmt interface {
 
-	// Close 方法关闭当前的连接状态，但是如果当前正在执行 Query，
-	// Query 还是有效反回 Rows 数据。
-	Close() error
+    // Close 方法关闭当前的连接状态，但是如果当前正在执行 Query，
+    // Query 还是有效反回 Rows 数据。
+    Close() error
 
-	// 返回当前预留参数的个数，当返回值 大于等于 0 时，数据库驱动会
-	// 智能检查调用者的参数，当数据库驱动不知道预留参数的时候，
-	// 返回 -1 。
-	NumInput() int
+    // 返回当前预留参数的个数，当返回值 大于等于 0 时，数据库驱动会
+    // 智能检查调用者的参数，当数据库驱动不知道预留参数的时候，
+    // 返回 -1 。
+    NumInput() int
 
-	// 执行 Prepare 准备好的 SQL，传入参数执行
-	// update / insert 等操作， 返回 Result 。
-	Exec(args []Value) (Result, error)
+    // 执行 Prepare 准备好的 SQL，传入参数执行
+    // update / insert 等操作， 返回 Result 。
+    Exec(args []Value) (Result, error)
 
-	// 执行 Prepare 准备好的 SQL，传入参数执行 
-	// select 操作，返回 Rows 。
-	Query(args []Value) (Rows, error)
+    // 执行 Prepare 准备好的 SQL，传入参数执行 
+    // select 操作，返回 Rows 。
+    Query(args []Value) (Rows, error)
 }
 ```
 
@@ -114,8 +104,8 @@ type Stmt interface {
 
 ```go
 type Tx interface {
-	Commit() error
-	Rollback() error
+    Commit() error
+    Rollback() error
 }
 ```
 
@@ -125,7 +115,7 @@ type Tx interface {
 
 ```go
 type Execer interface {
-	Exec(query string, args []Value) (Result, error)
+    Exec(query string, args []Value) (Result, error)
 }
 ```
 
@@ -138,11 +128,11 @@ type Execer interface {
 ```go
 type Result interface {
 
-	// 返回由数据库执行插入操作得到的自增 ID
-	LastINsertId() (int6t4, error)
+    // 返回由数据库执行插入操作得到的自增 ID
+    LastINsertId() (int6t4, error)
 
-	// 返回执行操作影响的数据条目数。
-	RowsAffected() (int64, error)
+    // 返回执行操作影响的数据条目数。
+    RowsAffected() (int64, error)
 }
 ```
 
@@ -153,18 +143,18 @@ type Result interface {
 ```go
 type Rows interface {
 
-	// 返回查询数据库表的字段信息，和 SQL 查询的字段一一对应。
-	Columns() []string
+    // 返回查询数据库表的字段信息，和 SQL 查询的字段一一对应。
+    Columns() []string
 
-	// 关闭 Rows 迭代器。
-	Close() error
+    // 关闭 Rows 迭代器。
+    Close() error
 
-	// 用来返回下一条数据，把结果赋值给 dest。
-	// dest 里面的元素必须是 driver？
-	// Value 的值除了 string，返回的数据中所有的 string 都 
-	// 必须要转换成 []byte 。
-	// 如果没有数据了，Next 函数最后返回 io.EOF。
-	Next(dest []Value) error
+    // 用来返回下一条数据，把结果赋值给 dest。
+    // dest 里面的元素必须是 driver？
+    // Value 的值除了 string，返回的数据中所有的 string 都 
+    // 必须要转换成 []byte 。
+    // 如果没有数据了，Next 函数最后返回 io.EOF。
+    Next(dest []Value) error
 }
 ```
 
@@ -202,7 +192,7 @@ drive 的 Value 是驱动必须能够操作的 Value，Value 要么是 nil，要
 
 ```go
 type ValueConverter interface {
-	ConvertValue(v interface{}) (Value, error)
+    ConvertValue(v interface{}) (Value, error)
 }
 ```
 
@@ -218,15 +208,13 @@ type ValueConverter interface {
 
 ```go
 type Valuer interface {
-	Value() (Value, error)
+    Value() (Value, error)
 }
 ```
 
 很多类型都实现了这个 `Value` 方法，用来自身于 `driver.Value` 的转化。
 
-
-
-### database/sql :
+### database/sql
 
 database/sql 是 golang 的标准库之一，它在 `dataqbase/sql/driver` 提供的接口的基础上定义了一些更高阶的方法，用以简化数据库操作。
 
@@ -234,18 +222,17 @@ database/sql 是 golang 的标准库之一，它在 `dataqbase/sql/driver` 提�
 
 database/sql库提供了一些 type。这些类型对掌握它的用法非常重要。
 
-- DB :  数据库对象。 
+- DB :  数据库对象。
 
 上面我了解到， `Open` 方法返回的 DB 对象，里面有一个 freeConn，它就是那个简易的连接池。他的实现相当简单或者说简陋，就是当执行 `DB.prepare` 的时候会 `defer db.putConn(ci, err)` ，也就是把这个连接放入连接池，每次调用 conn 的时候会先判断 freeConn 的长度是否大于 0，是则说明有可以复用的 conn，直接拿出来用；否则创建一个 conn ，然后再返回。
 
-
 ```go
 type DB struct {
-	driver driver.Driver
-	dsn string
-	mu sync.Mutex // protects freeConn and closed
-	freeConn []driver.Conn
-	closed bool
+    driver driver.Driver
+    dsn string
+    mu sync.Mutex // protects freeConn and closed
+    freeConn []driver.Conn
+    closed bool
 }
 ```
 
@@ -299,7 +286,6 @@ if err != nil{
 }
 ```
 
-
 调用了 Ping 之后，连接池一定会初始化一个数据库连接。当然，实际上对于失败的处理，应该定义一个符合自己需要的方式，现在为了演示，简单的使用`log.Fatalln(err)` 表示了。
 
 ### 连接池配置
@@ -308,11 +294,11 @@ golang 直到 1.2 版本以后才有一些简单的配置。可是1.2版本的�
 
 配置连接池有两个的方法：
 
-- `db.SetMaxOpenConns(n int) `
+- `db.SetMaxOpenConns(n int)`
 
 设置打开数据库的最大连接数。包含正在使用的连接和连接池的连接。如果你的函数调用需要申请一个连接，并且连接池已经没有了连接或者连接数达到了最大连接数。此时的函数调用将会被 block，直到有可用的连接才会返回。设置这个值可以避免并发太高导致连接mysql出现 too many connections 的错误。该函数的默认设置是 `0`，表示无限制。
 
-- `db.SetMaxIdleConns(n int)` 
+- `db.SetMaxIdleConns(n int)`
 
 设置连接池中的保持连接的最大连接数。默认也是 `0` ，表示连接池不会保持释放会连接池中的连接的连接状态：即当连接释放回到连接池的时候，连接将会被关闭。这会导致连接再连接池中频繁的关闭和创建。
 
@@ -325,68 +311,67 @@ golang 直到 1.2 版本以后才有一些简单的配置。可是1.2版本的�
 
 大多数时候，如何使用 `sql.DB` 对连接的影响大过连接池配置的影响。这些具体问题我们会再使用sql.DB的时候逐一介绍。
 
-
 ```go
 package main
 
 import (
-	"database/sql"
-	"log"
+    "database/sql"
+    "log"
 
-	_ "github.com/go-sql-driver/mysql"
+    _ "github.com/go-sql-driver/mysql"
 )
 
 type Mytb struct {
-	Id    int
-	Name  string
-	Email string
+    Id    int
+    Name  string
+    Email string
 }
 
 func main() {
 
-	db, err := sql.Open("mysql", "root:mp9b80:oNO4i@tcp(192.168.0.112:3306)/chaos")
-	if err != nil {
-		panic(err)
-	}
-	db.SetMaxOpenConns(20)
-	db.SetMaxIdleConns(300)
+    db, err := sql.Open("mysql", "root:mp9b80:oNO4i@tcp(192.168.0.112:3306)/chaos")
+    if err != nil {
+        panic(err)
+    }
+    db.SetMaxOpenConns(20)
+    db.SetMaxIdleConns(300)
 
-	err = db.Ping()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer db.Close()
+    err = db.Ping()
+    if err != nil {
+        log.Fatalln(err)
+    }
+    defer db.Close()
 
-	insertResult, err := db.Exec("insert into mytb (`name`, `email`) values (? , ?)", "handong", "handong222@163.com")
+    insertResult, err := db.Exec("insert into mytb (`name`, `email`) values (? , ?)", "handong", "handong222@163.com")
 
-	if err != nil {
-		log.Fatalln(err)
-	}
+    if err != nil {
+        log.Fatalln(err)
+    }
 
-	id, err := insertResult.LastInsertId()
-	affected, _ := insertResult.RowsAffected()
+    id, err := insertResult.LastInsertId()
+    affected, _ := insertResult.RowsAffected()
 
-	log.Printf("get id ===> %d, affected =====> %d\n", id, affected)
+    log.Printf("get id ===> %d, affected =====> %d\n", id, affected)
 
-	rows, err := db.Query("select id, name, email from chaos.mytb")
+    rows, err := db.Query("select id, name, email from chaos.mytb")
 
-	if err != nil {
-		log.Fatalln(err)
-	}
+    if err != nil {
+        log.Fatalln(err)
+    }
 
-	defer rows.Close()
+    defer rows.Close()
 
-	for rows.Next() {
-		mytb := Mytb{}
+    for rows.Next() {
+        mytb := Mytb{}
 
-		err = rows.Scan(&mytb.Id, &mytb.Name, &mytb.Email)
-		if err != nil {
-			log.Printf(">>>>>>>>>>> db %v\n", db)
-			log.Fatalln(err)
-		}
-		log.Printf("found row containing ..%v %v %v \n", mytb.Id, mytb.Name, mytb.Email)
+        err = rows.Scan(&mytb.Id, &mytb.Name, &mytb.Email)
+        if err != nil {
+            log.Printf(">>>>>>>>>>> db %v\n", db)
+            log.Fatalln(err)
+        }
+        log.Printf("found row containing ..%v %v %v \n", mytb.Id, mytb.Name, mytb.Email)
 
-	}
+    }
 }
 
 ```
@@ -400,7 +385,3 @@ SQLite 是一个开源的嵌入式关系型数据库，实现自包容、零配�
 SQLite Administrator :  [http://sqliteadmin.orbmu2k.de/](http://sqliteadmin.orbmu2k.de/)
 
 << EOF >>
-
-If you like TeXt, don't forget to give me a star :star2:.
-
-<iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
