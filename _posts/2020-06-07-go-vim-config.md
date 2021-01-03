@@ -4,41 +4,27 @@ key: 2020-06-07
 tags: vim go 
 ---
 
-
-
-
-
 记录如何使用 Vim 快速开发 Golang 的步骤
-
-
-
-
 
 <!--more-->
 
-
-
 ## 安装 Vundle.vim 插件
 
+### 安装
 
-
-**安装：**
-
-https://github.com/VundleVim/Vundle.vim
+[https://github.com/VundleVim/Vundle.vim](https://github.com/VundleVim/Vundle.vim)
 
 ```bash
-$ mkdir -p ~/.vim/bundle
-$ cd ~/.vim/bundle/
-$ git clone git@github.com:VundleVim/Vundle.vim.git
+mkdir -p ~/.vim/bundle
+cd ~/.vim/bundle/
+git clone git@github.com:VundleVim/Vundle.vim.git
 ```
 
-
-
-**配置：**
+### 配置
 
 编辑 `~/.vimrc` 文件（如果没有就创建）,在文件顶部添加有关 Vundle.vim 的配置：
 
-```
+```sh
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -54,49 +40,39 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 ```
 
-
-
 保存后关闭，然后在打开，在 vim 窗口中执行命令：
 
-```
+```sh
 :PluginInstall
 ```
 
 Vundle 开始安装插件，安装完成后现实 `Done!`
-
-
 
 ## 安装 vim-go 插件
 
-https://github.com/fatih/vim-go
+[https://github.com/fatih/vim-go](https://github.com/fatih/vim-go)
 
 编辑 `~/.vimrc` 文件，在 `bundle#being` 和 `bundle#end` 中间增加一行：
 
-```
+```sh
 Plugin 'fatih/vim-go'
 ```
 
-
-
 保存后关闭，然后在打开，在 vim 窗口中执行命令：
 
-```
+```sh
 :PluginInstall
 ```
 
 Vundle 开始安装插件，安装完成后现实 `Done!`
 
-
-
 ## 安装 go.tools Binaries
-
-
 
 vim-go 安装说明中提到所有必要的 binary 需要先安装好，比如 gocode、godef、goimports等。
 
 通过在 vim 环境中执行：
 
-```
+```sh
 :GoInstallBinaries
 ```
 
@@ -120,41 +96,25 @@ vim-go 安装说明中提到所有必要的 binary 需要先安装好，比如 g
 - 执行 `:GoImplements`，显示当前类型实现的interface列表。
 - 执行 `:GoRename [to]`，将当前光标下的符号替换为 `[to]`。
 
-
-
 ## 其他插件
-
-
 
 ### YCM
 
-
-
 YCM 现在使用 Python3 了，。
 
-https://github.com/ycm-core/YouCompleteMe
-
-
+[https://github.com/ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 
 ### ultisnips
 
-
-
-```
+```sh
 Plugin 'SirVer/ultisnips'
 ```
 
-
-
-https://github.com/SirVer/ultisnips
-
-
+[https://github.com/SirVer/ultisnips](https://github.com/SirVer/ultisnips)
 
 添加以下配置到 `~/.vimrc` 文件中：
 
-
-
-```
+```sh
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -162,38 +122,23 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 ```
 
-
-
 ### molokai theme
 
 ```bash
-$ mkdir -p ~/.vim/colors
-$ cd ~/.vim/colors
-$ touch molokai
-
+mkdir -p ~/.vim/colors
+cd ~/.vim/colors
+touch molokai
 ```
-
-
 
 复制这个文件到上面创建的文集中：
 
-https://github.com/fatih/molokai/blob/master/colors/molokai.vim
+[https://github.com/fatih/molokai/blob/master/colors/molokai.vim](https://github.com/fatih/molokai/blob/master/colors/molokai.vim)
 
- 在.vimrc添加一行：
+在.vimrc添加一行：
 
-```
+```sh
 colorscheme molokai
 ```
-
-
-
-
-
-
-
-
-
-
 
 - 参考文档： [go-vim配置](https://www.cnblogs.com/chris-cp/p/5846640.html)
 
@@ -202,5 +147,3 @@ colorscheme molokai
 ---
 
 Power by TeXt.
-
-<iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
