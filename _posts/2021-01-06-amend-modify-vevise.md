@@ -1,7 +1,7 @@
 ---
-title: 修改的英文单词
+title: amend modify revise 的区别
 key: 2021-01-06
-tags: remand modify revise
+tags: amend modify revise
 ---
 
 我们经常可以见到 amend、modif 以及 revise 都用来形容合同或法律法规的修改或变更。但从严格意义上讲，这三者的适用情况也是存在差别的。本文重在探究三者的适用情况，以及中文“修改”、“变更”的法律概念意义。
