@@ -179,6 +179,75 @@ innodb 引擎，当存在锁竞争时等待的时间。
 
 6．修改 `query_cache_type` 为 2，默认情况下不使用 MySQL 缓存，除非显示指定。
 
+## 在 Windows 上安装
+
+先去下载 [https://dev.mysql.com/downloads/file/?id=501136](https://dev.mysql.com/downloads/file/?id=501136)
+
+解压缩。
+
+新建一个 data 目录，一个 my.ini 文件。
+
+```ini
+[mysqld]
+# 设置3306端口
+port=3306
+# 设置mysql的安装目录
+basedir=C:\\works\\server\\mysql-8.0.23-winx64
+# 设置mysql数据库的数据的存放目录
+datadir=C:\\works\\server\\mysql-8.0.23-winx64\\data
+# 允许最大连接数
+max_connections=200
+# 允许连接失败的次数。这是为了防止有人从该主机试图攻击数据库系统
+max_connect_errors=10
+# 服务端使用的字符集默认为UTF8
+character-set-server           = utf8mb4
+collation-server               = utf8mb4_unicode_ci
+# 创建新表时将使用的默认存储引擎
+default-storage-engine=INNODB
+
+[mysql]
+# 设置mysql客户端默认字符集
+default-character-set=utf8
+[client]
+# 设置mysql客户端连接服务端时默认使用的端口
+port=3306
+default-character-set=utf8
+```
+
+```bat
+➜  mysql-8.0.23-winx64 .\bin\mysqld.exe --initialize --user=mysql --console 
+2021-03-11T06:01:10.477189Z 0 [System] [MY-013169] [Server] C:\works\server\mysql-8.0.23-winx64\bin\mysqld.exe (mysqld 8.0.23) initializing of server in progress as process 26636
+2021-03-11T06:01:10.505445Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2021-03-11T06:01:11.356352Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2021-03-11T06:01:13.098050Z 6 [Note] [MY-010454] [Server] A temporary password is generated for root@localhost: JUL?=wM7s;jK
+➜  mysql-8.0.23-winx64 .\bin\mysqld.exe --console
+2021-03-11T06:02:55.071024Z 0 [System] [MY-010116] [Server] C:\works\server\mysql-8.0.23-winx64\bin\mysqld.exe (mysqld 8.0.23) starting as process 59052
+2021-03-11T06:02:55.106239Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2021-03-11T06:02:55.548667Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2021-03-11T06:02:55.703004Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060
+2021-03-11T06:02:55.895620Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2021-03-11T06:02:55.897703Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2021-03-11T06:02:55.996668Z 0 [System] [MY-010931] [Server] C:\works\server\mysql-8.0.23-winx64\bin\mysqld.exe: ready for connections. Version: '8.0.23'  socket: ''  port: 3306  MySQL Community Server - GPL.
+
+```
+
+### 安装为系统服务
+
+- 使用命令： `mysqld -install` 进行服务的添加 。
+- 使用命令： `net start mysql` 启动服务 。
+
+- 使用命令： `mysql -u root -p` 进行登录数据库，这时提示需要密码，然后就是用你上面的密码登录 。
+- 登录成功后，使用命令： `ALTER USER root@localhost IDENTIFIED  BY '123456';` 修改密码为：123456 。
+
+### 赠送：8.0之前版本，忘记密码修改方法
+
+进入 bin 目录：`mysqld --skip-grant-tables`
+
+重新在开一个cmd窗口，进入 bin 目录：mysql 就进入登陆状态了
+
+- 5.7.22修改密码语句：`update user set authentication_string=password('123456') where user='root' and host='localhost';`
+- 5.6.修改密码语句：`update user set password=password('123456') where user='root' and host='localhost';`  (我没有实验过，网上都是这么写的)
+
 ## Redis （赠送的)
 
 修改 /etc/sysctl.conf 文件添加如下内容：
