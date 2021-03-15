@@ -49,6 +49,27 @@ trusted-host=mirrors.aliyun.com
 
 windows下，直接在user目录中创建一个pip目录，再新建文件 pip.ini。（例如：C:\Users\WQP\pip\pip.ini）内容同上。
 
+## Pipenv
+
+编辑项目使用的 Pipfile 文件，修改 url 属性的指向地址。
+
+```ini
+[[source]]
+#url = "https://pypi.org/simple"
+url = "https://mirrors.aliyun.com/pypi/simple"
+```
+
+### 可选的源
+
+- 阿里云：[https://mirrors.aliyun.com/pypi/simple](https://mirrors.aliyun.com/pypi/simple)
+- 豆瓣：[https://pypi.douban.com/simple](https://pypi.douban.com/simple/)
+- 清华大学：[https://pypi.tuna.tsinghua.edu.cn/simple](https://pypi.tuna.tsinghua.edu.cn/simple/)
+- 中国科学技术大学：[https://pypi.mirrors.ustc.edu.cn/simple](https://pypi.mirrors.ustc.edu.cn/simple/)
+
+
+
+
+
 ## CentOS
 
 ```sh
