@@ -20,6 +20,19 @@ CentOS 7 主机修改 hostname。
 [root@bogon ~]# vim /etc/hostname
 
 ```
+## CentOS 7 添加 EPEL 存储库
+
+
+
+[https://fedoraproject.org/wiki/EPEL](https://fedoraproject.org/wiki/EPEL)
+
+
+
+```sh
+sudo yum install epel-release
+sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+```
+
 
 
 以上。
