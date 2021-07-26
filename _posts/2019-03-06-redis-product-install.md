@@ -10,7 +10,6 @@ tags: Redis
 
 <!--more-->
 
-
 ## 在 Linux 上部署 Redis
 
 运行 Redis 最常见的操作系统是 Linux。在启动 Redis 实例之前，通常需要将一些 Linux 内核和操作系统级别的参数设置为前挡的值，以便在生产环境中发挥最高性能。
@@ -24,8 +23,6 @@ tags: Redis
 ~$ sudo sysctl -w vm.swappiness=0
 # echo 1 > /proc/sys/vm/overcommit_memory
 ```
-
-
 
 使用如下命令来持久化保存这些参数：
 
@@ -44,12 +41,11 @@ vm.overcommit_memory = 1
 vm.swappiness = 0
 ```
 
-#### 说明
+#### 补充说明
 
-**什么是 OverCommit**
+什么是 **OverCommit**
 
 Linux 对大部分申请内存的请求都回复 "yes"，以便能跑更多更大的程序。因为申请内存后，并不会马上使用内存。这种技术叫做 Overcommit。
-
 
 `mv.overcommit_memory` 文件指定了内核针对内存分配的策略，其志可以是： `0, 1, 2`.
 
@@ -68,7 +64,7 @@ Committed_AS:   20506432 kB
 `CommitLimit` 是一个内存分配上限，
 `Committed_As` 是已经分配的内存大小。
 
-```
+```sh
 CommitLimit = 物理内存 * overcommit_ratio(默认50，即 50%) + swap
 ```
 
@@ -76,25 +72,20 @@ CommitLimit = 物理内存 * overcommit_ratio(默认50，即 50%) + swap
 
 这个参数值只有在vm.overcommit_memory=2的情况下，这个参数才会生效。
 
+> 参考 [vm内核参数优化设置](http://www.cnblogs.com/wjoyxt/p/3777042.html)
 
-参考 [vm内核参数优化设置](http://www.cnblogs.com/wjoyxt/p/3777042.html)
-
-**`swappiness`**
-
+关于 `swappiness`
 
 `swappiness` 的值的大小对如何使用 swap 分区是有着很大的联系的。`swappiness=0` 的时候表示最大限度使用物理内存，然后才是 swap空间，`swappiness＝100` 的时候表示积极的使用 swap 分区，并且把内存上的数据及时的搬运到swap空间里面。
 
 CentOS7 的基本默认设置为 30，具体如下：
-    
+
 ```bash
 ~ $ cat /proc/sys/vm/swappiness
 30
 ```
 
-
 也就是说，你的内存在使用到 70% 的时候，就开始出现有交换分区的使用。大家知道，内存的速度会比磁盘快很多，这样子会加大系统 IO，同时造的成大量页的换进换出，严重影响系统的性能，所以我们在操作系统层面，要尽可能使用内存，对该参数进行调整。
-
-
 
 ### 2.禁用透明大页(transparent_hugepage)
 
@@ -108,7 +99,7 @@ echo naver > /sys/kernel/mm/transparent_hugepage/defrag
 EOF
 ```
 
-#### 说明
+#### 补充说明
 
 **1.什么是Transparent HugePages？**
 
@@ -206,9 +197,4 @@ vm.panic_on_oom = 0              # 内存不够时内核是否直接panic
 vm.oom_kill_allocating_task = 1  # oom-killer是否选择当前正在申请内存的进程进行kill
 ```
 
-
-<< EOF >>
-
-If you like TeXt, don't forget to give me a star :star2:.
-
-<iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+EOF
