@@ -74,7 +74,7 @@ db.changeUserPassword('admin', 'test123');
 我们除了可以设置数据库的超级管理员以外，还可以给每个数据库设置单独的管理员。其只有操作单独数据的一定权限
 
 ```javascript
-use test;
+use fma;
 db.createUser({
     user: 'foobar',
     pwd: 'VigWyBap]Rp_NNOKON1Ui7]3',

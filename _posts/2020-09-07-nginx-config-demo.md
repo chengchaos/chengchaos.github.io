@@ -84,32 +84,15 @@ server {
 }
 ```
 
-
-
 差不多是酱紫的。
-
-
 
 其他：
 
-
-
 - [openssl 、nginx生成配置自签名证书](https://chengchaos.github.io/2020/07/16/nginx-with-ssl.html)
 - [理解 Nginx 的配置文件](https://chengchaos.github.io/2020/07/01/understand-nginx-config.html)
-
-
-
-
 
 EOF
 
 ---
 
 Power by TeXt.
-
-<iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
-
-
-
-
-
