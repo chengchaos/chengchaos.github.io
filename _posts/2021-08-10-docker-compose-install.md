@@ -1,5 +1,8 @@
-
-# docker-compose安装(2020最新版)
+---
+title: docker-compose安装 (2020最新版)
+key: 2021-08-15
+tags: docker docker-compose
+---
 
 https://blog.csdn.net/weixin_45444133/article/details/110588884
 
