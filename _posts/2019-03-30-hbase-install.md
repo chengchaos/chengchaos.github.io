@@ -40,13 +40,40 @@ HBase 不适用
 
 以 2.7.x 为例
 
-**修改 `hadoop-env.sh` 配置**
+### 下载
 
-添加 JAVA_HOME 的配置
+添加环境变量
 
+```bash
 
+$ vim ~/.bashrc
 
-**配置 `hdfs-site.xml` 文件**
+export HADOOP_HOME=/works/apps/hadoop
+export HADOOP_PREFIX=$HADOOP_HOME
+export HADOOP_MAPREAD_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export HADOOP_INSTALL=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR
+export PATH=$HADOOP_HOME/sbin:$HADOOP_HOME/bin:$PATH
+
+$ source ~/.bashrc
+```
+
+修改 `hadoop-env.sh` 配置
+
+```bash
+$ cd $HADOOP_HOME
+$ vim etc/hadoop/hadoop-env.sh
+export HADOOP_NAMENODE_OPTS=" -Xms1G -Xmx1G -XX:+UseParallelGC"
+export HADOOP_DATANODE_OPTS=" -Xms1G -Xmx1G"
+export HADOOP_LOG_DIR=/works/datas/logs/hadoop
+$ mkdir -p /works/datas/logs/hadoop
+$ mkdir -p /works/datas/hdfs/{name,data}
+```
+
+配置 `hdfs-site.xml` 文件
 
 ```xml
 <configuration>
@@ -66,8 +93,7 @@ HBase 不适用
 </configuration>
 ```
 
-**配置 `core-site.xml` 文件**
-
+配置 `core-site.xml` 文件
 
 ```xml
 <configuration>
@@ -78,7 +104,7 @@ HBase 不适用
     <property>
         <name>fs.defaultFS</name>
         <value>hdfs://mycentos7:8020</value>
-	<commit>早期的端口是 9000，新版本的端口是 8020. Why ?</commit>
+        <commit>早期的端口是 9000，新版本的端口是 8020. Why ?</commit>
     </property>
 <!--
     <property>
@@ -89,20 +115,73 @@ HBase 不适用
 </configuration>
 ```
 
+```bash
+### 格式化 namenode
+$ hdfs namenode -foromat
+### 启动单机模式
+$ $HADOOP_PREFIX/sbin/start-dfs.sh
+```
 
 可以通过 web 浏览器访问主机的 50070 端口查看
 
 http://192.168.1.4:50070/
 
+http://192.168.56.123:9870/dfshealth.html#tab-overview
+
+## Zookeeper
+
+```bash
+$ tar -zxvf apache-zookeeper-3.5.5.tar.gz -C /works/apps/
+$ cd /works/apps/
+$ ln -s apache-zookeeper-3.5.5 zookeeper
+$ vim ~/.bashrc
+
+export ZOOKEEPER_HOME=/works/apps/zookeeper
+
+
+$ source ~/.bashrc
+$ cd $ZOOKEEPER_HOME
+$ cd conf/
+$ cp zoo_sample.cfg zoo.cfg
+$ vim zoo.cfg
+
+dataDir=/works/datas/zk
+
+$ mkdir -p /works/datas/zk
+$ echo 1 > /works/datas/zk/myid
+
+$ cd ..
+$ vim bin/zkEnv.sh
+
+ZOO_LOG_DIR=/works/datas/logs/zk
+
+$ mkdir -p /works/datas/logs/zk
+$ bin/zkServer.sh start
+
+ZooKeeper JMX enabled by default
+Using config: /works/apps/zookeeper/bin/../conf/zoo.cfg
+Starting zookeeper ... STARTED
+
+$ bin/zkCli.sh
+```
 
 ## 伪分布式的 HBase
 
 以 1.2.x 为例
 
-首先复制 Hadoop 的 hdfs-site.xml 和 core-site.xml 到 HBase 的 conf 目录中
+首先编辑环境变量
 
+```bash
+export HBASE_HOME=/works/apps/hbase
+export PATH=$HBASE_HOME/bin:$PATH
 
-**配置 `hbase-env.sh` 文件**
+$ cd /works/Downloads
+$ tar -zxvf hbase-2.2.3-bin.tar.gz -C /works/apps
+$ cd /works/apps
+$ ln -s hbase-2.2.3 hbase
+```
+
+配置 `hbase-env.sh` 文件
 
 添加 JAVA_HOME 的配置
 
@@ -116,30 +195,39 @@ export JAVA_HOME='/usr/java/default'
 
 ```
 
-**配置 `hbase-site.xml` 文件**
+配置 `hbase-site.xml` 文件, 添加上 `hbase.rootdir` 和 `hbase.zookeeper.property.dataDir` 的配置.
 
 ```xml
 <configuration>
 
-    <!-- 此处必须为true，不然hbase仍用自带的zk，若启动了外部的zookeeper，会导致冲突，hbase启动不起来 --> 
+    <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>/works/apps/zookeeper/</value>
+    </property>
+
+    <!-- 此处必须为true，不然hbase仍用自带的zk，-->
+    <!-- 若启动了外部的zookeeper，会导致冲突，hbase启动不起来 --> 
     <property> 
         <name>hbase.cluster.distributed</name>
         <value>true</value>
     </property>
-    <!-- ZK位置（HBase使用外部ZK，hbase-env.sh中属性HBASE_MANAGES_ZK要设置为false），必须ZK数量必须为奇数，多个可用逗号分隔 --> 
-    <property> 
-        <name>hbase.zookeeper.quorum</name> 
-        <value>localhost</value> 
-    </property> 
 
+
+    <!-- value 为 /hbase 意思是使用本地磁盘 -->
+    <!-- value 为 hdfs://hostname:8020/hbase 是用的 hdfs -->
     <property>
         <name>hbase.rootdir</name>
-        <value>/hbase</value>
+        <value>hdfs://c7h23:8020/hbase</value>
     </property>
-    <property>
-        <name>hbase.zookeeper.property.dataDir</name>
-        <value>/works/datas/hbase-zk-data</value>
-    </property>
+
+
+    <!-- ZK位置（HBase使用外部ZK，hbase-env.sh中属性HBASE_MANAGES_ZK要设置为false）-->
+    <!-- 必须ZK数量必须为奇数，多个可用逗号分隔 --> 
+    <property> 
+        <name>hbase.zookeeper.quorum</name> 
+        <value>c7h23</value> 
+    </property> 
+
 
     <!-- ZooKeeper 会话超时。Hbase 把这个值传递给 zk 集群，向它推荐一个会话的最大超时时间 --> 
     <property> 
@@ -156,6 +244,21 @@ export JAVA_HOME='/usr/java/default'
 
 </configuration>
 ```
+
+### Troubleshooting (故常排除)
+
+```sh
+
+hdfs-site.xml:
+dfs.permissions.supergroup 
+
+# groupadd supergroup
+# groupmems -g supergroup -a hbase
+```
+
+
+复制 Hadoop 的 hdfs-site.xml 和 core-site.xml 到 HBase 的 conf 目录中
+
 
 可以通过 web 浏览器访问主机的 16010 端口查看
 

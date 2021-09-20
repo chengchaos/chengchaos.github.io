@@ -4,14 +4,11 @@ key: 2020-07-01
 tags: nginx
 ---
 
-
 Nginx 的配置文件使用了自定义的一套语法，完全可以把它理解成一个小型的变成语言。
-
-
 
 <!--more-->
 
-## 要点：
+## 要点
 
 - 使用 `#` 开始一个注释行
 - 使用单引号或者双引号定义字符串，允许使用斜杠  `\` 转义字符。
@@ -21,13 +18,11 @@ Nginx 的配置文件使用了自定义的一套语法，完全可以把它理�
 - 使用 `include` 指令包含其他配置文件，支持 `*` 通配符。
 - 不能识别或者错误的配置指令会导致 Nginx 启动失败。
 
-
 ## 变量
 
 变量是 Nginx 内部保存的运行时 HTTP/TCP 请求相关数据，可以在编写配置文件时任意引用，使得编写 Nginx 配置文件更像是在写程序。
 
 在配置文件里使用变量需要以 `$` 开头，常见的变量：
-
 
 - `$uri` 当钱请求的 URI 不包含 ？ 后面的参数
 - `$args` ： 当前请求的参数
@@ -40,21 +35,19 @@ Nginx 的配置文件使用了自定义的一套语法，完全可以把它理�
 
 Nginx 也允许使用自定义变量，最常用的就是 `set` ：
 
-```
+```conf
 set $max_size 10000; 
 ```
-
 
 ## HTTP 服务
 
 ### location 配置
 
-
 location 指令定义 Web 服务的接口。
 
 location 是一个配置块，除了 `{}` 外还有其他参数：
 
-```
+```conf
 location [ = | ~ | ~* | ^~ ] uir {
   # ....
 }
@@ -67,28 +60,8 @@ location 使用 uri 参数匹配 HTTP 请求里的 URI，默认是**前缀匹配
 - `~*` : 大小写不敏感正则匹配
 - `^~` : 前缀匹配
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 EOF
 
 ---
 
 Power by TeXt.
-
-<iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
-
-
-
-
-
