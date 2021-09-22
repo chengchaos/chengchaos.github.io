@@ -155,10 +155,15 @@ fi
 #!/usr/bin/env bash
 
 BASE_DIR=$(cd $(dirname $0) && pwd)
+BASE_INPUT="/home/chengchao/temp/somelog"
+BASE_OUTPUT="/home/chengchao/temp/somegz"
 
-echo "BASE_DIR=> $BASE_DIR)"
-cd $BASE_DIR
-echo "chenge dir to $BASE_DIR"
+echo "BASE_DIR=> $BASE_DIR"
+echo "BASE_INPUT => $BASE_INPUT"
+echo "BASE_OUTPUT => $BASE_OUTPUT"
+
+cd $BASE_INPUT
+echo "chenge dir to $BASE_INPUT"
 
 for mydir in $(ls -d */ | sed -r "s/(.*)\//\1/g"); do
         cd $mydir
@@ -167,7 +172,7 @@ for mydir in $(ls -d */ | sed -r "s/(.*)\//\1/g"); do
                 echo "        $mydir / $myfile"
                 FILE_YEAR=$(echo $myfile | sed -r "s/.*([[:digit:]]{4})-([[:digit:]]{2})-([[:digit:]]{2}).*/\1/g")
                 FILE_MONTH=$(echo $myfile | sed -r "s/.*([[:digit:]]{4})-([[:digit:]]{2})-([[:digit:]]{2}).*/\2/g")
-                TARGET_DIR="../../somegz/${mydir}/${FILE_YEAR}/${FILE_MONTH}"
+                TARGET_DIR="${BASE_OUTPUT}/${mydir}/${FILE_YEAR}/${FILE_MONTH}"
                 mkdir -p ${TARGET_DIR}
                 tar -zcvf ${TARGET_DIR}/${myfile}.tar.gz ${myfile} --remove-files
                 echo "        tar ${myfile} ... is $?"
