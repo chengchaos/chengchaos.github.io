@@ -1,5 +1,5 @@
 ---
-title: Linux 常用名利
+title: Linux 常用命令
 key: 2021-09-20
 tags: linux tar
 ---
