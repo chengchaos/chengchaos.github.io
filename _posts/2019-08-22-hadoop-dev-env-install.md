@@ -4,29 +4,17 @@ key: 2019-08-22
 tags: hadoop spark
 ---
 
-
-
-As The Titile
-
-
+As the title says.
 
 <!--more-->
 
-
-
 ## 下载
-
-
 
 **地址：**
 
 http://archive.cloudera.com/cdh5/cdh/5/
 
-
-
 **准备工作：**
-
-
 
 - JDK
 - hostname
@@ -34,47 +22,32 @@ http://archive.cloudera.com/cdh5/cdh/5/
 - ssh 免密码登录
 - maven 添加镜像：
 
-
+### maven 添加镜像
 
 ```xml
 
     <mirrors>
         <mirror>
-            <id>fma-group</id>
-            <name>fma maven</name>
-            <url>http://pts-tsp.futuremove.cn/nexus/repository/fma-group/</url>
-            <mirrorOf>*</mirrorOf>	 
-        </mirror>
-        <mirror>
             <id>alimaven</id>
             <name>aliyun maven</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <mirrorOf>central</mirrorOf>	 
+            <mirrorOf>central</mirrorOf>
         </mirror>
-
     </mirrors>
 
 ```
 
+### 安装开发环境的 Hadoop
 
+1) 解压缩，修改配置文件：
 
-
-
-**解压缩，修改配置文件：**
-
-
-
-- hadoop-env.sh
-
-
+1.1) hadoop-env.sh
 
 ```bash
 export JAVA_HOME=/usr/local/jvm/jdk
 ```
 
-
-
-- core-site.xml
+1.2) core-site.xml
 
 ```xml
 <configuration>
@@ -90,13 +63,9 @@ export JAVA_HOME=/usr/local/jvm/jdk
 
 ```
 
+1.3) hdfs-site.xml
 
-
-- hdfs-site.xml
-
-
-
-```
+```xml
 <configuration>
     <property>
         <name>dfs.replication</name>
@@ -106,11 +75,7 @@ export JAVA_HOME=/usr/local/jvm/jdk
 
 ```
 
-
-
-**格式化 HDFS :**
-
-
+2.) 执行命令命令行执行格式化 HDFS
 
 ```bash
 $ $HADOOP_HOME/bin/hdfs namenode -format
@@ -193,14 +158,10 @@ SHUTDOWN_MSG: Shutting down NameNode at t420i/192.168.88.240
 
 ```
 
-
-
-**启动：**
-
-
+3.) 启动 HDFS
 
 ```bash
-$ $HADOOP_HOME/sbin/start-dfs.sh
+$HADOOP_HOME/sbin/start-dfs.sh
 19/08/16 20:36:30 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Starting namenodes on [t420i]
 t420i: starting namenode, logging to /works/local/hadoop-2.6.0-cdh5.16.2/logs/hadoop-chengchao-namenode-t420i.out
@@ -216,17 +177,11 @@ chengchao@chaosubuntu:/works/apps/hadoop/etc/hadoop$ jps
 
 ```
 
-
-
-
-
 ### YARN
 
+2.) 编辑 site 文件
 
-
-**mapred-site.xml**
-
-
+2.1) **mapred-site.xml**
 
 ```xml
 <configuration>
@@ -238,11 +193,7 @@ chengchao@chaosubuntu:/works/apps/hadoop/etc/hadoop$ jps
 
 ```
 
-
-
-**yarn-site.xml**
-
-
+2.2) **yarn-site.xml**
 
 ```xml
 <configuration>
@@ -257,49 +208,29 @@ chengchao@chaosubuntu:/works/apps/hadoop/etc/hadoop$ jps
 
 ```
 
-
-
-**启动：**
-
-
+2.3) 启动 YARN
 
 ```bash
-$ $HADOOP_HOME/sbin/start-yarn.sh
+$HADOOP_HOME/sbin/start-yarn.sh
 ```
 
+### Hadoop 的 Web 界面
 
+hdfs：http://t420i:50070/
 
-**Web 界面**
-
-
-
-hdfs：    http://t420i:50070/
-
-yarn：  http://t420i:8088/cluster
-
-
+yarn：http://t420i:8088/cluster
 
 ## Spark 编译
 
-
-
-**下载 src，解压**
-
-
+1.) **下载 src，解压**
 
 前置要求：
 
+1.1）：maven 3.5； jdk1.8
 
-
-1）：maven 3.5； jdk1.8
-
-2）：export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
-
-
+2.2）：export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 
 **mvn 编译命令：**
-
-
 
 ```bash
 
@@ -315,13 +246,7 @@ $ ./dev/make-distribution.sh \
 
 ```
 
-
-
-
-
-## 环境变量
-
-
+### 环境变量
 
 ```bash
 
@@ -343,9 +268,102 @@ export YARN_HOME=$HADOOP_HOME
 
 ```
 
+## Spark 部署
 
-<< EOF >>
+### (local 模式)
 
-If you like TeXt, don't forget to give me a star :star2:.
+啥都不用改, 解压到指定位置. 即可.
 
-<iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+> 把 spark 加到系统环境变量中.
+
+```bash
+$ spark-shell --master local[2]
+
+21/09/26 15:50:59 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Spark context Web UI available at http://c7h23:4040
+Spark context available as 'sc' (master = local[2], app id = local-1632642665156).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 3.0.3
+      /_/
+
+Using Scala version 2.12.10 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_301)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+```
+
+### (standalone 模式)
+
+Spark standalone 模式的架构和 Hadoop HDFS/YARN 类似, 即 1 个 Master 带多个 Worker.
+
+首先调整配置文件
+
+```bash
+cd conf/
+cp spark-env.sh.template spark-env.sh
+
+
+# Options for the daemons used in the standalone deploy mode
+# - SPARK_MASTER_HOST, to bind the master to a different IP address or hostname
+# - SPARK_MASTER_PORT / SPARK_MASTER_WEBUI_PORT, to use non-default ports for the master
+# - SPARK_MASTER_OPTS, to set config properties only for the master (e.g. "-Dx=y")
+# - SPARK_WORKER_CORES, to set the number of cores to use on this machine
+# - SPARK_WORKER_MEMORY, to set how much total memory workers have to give executors (e.g. 1000m, 2g)
+# - SPARK_WORKER_PORT / SPARK_WORKER_WEBUI_PORT, to use non-default ports for the worker
+# - SPARK_WORKER_DIR, to set the working directory of worker processes
+# - SPARK_WORKER_OPTS, to set config properties only for the worker (e.g. "-Dx=y")
+# - SPARK_DAEMON_MEMORY, to allocate to the master, worker and history server themselves (default: 1g).
+# - SPARK_HISTORY_OPTS, to set config properties only for the history server (e.g. "-Dx=y")
+# - SPARK_SHUFFLE_OPTS, to set config properties only for the external shuffle service (e.g. "-Dx=y")
+# - SPARK_DAEMON_JAVA_OPTS, to set config properties for all daemons (e.g. "-Dx=y")
+# - SPARK_DAEMON_CLASSPATH, to set the classpath for all daemons
+# - SPARK_PUBLIC_DNS, to set the public dns name of the master or workers
+SPARK_MASTER_HOST=192.168.56.123
+SPARK_WORKER_CORES=2
+SPARK_WORKER_MEMORY=2g
+SPARK_WORKER_INSTANCES=1
+
+sbin/start-all.sh
+bin/spark-shell --master spark://192.168.56.123:7077
+```
+
+一个 WordCount 的示例:
+
+```scala
+val file = spark.sparkContext.textFile("file:///home/chengchao/data/wc.txt")
+val wordCounts = file.flatMap(line => line.split(",")).
+  map(word => (word, 1)).
+  reduceByKey(_ + _)
+wordCounts.collect
+
+
+```
+
+### 提交作业
+
+```bash
+bin/spark-submit \
+  --class <main-class> \
+  --master <master-url> \
+  --deploy-mode <deploy-mode> \
+  --conf <key=value> \
+  ... # other options
+  <application-jar> \
+  [application-arguments]
+
+ spark-submit --class cn.chengchaos.spark.sql.bba.BbaDemo1App1 \
+   --master yarn \
+   my-spark-demo-jar-with-dependencies.jar
+ spark-submit --class cn.chengchaos.spark.sql.bba.BbaDemo1App1 \
+   --master local[2] \
+   my-spark-demo-jar-with-dependencies.jar
+```
+
+EOF
