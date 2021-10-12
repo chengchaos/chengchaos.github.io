@@ -37,7 +37,7 @@ Redis 的性能测试工具，目前主流使用的是 redis-benchmark 。为什
 
 当然，也是有其它工具：
 
-- memtier_benchmark ：目前阿里云提供的测试方法，是基于它来实现，具体可以看看 [阿里云 Redis —— 测试工具](https://help.aliyun.com/document_detail/100347.html) 。
+- memtier_benchmark ：目前阿里云提供的测试方法，是基于它来实现，CentOS 的安装具体可以看看 [阿里云 Redis —— 测试工具](https://help.aliyun.com/document_detail/100347.html) 。
 - jMeter: 测试都会用这个。
 - YCSB ：YCSB 能够测试的服务特别多（回头再说）。
 
@@ -420,6 +420,77 @@ Warning: Using a password with '-a' option on the command line interface may not
 SET: 675219.50 requests per second
 GET: 640615.00 requests per second
 INCR: 647249.19 requests per second
+```
+
+## memtier-benchmark (阿里云)
+
+memtier-benchmark 可以根据您的需求生成多种结构的数据对数据库进行压力测试，帮助您了解目标数据库的性能极限。其部分功能特性如下。
+
+- 支持 Redis 和 Memcached 数据库测试。
+- 支持多线程、多客户端测试。
+- 可设置测试中的读写比例（SET: GET Ratio）。
+- 可自定义测试中键的结构。
+- 支持设置随机过期时间。
+
+需要 Linux 系统已安装以下库或工具。
+
+- Git
+- libevent 2.0.10或更高版本
+- libpcre 8.x
+- autoconf
+- automake
+- GNU make
+- GCC C++ compiler
+
+### 安装 (SUSE Linux)
+
+```bash
+# zypper install autoconf
+# zypper install automake
+# zypper install make
+# zypper install gcc-c++
+# zypper install pcre-devel zlib-devel libmemcached-devel
+# zypper install libevent-devel 
+wget https://github.com/downloads/libevent/libevent/libevent-2.0.21-stable.tar.gz
+tar xfz libevent-2.0.21-stable.tar.gz
+pushd libevent-2.0.21-stable
+./configure
+make
+sudo make install
+popd
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=/usr/local/lib64
+
+git clone https://github.com/RedisLabs/memtier_benchmark.git
+cd memtier_benchmark
+
+autoreconf -ivf
+./configure
+make
+make install
+
+```
+
+> SUSE 中没有安装成功, 回头再说. 先用 CentOS 7 编译.
+
+编译时提示找不到 libssl. `No package 'libssl' found` .
+
+libssl-dev
+
+libssl-dev 是 ubuntu 系统的库，
+
+而 centos 系统对应的是 openssl-devel ，
+
+所以centos中运行
+
+```bash
+　　yum install openssl-devel
+```
+
+ubuntu系统运行
+
+```bash
+　　apt-get install libssl-dev
 ```
 
 ## jMeter (Redis Data Set)
