@@ -46,7 +46,6 @@ docker docker-compose openssl
 
 [https://chengchaos.github.io/2021/08/10/docker-compose-install.html](https://chengchaos.github.io/2021/08/10/docker-compose-install.html)
 
-
 去 github 上下载 tgz 的压缩包， 地址是：
 
 [https://github.com/goharbor/harbor/tags](https://github.com/goharbor/harbor/tags)
@@ -60,7 +59,6 @@ cd /opt/harbor
 wget -c https://github.com/goharbor/harbor/releases/download/v2.3.1/harbor-offline-installer-v2.3.1.tgz
 
 ```
-
 
 ## Docker镜像远程同步复制功能
 
