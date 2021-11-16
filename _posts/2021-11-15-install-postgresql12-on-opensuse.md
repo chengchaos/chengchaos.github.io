@@ -113,7 +113,7 @@ postgres=# GRANT ALL PRIVILEGES ON DATABASE exampledb to dbuser;
 postgres=# \q
 ```
 
-## **第二种方法，使用shell命令行。**
+### 第二种方法，使用shell命令行。
 
 添加新用户和新数据库，除了在 PostgreSQL 控制台内，还可以在 shell 命令行下完成。这是因为PostgreSQL 提供了命令行程序 `createuser` 和 `createdb`。以新建用户 dbuser2 和数据库exampledb2 为例。
 
@@ -217,6 +217,10 @@ exampledb2=#
 
 
 ## Go
+
+待补充。
+
+
 
 so so .
 
