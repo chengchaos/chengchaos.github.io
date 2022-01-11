@@ -228,6 +228,7 @@ so so .
 
 - [PostgreSQL新手入门](http://www.ruanyifeng.com/blog/2013/12/getting_started_with_postgresql.html)
 - [openSUSE 安装 PostgreSQL](https://segmentfault.com/a/1190000010032424)
+- [Java连接PostgreSQL数据库](https://www.yiibai.com/postgresql/postgresql_java.html)
 
 EOF
 
