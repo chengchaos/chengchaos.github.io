@@ -1,7 +1,7 @@
 ---
 title: How Fabric networks are structured
 key: 2022-01-05
-tags: Fabric, fabric networks
+tags: Fabric fabric networks
 ---
 
 
