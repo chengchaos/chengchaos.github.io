@@ -186,6 +186,12 @@ kubeadm init --kubernetes-version=1.18.1 \
 --service-cidr=10.1.0.0/16 \
 --pod-network-cidr=10.244.0.0/16
 
+... running with swap on is not supported. Please disable swap
+swapoff -a
+
+
+
+#### 
 kubeadm reset 就可以解决这种问题
 
 kubeadm init --kubernetes-version=1.18.1 \
@@ -230,8 +236,8 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 
 Then you can join any number of worker nodes by running the following on each as root:
 
-kubeadm join 10.10.10.241:6443 --token io1pa7.pp3wbn8i4hbi7ktn \
-    --discovery-token-ca-cert-hash sha256:e9dd69f71312e61280d6d3a257f811135b43dea7e62fd667478bb776af16737d
+kubeadm join 10.10.10.241:6443 --token s0nsy5.4e0dk69622arxjjp \
+    --discovery-token-ca-cert-hash sha256:8f8df685cf88042d7256af53b95b4c85d310954b42cb1a7287b39db128604b31 
 
 ```
 
@@ -248,7 +254,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ## 安装flannel
 
 ```bash
-mkdir k8s
+mkdir ~/k8s
 cd k8s
 wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
