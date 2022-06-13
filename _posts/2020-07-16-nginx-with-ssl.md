@@ -1,14 +1,14 @@
 ---
 title: openssl 、nginx生成配置自签名证书
 key: 2020-07-16
-tags: openssl nginx 
+tags: openssl ssl nginx 
 ---
 
 ![openssl.png](http://qiniu.chaos.luxe/openssl.png)
 
-参考： 
-- https://www.cnblogs.com/ishen/p/12216681.html
+参考：
 
+- <https://www.cnblogs.com/ishen/p/12216681.html>
 
 在 nginx 使用 https 协议需要配置证书，通过 CA 机构获取的证书是收费的，出于研究测试的话可以通过 openssl 自己制作证书，使用 openssl 制作证书如下：
 
@@ -31,7 +31,7 @@ openssl是一个用于生成密钥、公钥，证书，以及进行证书签名�
 CentOS 7 中有个 openssl 的示例文件： /etc/pki/tls/openssl.cnf
 
 ```bash
-$ sudo cp /etc/pki/tls/openssl.cnf /etc/ssl/openssl.cnf
+sudo cp /etc/pki/tls/openssl.cnf /etc/ssl/openssl.cnf
 ```
 
 然后 openssl.cnf 中 `[ CA_default ]` 描述的文件结构，创建对应的文件目录和文件
@@ -67,12 +67,9 @@ $ sudo -i
 # echo 01 >> serial
 ```
 
-
-
-### 生成 CA 私钥 
+### 生成 CA 私钥
 
 使用 `umask 077` 使得之后生成文件的默认权限为 077，使用 openssl 工具生成 4096 位的 rsa 秘钥，该秘钥存放在 `/etc/pki/CA/private/cakey.pem`。
-
 
 ```bash
 # umask 077; openssl genrsa -out /etc/pki/CA/private/cakey.pem 4096
@@ -94,7 +91,6 @@ $ sudo -i
   -out /etc/pki/CA/cacert.pem -days 3650
 ```
 
-
 这个生成CA证书的命令会让人迷惑，因为生成证书其实一般需要经过三个步骤
 
 1. 生成秘钥 `xxx.pem`
@@ -102,7 +98,6 @@ $ sudo -i
 3. 通过证书请求文件 `xxx.csr` 生成最终的证书 `xxx.crt`
 
 但是以下的命令将2和3杂糅在了一起
-
 
 ```bash
 # openssl req -new -x509 -key /etc/pki/CA/private/cakey.pem \
@@ -127,6 +122,7 @@ $ sudo -i
 ## 生成服务器端证书
 
 ### 生成服务器端私钥 **(*.pem)**
+
 首先我创建并进入了 ~/https 目录，然后生成服务端的**私钥**
 
 ```bash
@@ -136,6 +132,7 @@ Generating RSA private key, 4096 bit long modulus
 ...........................................................................................................++
 
 ```
+
 ### 生成服务器端证书请求 **(*.csr)**
 
 ```bash
@@ -145,7 +142,7 @@ $ openssl req -new -key https.pem \
 
 ```
 
-这里使用 `-subj ` 可以预先完成证书请求者信息的填写，但要注意，填入的信息中 C 和 ST 和 L 和 Ｏ 一定要与签署的根证书一样，如果忘记了根证书乱填了什么，可以通过如下指令进行查询:
+这里使用 `-subj` 可以预先完成证书请求者信息的填写，但要注意，填入的信息中 C 和 ST 和 L 和 Ｏ 一定要与签署的根证书一样，如果忘记了根证书乱填了什么，可以通过如下指令进行查询:
 
 ```bash
 
@@ -201,21 +198,21 @@ Data Base Updated
 
 server {
     listen 443 ssl;
-	server_name web1.chaos.luxe;
-	
-	ssl_certificate cert/https.crt;
-	ssl_certificate_key cert/https.pem;
-	
-	ssl_session_cache shared:SSL:1m;
-	ssl_session_timeout 5m;
-	
-	ssl_ciphers HIGH:!aNULL:!MD5;
-	ssl_prefer_server_ciphers on;
-	
-	location / {
-	    root /works/htdocs;
-		index index.html index.htm;
-	}
+ server_name web1.chaos.luxe;
+ 
+ ssl_certificate cert/https.crt;
+ ssl_certificate_key cert/https.pem;
+ 
+ ssl_session_cache shared:SSL:1m;
+ ssl_session_timeout 5m;
+ 
+ ssl_ciphers HIGH:!aNULL:!MD5;
+ ssl_prefer_server_ciphers on;
+ 
+ location / {
+     root /works/htdocs;
+  index index.html index.htm;
+ }
 }
 ```
 
@@ -223,29 +220,19 @@ server {
 
 除了服务端证书和CA根证书之外，还有一种类型叫做客户端证书，这个的作用是用来验证客户的身份，在极少数的情况下会用到，比如说网银限制客户在某台机器上进行登陆，很久之前银行提供的u盾的作用就是为了提供客户端证书而存在的。总之，证书的作用就是用来验证身份。
 
-
 ## 原文参考文档
 
-使用 openssl 生成证书（含openssl详解）：https://blog.csdn.net/gengxiaoming7/article/details/78505107
-理解服务器证书CA&& SSL: https://blog.csdn.net/weixin_41830501/article/details/81128968
-使用openssl生成证书(详细): https://blog.csdn.net/gengxiaoming7/article/details/78505107
-证书的签发和通信过程: https://www.cnblogs.com/handsomeBoys/p/6556336.html
-自签名根证书和客户端证书的制作: https://blog.csdn.net/ilytl/article/details/52450334
-openssl指令说明： https://www.cnblogs.com/gordon0918/p/5409286.html
-
-
-
-
-
+使用 openssl 生成证书（含openssl详解）：<https://blog.csdn.net/gengxiaoming7/article/details/78505107>
+理解服务器证书CA&& SSL: <https://blog.csdn.net/weixin_41830501/article/details/81128968>
+使用openssl生成证书(详细): <https://blog.csdn.net/gengxiaoming7/article/details/78505107>
+证书的签发和通信过程: <https://www.cnblogs.com/handsomeBoys/p/6556336.html>
+自签名根证书和客户端证书的制作: <https://blog.csdn.net/ilytl/article/details/52450334>
+openssl指令说明： <https://www.cnblogs.com/gordon0918/p/5409286.html>
 
 EOF
+
 ---
 
 Power by TeXt.
 
 <iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
-
-
-
-
-
