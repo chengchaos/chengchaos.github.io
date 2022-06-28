@@ -448,15 +448,5 @@ kubectl -n kube-system describe
 
 
 
-
-
-## 访问 Dashboard 用户界面
-
-为了保护你的集群数据，默认情况下，Dashboard 会使用最少的 RBAC 配置进行部署。 当前，Dashboard 仅支持使用 Bearer 令牌登录。 要为此样本演示创建令牌，你可以按照 [创建示例用户](https://github.com/kubernetes/dashboard/wiki/Creating-sample-user) 上的指南进行操作。
-
-
-
-
-
 EOF
 
