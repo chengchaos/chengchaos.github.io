@@ -1,4 +1,5 @@
 ---
+
 title: CentOS7 安装 Kubernetes1.18.1 并使用 Flannel
 key: 2021-08-15
 tags: kubernetes k8s kubeadm flannel
@@ -137,6 +138,10 @@ hostnamectl set-hostname k8s-master
 
 ## 安装 kubeadm, kubelet, kubectl
 
+
+
+> master, node1, node2 之上都必须执行！
+
 ### 修改 yum 安装源
 
 ```bash
@@ -168,20 +173,26 @@ yum -y update
 # yum -y remove kubelet kubeadm kubectl 
 
 yum install -y kubelet-1.18.1-0 
-
 yum install -y kubectl-1.18.1-0
-
 yum install -y kubeadm-1.18.1-0 
 ## 
 systemctl enable kubelet && systemctl start kubelet
 
 ```
 
-### 运行初始化命令
+> 以上就是 master 节点和 node 节点都要执行的操作！
+
+
+
+### 初始化 Master 节点
+
+> 登录到 master 主机上，运行初始化命令
+>
+> 注意： 修改 apiserver-advertise-address 为 master 节点的 IP
 
 ```bash
 kubeadm init --kubernetes-version=1.18.1 \
---apiserver-advertise-address=10.10.10.241 \
+--apiserver-advertise-address=192.168.3.201 \
 --image-repository registry.aliyuncs.com/google_containers \
 --service-cidr=10.1.0.0/16 \
 --pod-network-cidr=10.244.0.0/16
@@ -199,6 +210,7 @@ kubeadm init --kubernetes-version=1.18.1 \
 --image-repository registry.aliyuncs.com/google_containers \
 --service-cidr=10.1.0.0/16 \
 --pod-network-cidr=10.244.0.0/16
+
 ```
 
 注意**修改 apiserver-advertise-address 为 master 节点 ip**
@@ -236,8 +248,9 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 
 Then you can join any number of worker nodes by running the following on each as root:
 
-kubeadm join 10.10.10.241:6443 --token s0nsy5.4e0dk69622arxjjp \
-    --discovery-token-ca-cert-hash sha256:8f8df685cf88042d7256af53b95b4c85d310954b42cb1a7287b39db128604b31 
+kubeadm join 192.168.3.201:6443 --token 9ubtp9.btqe8ednga3w450p \
+    --discovery-token-ca-cert-hash \
+    sha256:b716f3d078a8ed62a6bc1380c1ea655622d0ef6743b86ba6a2d92144bff040d2 
 
 ```
 
@@ -289,6 +302,9 @@ docker push chengchao/flannel:v0.14.0
 
 docker pull chengchao/flannel:v0.14.0
 docker tag chengchao/flannel:v0.14.0  quay.io/coreos/flannel:v0.14.0
+
+docker pull flannelcni/flannel:v0.17.0
+docker tag flannelcni/flannel:v0.17.0 quay.io/coreos/flannel:v0.17.0
 ```
 
 #### 加载flannel
@@ -315,6 +331,10 @@ source  ~/.bashrc
 
 ## node 加入集群
 
+> 在 nodes 的主机上执行！
+>
+> 
+
 执行上面的 kubeadm join 命令
 
 如果 token 过期:
@@ -331,10 +351,27 @@ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outfor
 ed7ea5ae0c06f4ace9013e663b223e8da72e4e94e4dc657cfb1db68d777f3984
 
 ### !指定两个地方，token名和sha256
+kubeadm join 192.168.3.201:6443 --token 9ubtp9.btqe8ednga3w450p \
+     --discovery-token-ca-cert-hash \
+     sha256:b716f3d078a8ed62a6bc1380c1ea655622d0ef6743b86ba6a2d92144bff040d2 
+     
+W0608 12:51:06.998161   25359 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+[preflight] Running pre-flight checks
+        [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
+        [WARNING SystemVerification]: this Docker version is not on the list of validated versions: 20.10.14. Latest validated version: 19.03
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+[kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.18" ConfigMap in the kube-system namespace
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
 
-kubeadm join 192.168.1.200:6443 \
-  --token wxvdun.vec7m9cu4ru3hngg \
-  --discovery-token-ca-cert-hash sha256:ed7ea5ae0c06f4ace9013e663b223e8da72e4e94e4dc657cfb1db68d777f3984 
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 
 
 
@@ -351,6 +388,65 @@ systemctl enable kubelet
 
 ```bash
 kubectl get nodes  -o wide
+
+NAME                   STATUS   ROLES    AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                KERNEL-VERSION                CONTAINER-RUNTIME
+centos701.chaos.luxe   Ready    master   12m     v1.18.1   192.168.3.201   <none>        CentOS Linux 7 (Core)   3.10.0-1160.62.1.el7.x86_64   docker://20.10.14
+centos702.chaos.luxe   Ready    <none>   3m6s    v1.18.1   192.168.3.202   <none>        CentOS Linux 7 (Core)   3.10.0-1160.62.1.el7.x86_64   docker://20.10.14
+centos703              Ready    <none>   2m51s   v1.18.1   192.168.3.203   <none>        CentOS Linux 7 (Core)   3.10.0-1160.62.1.el7.x86_64   docker://20.10.14
 ```
 
+## 部署 Dashboard UI
+
+看看这里： [https://github.com/kubernetes/dashboard](https://github.com/kubernetes/dashboard)
+
+
+
+### Install
+
+To deploy Dashboard, execute following command:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/aio/deploy/recommended.yaml
+```
+
+Alternatively, you can install Dashboard using Helm as described at [`https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard`](https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard).
+
+### 
+
+### Access
+
+To access Dashboard from your local workstation you must  create a secure channel to your Kubernetes cluster. Run the following  command:
+
+```
+kubectl proxy
+```
+
+Now access Dashboard at:
+
+[`http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/`](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
+
+## Create An Authentication Token (RBAC)
+
+To find out how to create sample user and log in follow [Creating sample user](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md) guide.
+
+**NOTE:**
+
+- Kubeconfig Authentication method does not support external identity providers or certificate-based authentication.
+- [Metrics-Server](https://github.com/kubernetes-sigs/metrics-server) has to be running in the cluster for the metrics and graphs to be available. Read more about it in [Integrations](https://github.com/kubernetes/dashboard/blob/master/docs/user/integrations.md) guide.
+
+
+
+
+
+
+
+生成访问令牌
+
+```bash
+kubectl -n kube-system describe 
+```
+
+
+
 EOF
+
