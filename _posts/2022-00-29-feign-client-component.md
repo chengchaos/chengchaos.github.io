@@ -1,7 +1,7 @@
 ---
 
 title: Feign 的客户端组件
-key: 2021-08-29
+key: 2022-08-29
 tags: git
 ---
 
