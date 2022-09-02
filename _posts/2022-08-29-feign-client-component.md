@@ -1,8 +1,8 @@
 ---
 
 title: Feign 的客户端组件
-key: 2021-08-29
-tags: git
+key: 2022-08-29
+tags: feign
 ---
 
 客户端组件是 Feign 中一个非常重要的组件, 负责做种的 HTTP 请求的执行, 它的核心逻辑是: 发送 Request 到服务器, 在接收到 Response 后进行解码, 最后返回结果.
