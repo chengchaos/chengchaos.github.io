@@ -1,5 +1,4 @@
 ---
-
 title: [转载] 深入理解 Atwood 定律
 key: 2022-09-02
 tags: Atwood low
