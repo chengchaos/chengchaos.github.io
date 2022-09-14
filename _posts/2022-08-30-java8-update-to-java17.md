@@ -1,6 +1,5 @@
 ---
-
-title: [转载]java 8 - java 17 升级指北 
+title: java 8 到 java 17 升级指北 
 key: 2022-08-30
 tags: Java maven
 ---
