@@ -163,7 +163,7 @@ echo -e "-> $val"
 
 ```bash
 jc_hms() {
-    declare -i i=${1:-$(</dev/stdin>)};
+    declare -i i=${1:-$(</dev/stdin)};
     declare hr=$(($i/3600)) min=$(($i/60%60)) sec=$(($i%60))
     printf "%02d:%02d:%02d\n" "$hr" "$min" "$sec";
 }
