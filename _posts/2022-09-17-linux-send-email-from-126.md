@@ -130,4 +130,32 @@ set nss-config-dir=/root/.certs
 echo "hello: " | mail -v -s test c.b.cheng@myemailaddress.domain
 ```
 
+发邮件的三种方式:
+
+1.命令行:
+
+```bash
+mailx -s '主题' 邮件地址
+```
+
+回车后输入内容, 最后按 `Ctrl + D` 发送.
+
+2.管道符:
+
+```bash
+echo "邮件正文" | mail -s "主题" 邮件地址
+```
+
+3.文件:
+
+```bash
+mail -s "主题" 邮件地址 < /tmp/content.txt
+```
+
+## 0x06 参考链接
+
+- <https://www.jianshu.com/p/83f806914eff>
+- <https://blog.csdn.net/cunjiu9486/article/details/109074085>
+- <https://cloud.tencent.com/developer/article/1416520>
+
 EOF
