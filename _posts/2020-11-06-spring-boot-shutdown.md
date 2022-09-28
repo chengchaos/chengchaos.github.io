@@ -1,7 +1,7 @@
 ---
 title: Springboot 优雅停止服务的几种方法
 key: 2020-11-06
-tags: spring-boot
+tags: spring-boot java
 ---
 
 在使用 SpringBoot 的时候，都要涉及到服务的停止和启动，当我们停止服务的时候，很多时候大家都是 kill -9 直接把程序进程杀掉，这样程序不会执行优雅的关闭。而且一些没有执行完的程序就会直接退出。
@@ -255,7 +255,7 @@ public class ShutDownController implements ApplicationContextAware {
 
 参考：
 
-- [Springboot 优雅停止服务的几种方法](www.cnblogs.com/huangqingshi/p/11370291.html)
+- <https://www.cnblogs.com/huangqingshi/p/11370291.html>
 
 EOF
 
