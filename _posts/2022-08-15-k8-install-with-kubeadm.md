@@ -138,8 +138,6 @@ hostnamectl set-hostname k8s-master
 
 ## 安装 kubeadm, kubelet, kubectl
 
-
-
 > master, node1, node2 之上都必须执行！
 
 ### 修改 yum 安装源
@@ -182,34 +180,29 @@ systemctl enable kubelet && systemctl start kubelet
 
 > 以上就是 master 节点和 node 节点都要执行的操作！
 
-
-
 ### 初始化 Master 节点
 
-> 登录到 master 主机上，运行初始化命令
->
+登录到 master 主机上，运行初始化命令
+
 > 注意： 修改 apiserver-advertise-address 为 master 节点的 IP
 
 ```bash
 kubeadm init --kubernetes-version=1.18.1 \
---apiserver-advertise-address=192.168.3.201 \
---image-repository registry.aliyuncs.com/google_containers \
---service-cidr=10.1.0.0/16 \
---pod-network-cidr=10.244.0.0/16
+  --apiserver-advertise-address=192.168.3.201 \
+  --image-repository registry.aliyuncs.com/google_containers \
+  --service-cidr=10.1.0.0/16 \
+  --pod-network-cidr=10.244.0.0/16
 
 ... running with swap on is not supported. Please disable swap
 swapoff -a
 
-
-
-#### 
-kubeadm reset 就可以解决这种问题
+####  kubeadm reset 就可以解决这种问题
 
 kubeadm init --kubernetes-version=1.18.1 \
---apiserver-advertise-address=192.168.56.109 \
---image-repository registry.aliyuncs.com/google_containers \
---service-cidr=10.1.0.0/16 \
---pod-network-cidr=10.244.0.0/16
+  --apiserver-advertise-address=192.168.56.109 \
+  --image-repository registry.aliyuncs.com/google_containers \
+  --service-cidr=10.1.0.0/16 \
+  --pod-network-cidr=10.244.0.0/16
 
 ```
 
@@ -218,16 +211,17 @@ kubeadm init --kubernetes-version=1.18.1 \
 参数解释：
 
 ```sh
-–kubernetes-version: 用于指定k8s版本；
-–apiserver-advertise-address：用于指定kube-apiserver监听的ip地址,就是 master本机IP地址。
-–pod-network-cidr：用于指定Pod的网络范围； 10.244.0.0/16
-–service-cidr：用于指定SVC的网络范围；
-–image-repository: 指定阿里云镜像仓库地址
+-–kubernetes-version: 用于指定k8s版本；
+–-apiserver-advertise-address：用于指定kube-apiserver监听的ip地址,就是 master本机IP地址。
+–-pod-network-cidr：用于指定Pod的网络范围； 10.244.0.0/16
+–-service-cidr：用于指定SVC的网络范围；
+–-image-repository: 指定阿里云镜像仓库地址
 ```
 
-这一步很关键，由于kubeadm 默认从官网k8s.grc.io下载所需镜像，国内无法访问，因此需要通过–image-repository指定阿里云镜像仓库地址
+这一步很关键，由于kubeadm 默认从官网 k8s.grc.io 下载所需镜像，国内无法访问，因此需要通过 `-–image-repository` 指定阿里云镜像仓库地址
 
 集群初始化成功后返回如下信息：
+
 记录生成的最后部分内容，此内容需要在其它节点加入Kubernetes集群时执行。
 输出如下：
 
@@ -333,7 +327,7 @@ source  ~/.bashrc
 
 > 在 nodes 的主机上执行！
 >
-> 
+>
 
 执行上面的 kubeadm join 命令
 
@@ -399,8 +393,6 @@ centos703              Ready    <none>   2m51s   v1.18.1   192.168.3.203   <none
 
 看看这里： [https://github.com/kubernetes/dashboard](https://github.com/kubernetes/dashboard)
 
-
-
 ### Install
 
 To deploy Dashboard, execute following command:
@@ -411,7 +403,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/a
 
 Alternatively, you can install Dashboard using Helm as described at [`https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard`](https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard).
 
-### 
+###
 
 ### Access
 
@@ -434,19 +426,10 @@ To find out how to create sample user and log in follow [Creating sample user](h
 - Kubeconfig Authentication method does not support external identity providers or certificate-based authentication.
 - [Metrics-Server](https://github.com/kubernetes-sigs/metrics-server) has to be running in the cluster for the metrics and graphs to be available. Read more about it in [Integrations](https://github.com/kubernetes/dashboard/blob/master/docs/user/integrations.md) guide.
 
-
-
-
-
-
-
 生成访问令牌
 
 ```bash
 kubectl -n kube-system describe 
 ```
 
-
-
 EOF
-

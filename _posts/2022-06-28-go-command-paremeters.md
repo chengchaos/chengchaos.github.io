@@ -1,7 +1,7 @@
 ---
 title: Go command parameters
 key: 2022-06-28
-tags: go go-lang
+tags: go go-lang os.Args
 ---
 
 `os` 包提供一些函数和变量，以平台无关的方式和操作系统交互，命令行参数以 `os` 包中 `Args` 名字的变量提供程序访问， 在 `os` 包之外，使用 `os.Args` 这个名字。
@@ -16,8 +16,6 @@ tags: go go-lang
 
 `os.Args[0]` 是命令本身的名字； 其余的元素是程序开始执行时的参数。
 
-
-
 ## 实现一个 echo 命令
 
 ```go
@@ -26,35 +24,35 @@ tags: go go-lang
 package main
 
 import (
-	"fmt"
-	"os"
-	"strings"
+ "fmt"
+ "os"
+ "strings"
 )
 
 func main() {
-	echo3()
+ echo3()
 }
 
 func echo1() {
-	var s, sep string
-	for i := 1; i < len(os.Args); i++ {
-		s += sep + os.Args[i]
-		sep = " "
-	}
-	fmt.Println(s)
+ var s, sep string
+ for i := 1; i < len(os.Args); i++ {
+  s += sep + os.Args[i]
+  sep = " "
+ }
+ fmt.Println(s)
 }
 
 func echo2() {
-	s, sep := "", ""
-	for _, arg := range os.Args[1:] {
-		s += sep + arg
-		sep = " "
-	}
-	fmt.Println(s)
+ s, sep := "", ""
+ for _, arg := range os.Args[1:] {
+  s += sep + arg
+  sep = " "
+ }
+ fmt.Println(s)
 }
 
 func echo3() {
-	fmt.Println(strings.Join(os.Args[1:], " "))
+ fmt.Println(strings.Join(os.Args[1:], " "))
 }
 
 ```
@@ -67,29 +65,29 @@ func echo3() {
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+ "bufio"
+ "fmt"
+ "os"
 )
 
 func main() {
-	// 内置函数 make 创建 map
-	counts := make(map[string]int)
-	input := bufio.NewScanner(os.Stdin)
-	for input.Scan() {
-		counts[input.Text()]++
-	}
-	// 注意： 忽略 input。Err() 中可能的错误
-	for line, n := range counts {
-		if n > 1 {
-			fmt.Printf("%d\t%s\n", n, line)
-		}
-	}
+ // 内置函数 make 创建 map
+ counts := make(map[string]int)
+ input := bufio.NewScanner(os.Stdin)
+ for input.Scan() {
+  counts[input.Text()]++
+ }
+ // 注意： 忽略 input。Err() 中可能的错误
+ for line, n := range counts {
+  if n > 1 {
+   fmt.Printf("%d\t%s\n", n, line)
+  }
+ }
 }
 
 ```
 
-`bufio` 包可以简便和搞笑地处理输入和输出。
+`bufio` 包可以简便和*搞笑(高效)*地处理输入和输出。
 
 其中一个最有用的特性时被称为扫描器的类型（Scanner），它可以读取输入，以行或者单词为单位断开，这是处理以行为单位的输入内容的最简单方式。
 
@@ -103,50 +101,48 @@ Scanner 从程序的标准输入进行读取。每次调用 `input.Scan()` 读�
 
 `Scan()` 函数在读到新行时返回 `true`，在没有更多内容的时候返回 `false`。
 
-
-
 ```go
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+ "bufio"
+ "fmt"
+ "os"
 )
 
 func main() {
-	dup2()
+ dup2()
 }
 
 func dup2() {
-	counts := make(map[string]int)
-	files := os.Args[1:]
-	if len(files) == 0 {
-		countLines(os.Stdin, counts)
-	} else {
-		for _, arg := range files {
-			f, err := os.Open(arg)
-			if err != nil {
+ counts := make(map[string]int)
+ files := os.Args[1:]
+ if len(files) == 0 {
+  countLines(os.Stdin, counts)
+ } else {
+  for _, arg := range files {
+   f, err := os.Open(arg)
+   if err != nil {
         // %v 可以使用默认格式显示任意类型的值；
-				fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
-				continue
-			}
-			countLines(f, counts)
-			f.Close()
-		}
-	}
-	for line, n := range counts {
-		if n > 1 {
-			fmt.Printf("%d\t%s\n", n, line)
-		}
-	}
+    fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
+    continue
+   }
+   countLines(f, counts)
+   f.Close()
+  }
+ }
+ for line, n := range counts {
+  if n > 1 {
+   fmt.Printf("%d\t%s\n", n, line)
+  }
+ }
 }
 
 func countLines(f *os.File, counts map[string]int) {
-	input := bufio.NewScanner(f)
-	for input.Scan() {
-		counts[input.Text()]++
-	}
+ input := bufio.NewScanner(f)
+ for input.Scan() {
+  counts[input.Text()]++
+ }
 }
 
 ```
@@ -155,40 +151,38 @@ func countLines(f *os.File, counts map[string]int) {
 
 `map` 时一个使用 `make` 创建的数据结构的**引用**。当一个 map 被传递给一个函数时，函数接收到这个**引用的副本**，所以被调用函数中对于 map 数据结构中的改变对函数调用者使用的 map 引用也是可见的。
 
-
-
 ```go
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"strings"
+ "fmt"
+ "io/ioutil"
+ "os"
+ "strings"
 )
 
 func dup3() {
 
-	counts := make(map[string]int)
-	for _, filename := range os.Args[1:] {
-		data, err := ioutil.ReadFile(filename)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "dup3: %v\n", err)
-			continue
-		}
-		for _, line := range strings.Split(string(data), "\n") {
-			counts[line]++
-		}
-	}
-	for line, n := range counts {
-		if n > 1 {
-			fmt.Printf("%d\t%s\n", n, line)
-		}
-	}
+ counts := make(map[string]int)
+ for _, filename := range os.Args[1:] {
+  data, err := ioutil.ReadFile(filename)
+  if err != nil {
+   fmt.Fprintf(os.Stderr, "dup3: %v\n", err)
+   continue
+  }
+  for _, line := range strings.Split(string(data), "\n") {
+   counts[line]++
+  }
+ }
+ for line, n := range counts {
+  if n > 1 {
+   fmt.Printf("%d\t%s\n", n, line)
+  }
+ }
 }
 
 func main() {
-	dup3()
+ dup3()
 }
 
 ```
@@ -200,4 +194,3 @@ func main() {
 If you like TeXt, don't forget to give me a star. :star2:
 
 [![Star This Project](https://img.shields.io/github/stars/kitian616/jekyll-TeXt-theme.svg?label=Stars&style=social)](https://github.com/kitian616/jekyll-TeXt-theme/)
-

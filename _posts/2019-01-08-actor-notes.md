@@ -4,11 +4,11 @@ key: 20190108
 tags: scala akka actor
 ---
 
-维基百科这样定义Actor模型：
+维基百科这样定义 Actor 模型：
 
-> 
-> 在计算科学领域，Actor模型是一个并行计算（Concurrent Computation）模型，它把 actor 作为并行计算的基本元素来对待：为响应一个接收到的消息，一个 actor 能够自己做出一些决策，如创建更多的 actor，或发送更多的消息，或者确定如何去响应接收到的下一个消息。 
-> 
+>
+> 在计算科学领域，Actor 模型是一个并行计算（Concurrent Computation）模型，它把 actor 作为并行计算的基本元素来对待：为响应一个接收到的消息，一个 actor 能够自己做出一些决策，如创建更多的 actor，或发送更多的消息，或者确定如何去响应接收到的下一个消息。
+>
 
 <!--more-->
 

@@ -1,14 +1,14 @@
 ---
 title: Akka 学习笔记 5 纵向扩展
-key: 20181226
+key: 2018-12-26
 tags: Akka 
 ---
 
 话题：
 
 - 多核计算的出现
-- 使用 Future 进行多核变成
-- 使用 Router 和 Actor 进行多核变成
+- 使用 Future 进行多核编程
+- 使用 Router 和 Actor 进行多核编程
 - 使用 Dispatcher 隔离性能风险
 
 > 贾森·古德温(Jason Goodwin). Akka入门与实践（异步图书）  
@@ -20,7 +20,6 @@ tags: Akka
 作为一名现代开发者，要能够安全、高效地使用更多的核，而不是单个计算速度更快的核。
 
 其实可以把如何进行多核架构看作是一个分布式问题：我们需要在另一个 CPU 或者是另一台机器上完成一些任务。通过 Akka 来使用 Actor 时，纵向扩展和横向扩展之间的区别开始显得不那么明显。哦我们可以忽略另一台主机和另一个内核之间的区别，只把这个问题看作是向某个 Actor 发送一条消息。我们希望将一些人物发送到另一个地方来执行并完成，然后在某一时刻接受对于发出请求的相应。可以将学习纵向扩展作为第一步，帮助我们理解如何最终进行横向扩展——如果可以在 8 个核心上使用 Actor 完成工作，那么要在 8 台主机上使用 Actor 完成工作也就八九不离十了。
-
 
 要利用多个内核，最基本的机制就是并行：应用程序必须同时执行不同的操作。本质上来说，我们希望将工作分割成独立的子任务，然后使用不同的核同时运行这些子任务，这样就能利用所有可用的内核了。
 
@@ -38,17 +37,16 @@ Akka 中提供了两种可以用来多核并行编程的抽象： Future 和 Act
 
 ## 5.4 并行编程
 
-
 我们先模拟一个非常耗时的操作，假设是一个从网页解析出文本内容的例子：
 
 ```java
 public class ArticleParser {
-	public static Try<String> apply(String html) {
-		return Try.ofFailable(
-			() -> de.13s.boilerpipe.extractors
-				.ArticleExtractor.INSTANCE.getText(html)
-		);
-	}
+ public static Try<String> apply(String html) {
+  return Try.ofFailable(
+   () -> de.13s.boilerpipe.extractors
+    .ArticleExtractor.INSTANCE.getText(html)
+  );
+ }
 }
 ```
 
@@ -56,14 +54,13 @@ Scala 的例子：
 
 ```scala
 object ArticleParser {
-	def apply(html: String) : String = 
-	    de.l3s.boilerpipe.extractors.
-	    	.ArticleExtractor.INSTANCE.getText(html)
+ def apply(html: String) : String = 
+     de.l3s.boilerpipe.extractors.
+      .ArticleExtractor.INSTANCE.getText(html)
 }
 ```
 
 ### 5.4.1 使用 Future 进行并行编程
-
 
 Future 的可组合行很高，非常适合用来并行编程。
 
@@ -74,18 +71,17 @@ Java 的例子：
 ```java
 
 List<ComposableFuture<String>> futures = articleLists
-	.stream()
-	.map(article -> CompletableFuture.supplyAsync(() -> ArticleParser.apply(article)))
-	.collect(Collectors.toList());
+ .stream()
+ .map(article -> CompletableFuture.supplyAsync(() -> ArticleParser.apply(article)))
+ .collect(Collectors.toList());
 Future<List<String>> articleFuture = com.jasongoodwin.monads.Futures.sequence(futures).get();
 
 ```
 
 我们使用 `better-java-monads` 库来处理多个 Future， 这个库中包含一个 `sequence` 的方法，可以将一个 Future 列表转化成包含结果列表的单个 Future。使用这个库需要加入以下以来到  build.sbt:
 
-
 ```sbt
-	"com.jason-goodwin" % "better-monads" % "0.2.1"
+ "com.jason-goodwin" % "better-monads" % "0.2.1"
 ```
 
 Scala 的例子也类似，不过 Scala 原生提供了 `sequence` 方法，用于对 Future 列表进行转换。
@@ -95,15 +91,13 @@ Scala 的例子也类似，不过 Scala 原生提供了 `sequence` 方法，用�
 import scala.concurrent.ExecutionContext.Implicits.global
 
 val futures = articleList.map(article => {
-	Future(ArticleParse.apply(article))
+ Future(ArticleParse.apply(article))
 })
 val articleFutures: Future[List[String]] = Future.sequence(futures)
 
 ```
 
-
 ### 5.4.2 使用 Actor 进行并行编程
-
 
 首先创建一个 Actor，负责调用 Future 例子中的 ArticleParser 的静态 apply 方法。
 
@@ -111,21 +105,21 @@ java 的例子：
 
 ```java
 public class ParseArticle {
-	public final String htmlBody;
-	public ParseArticle(String url) {
-		this.htmlBody = url;
-	}
+ public final String htmlBody;
+ public ParseArticle(String url) {
+  this.htmlBody = url;
+ }
 }
 
 public class ArticleParseActor extends AbstractActor {
 
-	private ArticleParseActor() {
-		receive(ReceiveBuilder.match(ParseArticle.class, x -> {
-			sender().tell(ArticleParser.apply(x.htmlBody), self());
-			})
-			.build()
-	    );
-	}
+ private ArticleParseActor() {
+  receive(ReceiveBuilder.match(ParseArticle.class, x -> {
+   sender().tell(ArticleParser.apply(x.htmlBody), self());
+   })
+   .build()
+     );
+ }
 }
 ```
 
@@ -136,11 +130,11 @@ Scala 的例子：
 case class ParseArticle(htmlString: String)
 
 class ArticleParseActor extends actor {
-	override def receive: Receive = {
-		case ParseArticle(htmlString) =>
-			val body:String = ArticleParser(htmlString)
-			sender9) ! body
-	}
+ override def receive: Receive = {
+  case ParseArticle(htmlString) =>
+   val body:String = ArticleParser(htmlString)
+   sender9) ! body
+ }
 }
 
 ```
@@ -163,18 +157,18 @@ Java 代码：
 
 ```java
 ActorRef workerRouter = 
-	system.actorOf(
-		Props.create(ArticleParseActor.class)
-			.withRouter(new RoundRobinPool(8)));
+ system.actorOf(
+  Props.create(ArticleParseActor.class)
+   .withRouter(new RoundRobinPool(8)));
 ```
 
 Scala 代码：
 
 ```scala
 val workerRouter: ActorRef = 
-	system.actorOf(
-		Props.create(classOf[ArticleParseActor])
-			.withRouter(new RoundRobinPool(8)))
+ system.actorOf(
+  Props.create(classOf[ArticleParseActor])
+   .withRouter(new RoundRobinPool(8)))
 ```
 
 也可以采用 Actor Group 的方式来创建 Router：传入一个包含 Actor 路径的列表：
@@ -203,9 +197,7 @@ val router = system.actorOf(new RoundRobinGroup(actors.map(actor => actor.path).
 | Consistent Hashing | 给 Router 提供一个 可以， Router 根据这个 key 生成哈希值。使用这个哈希值来决定给哪个节点发送数据。想要将特定的数据发送到特定的目标位置时，就可以使用哈希。 |
 | Balancing Pool |BalancingPool 这个路由策略有点特殊。只可以用于本地 Actor。多个 Actor 共享同一个邮箱，一有空闲就处理邮箱中的任务。这种策略可以确保所有 Actor 都处于繁忙状态。对于本地集群来说，经常会优先选择这个路由策略 |
 
-
 我们也可以实现自己的路由策略，不过大多数情况下并不需要这么做。
-
 
 #### 向同一个 Router Group/Pool 中发的所有 Actor 发送消息
 
@@ -218,7 +210,6 @@ router.tell(new akka.routing.Broadcast(msg));
 router ! akka.routing.Broadcast(msg)
 ```
 
-
 #### 监督 Router Pool 中的路由对象
 
 如果使用 Pool 的方式创建 Router，由 Router 负责创建 Actor，那么这些路由对象会成为 Router 的子节点。创建 Router 时，可以给 Router 提供一个自定义的监督策略。
@@ -228,16 +219,16 @@ router ! akka.routing.Broadcast(msg)
 ```java
 // java
 ActorRef workerRouter = system.actorOf(
-	Props.create(ArticleParseActor.class)
-		.withRouter(new RoundRobinPool(8)
-			.withSupervisorStrategy(strategy))
-	);
+ Props.create(ArticleParseActor.class)
+  .withRouter(new RoundRobinPool(8)
+   .withSupervisorStrategy(strategy))
+ );
 // scala
 val workerRouter: ActorRef = 
-	system.actorOf(
-		Props.create(classOf[ArticleParseActor])
-			.withrouter(new RoundRobinPool(8)
-				.withSupervisorStrategy(strategy)))
+ system.actorOf(
+  Props.create(classOf[ArticleParseActor])
+   .withrouter(new RoundRobinPool(8)
+    .withSupervisorStrategy(strategy)))
 ```
 
 由于使用 Group方式创建 Router 的时候传入了事先已经能够存在的 Actor，所以没有办法用 Router 来监督 Group 中的 Actor。
@@ -246,9 +237,7 @@ val workerRouter: ActorRef =
 
 ### 5.5.1 Dispatcher 解析
 
-
 Dispatcher 将如何执行任务与何时执行任务两者解耦。一般来说，Dispatcher 会包含一些线程，这些线程会负责调度并运行任务，比如处理 Actor 的消息以及线程中的 Future 事件。Dispatcher 是 Akka 能够支持响应式编程的关键，是负责完成任务的机制。
-
 
 所有的 Actor 或者 Future 的工作都是由 Executor/Dispatcher 分配的资源来完成的。
 
@@ -267,7 +256,6 @@ system.dispatchers.lookup("my-dispatcher")
 
 由于我们能够创建并获取这些基于 Executor 的 Dispatcher，因此可以使用它们来定义 ThreadPool/ForkJoinPool 来隔离运行任务的环境。
 
-
 ### 5.5.2 Executor
 
 Dispatcher 基于 Executor，所以在具体介绍 Dispatcher 之前，我们先介绍两种主要的 Executor 类型： ForkJoinPool 和 ThreadPool。
@@ -276,27 +264,23 @@ ThreadPool Executor 有一个工作队列，队列中包含了要分配给各线
 
 ForkJoinPool Executor 使用一种分治算法，递归地将任务分割成更小的子任务，然后把子任务分配给不同的线程运行。接着再把运行结果组合起来。由于提交的任务不一定都能够被递归地分割成 ForkJoinTask，所以 ForkJoinPool Executor 有一个工作窃取算法，允许空闲的线程“窃取”分配给另一个线程的工作。由于工作可能无法平均分配并完成，所以工作窃取算法能够更高效地利用硬件资源。
 
-
 ForkJoinPool Executor 几乎总是比 ThreadPool 的 Executor 效率更高，是我们的默认选择。
-
 
 ### 5.5.3 创建 Dispatcher
 
-
 要在 application.conf 中定义一个 Dispatcher，需要指定 Dispatcher 的类型和 Executor。还可以指定 Executor 的具体配置细节，比如使用线程的数量，或是每个 Actor 一次性处理的消息的数量。
-
 
 ```conf
 my-dispatcher {
-	type = Dispatcher
-	executor = "fork-join-executor"
+ type = Dispatcher
+ executor = "fork-join-executor"
 
-	fork-join-executor {
-		parallelism-min = 2 # minimum threads
-		parallelism-factor = 2.0 # Maximum threads per core
-		parallelism-max = 10 # Maximum total threads
-	}
-	throughput = 100 # Max message to process in a actor before moving on.
+ fork-join-executor {
+  parallelism-min = 2 # minimum threads
+  parallelism-factor = 2.0 # Maximum threads per core
+  parallelism-max = 10 # Maximum total threads
+ }
+ throughput = 100 # Max message to process in a actor before moving on.
 }
 ```
 
@@ -307,15 +291,13 @@ my-dispatcher {
 - **CallingThreadDispatcher**： 这个 Dispatcher 比较特殊，它没有 Executor，而是在发起调用的线程上执行工作。这种 Dispatcher 主要用于测试，特备是调试。由于发起调用的线程负责返程工作，可以清楚地看到栈追踪轨迹信息，了解所执行方法的完整上下文。这对于理解异常是非常有用的。每个 Actor 会获取一个锁，所以每次只有一个线程可以在 Actor 中执行代码，而如果doge线程向一个 Actor 发送信息的话，就会导致除了拥有锁的线程之外的所有线程处于等待状态。 TestActorRef 就是介于 CallingThreadDispatcher 实现在测试中同步执行工作的。
 - **BalancingDispatcher**：哦我们会在一些 Akka 文档中看到 BalancingDispatcher。现在已经不推荐直接使用了。应该使用之前介绍过的 BalancingPool Router。不过 Akka 中任然使用了 BalancingDispatcher，但是只会通过 Router 简介受用。 BalancingDispatcher 有一点很特殊：Pool 中的所有 Actor 都共享同一个邮箱，并且会为 Pool 中的每个 Actor 都创建一个线程。使用 BalancingDispatcher 的 Actor 从邮箱中拉去信息，所以只要有 Actor 处于空闲状态，就不会有任何 Actor 的工作队列中存在任务。这是工作窃取的一个变种，所有 Actor 都会从一个共享的邮箱中拉取任务。两者在性能上的优点也类似。
 
-
 创建 Actor 的时候，可以给 `Props` 提供在 application.conf 中配置好的 Dispatcher 名称：
 
 ```scala
 system.actorOf(Props[MyActor].withDispatcher("my-pinned-dispatcher"))
-``` 
+```
 
 ### 5.5.4 决定合适使用哪种 Dispatcher
-
 
 进行纵向扩展的第一步是理解哪些情况的响应及时性最重要，以及对这些重要的请求做出响应时可能会发生资源竞争的地方。
 
@@ -327,32 +309,29 @@ system.actorOf(Props[MyActor].withDispatcher("my-pinned-dispatcher"))
 
 阻塞 IO 会有它自己的 Dispatcher，包含 50 或 100 个线程，会阻塞线程、等待 IO 的操作要和异步线程池分隔开来，原因在于一旦所有线程都处于等待 IO 的状态，那么应用程序中的其他操作都无法继续执行。这可能是最重要的一点：**千万不要把阻塞 IO 操作放在 akka 的 Dispatcher 中**。
 
-
 ### 5.5.5 Default Dispatcher
-
 
 有好多种使用 `Default Dispatcher` 的方法。既可以把所有工作都分离出去，只由 Akka 本身来使用 `Default Dispatcher`，也可以只在 `Default Dispatcher` 中执行异步操作，把高风险操作移到其他地方执行。无论怎么选择，都不要能够阻塞 `Default Dispatcher` 的线程，而且要对于运行在 `Default Dispatcher` 中的人物多加小心，防止资源饥饿的情况发生。
 
 要创建或者使用 `Default Dispathcer/ThreadPool` 的话，其实不需要做什么。古国需要的话，只要在 classpath 内的 `application.conf` 文件中定义并配置 `Default Dispatcher` 即可。如下：
 
-
 ```conf
 akka {
-	actor {
-		default-dispatcher {
-			# Min number of threads to cap
-			# factor-based parallelism number to
-			parallelism-min = 8
-			# The parallelism factor is used to determine thread pool size using the 
-			# following formula: ceil( available processors * factor). Resulting size 
-			# is then bounded by the parallelism- min and parallelism- max values. 
-			parallelism- factor = 3. 0 
-			# Max number of threads to cap factor- based parallelism number to 
-			parallelism- max = 64 
-			# Throughput for default Dispatcher, set to 1 for as fair as possible 
-			throughput = 10
-		}
-	}
+ actor {
+  default-dispatcher {
+   # Min number of threads to cap
+   # factor-based parallelism number to
+   parallelism-min = 8
+   # The parallelism factor is used to determine thread pool size using the 
+   # following formula: ceil( available processors * factor). Resulting size 
+   # is then bounded by the parallelism- min and parallelism- max values. 
+   parallelism- factor = 3. 0 
+   # Max number of threads to cap factor- based parallelism number to 
+   parallelism- max = 64 
+   # Throughput for default Dispatcher, set to 1 for as fair as possible 
+   throughput = 10
+  }
+ }
 }
 
 ```
@@ -361,11 +340,11 @@ akka {
 
 ```conf
 akka {
-	actor {
-		default-dispatcher {
-			throughput = 1
-		}
-	}
+ actor {
+  default-dispatcher {
+   throughput = 1
+  }
+ }
 }
 ```
 
@@ -375,7 +354,7 @@ akka {
 /* java */
 ActorSystem system = ActorSystem.create();
 CompletableFuture.runAsync(() -> System.out.println("run in ec", 
-	system.dispatcher());
+ system.dispatcher());
 
 /* scala */
 implicit val ec = system.dispatcher
@@ -386,10 +365,7 @@ val future = Future(() => println("run in ec)
 
 在 Scala 中，扩展了 Actor 的类中已经包含了一个 `implicit val` 的 Dispatcher，所以在 Actor 中使用 Future 的时候就不需要再指定 Dispatcher 了。不过在 Actor 中使用 Future 的情况其实不是很多，要记住相对于 `ask` 应该优先使用 `tell`。所以如果发现有好多在 Actor 中使用 Future 的情况，那么可能需要衡量一下方法是否合理。
 
-
-
 ### 5.5.6 使用 Future 的阻塞 IO Dispatcher
-
 
 如果需要执行阻塞操作，那么不应该将这些操作放在 Default Dispatcher 中执行，这一应用程序执行阻塞操作的时候仍然能够继续运行。
 
@@ -401,13 +377,13 @@ val future = Future(() => println("run in ec)
 
 ```conf
 blocking-io-dispatcher {
-	type = Dispatcher
-	executor = "fork-join-executor"
-	fork-join-executor {
-		parallelism-factor = 50.0
-		parallelism-min = 10
-		parallelism-max = 100
-	}
+ type = Dispatcher
+ executor = "fork-join-executor"
+ fork-join-executor {
+  parallelism-factor = 50.0
+  parallelism-min = 10
+  parallelism-max = 100
+ }
 }
 ```
 
@@ -424,9 +400,9 @@ Executor ex = context().system().dispatchers().lookup("blocking-io-dispatcher");
 
 /* scala */
 val ec: ExecutionContext = context
-	.system
-	.dispatchers
-	.lookup("blocking-io-dispatcher")
+ .system
+ .dispatchers
+ .lookup("blocking-io-dispatcher")
 ```
 
 一旦得到了 Dispatcher 的引用，就可以使用（以及 Future API） 在 Dispatcher 中执行操作了。
@@ -435,18 +411,17 @@ val ec: ExecutionContext = context
 
 /* java */
 CompletableFuture<UserProfile> future = CompletableFuture
-	.supplyAsync(() -> userProfileRepository.findById(id), ex);
+ .supplyAsync(() -> userProfileRepository.findById(id), ex);
 
 /* scala */
 val future: Future[UserProfile] = Future {
-	userProfileRepository.findById(id)
+ userProfileRepository.findById(id)
 }(ec)
 ```
 
 在 Scala 和 Java 的 Future API 中，我们只需做一件事：把 Dispatcher 的引用作为 Future 的第二个参数传递进去，Dispatcher 会负责剩余的所有工作。一旦有了结果，Future 就会完成。
 
 也可以使用 Future 来获取计算密集型任务的结果，将执行计算的过程移到另一个 Dispatcher 中，确保 Actor 能够继续执行。
-
 
 ### 5.5.7 将 Actor 分配给另一个 Dispatcher
 
@@ -463,20 +438,20 @@ val future: Future[UserProfile] = Future {
 
 ```conf
 article-parsing-dispatcher {
-	# Dispatcer is the name of the event-based dispatcher
-	type = Dispatcher
-	# What kind of ExecutionService to use
-	executor = "fork-join-executor"
-	# Configuration for the fork join pool
-	fork-join-executor {
-		# Min number of threads to cap factor-based parallelism number to
-		parallelism-min = 2
-		# Parallelism (threads) ... ceil(vaaliable processors * factor)
-		parallelism-factor = 2.0
-		# Max number of threads to cap factor-based parallelism number to
-		parallelism-max = 8
-	}
-	throughput = 50
+ # Dispatcer is the name of the event-based dispatcher
+ type = Dispatcher
+ # What kind of ExecutionService to use
+ executor = "fork-join-executor"
+ # Configuration for the fork join pool
+ fork-join-executor {
+  # Min number of threads to cap factor-based parallelism number to
+  parallelism-min = 2
+  # Parallelism (threads) ... ceil(vaaliable processors * factor)
+  parallelism-factor = 2.0
+  # Max number of threads to cap factor-based parallelism number to
+  parallelism-max = 8
+ }
+ throughput = 50
 }
 ```
 
@@ -486,14 +461,14 @@ article-parsing-dispatcher {
 
 /* Java */
 List<ActorRef> routees = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8)
-		.stream()
-		.map(x -> system.actorOf(Props.create(ArticleParseActor.class).withDispatcher("article-parsing-dispatcher")))
-		.collect(Collectors.toList());
+  .stream()
+  .map(x -> system.actorOf(Props.create(ArticleParseActor.class).withDispatcher("article-parsing-dispatcher")))
+  .collect(Collectors.toList());
 
 /* Scala */
 val actors: List[ActorRef] = (0 to 7).map(x => {
-	system.actorOf(Props(classOf[ArticleParseActor])
-		.withDispatcher("article-parsing-dispatcher"))
+ system.actorOf(Props(classOf[ArticleParseActor])
+  .withDispatcher("article-parsing-dispatcher"))
 }).toList
 
 ```
@@ -504,23 +479,20 @@ val actors: List[ActorRef] = (0 to 7).map(x => {
 /* Java */
 
 Iterable<String> routeeAddresses = routees
-		.stream()
-		.map(x -> x.path().toStringWithoutAddress())
-		.collect(Collectors.toList());
+  .stream()
+  .map(x -> x.path().toStringWithoutAddress())
+  .collect(Collectors.toList());
 ActorRef workRouter = system.actorOf(new RoundRobinGroup(routeeAddresses).props());
 
 /* Scala */
 val workerRouter = system.actorOf(RoundRobingGroup(
-		actors.map(x => x.path.toStringWithoutAdress).toList).props(), "workerRouter")
+  actors.map(x => x.path.toStringWithoutAdress).toList).props(), "workerRouter")
 workerRouter.tell(new ParseArticle(TestHelper.file), self());
 ```
 
-
 **使用 BalancingPool/BalancingDispatcher**
 
-
 ……
-
 
 ### 5.5.8 优化并行
 
@@ -528,25 +500,7 @@ workerRouter.tell(new ParseArticle(TestHelper.file), self());
 
 The Only way to know for sure what impact a change has is to **measure**!
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- 
-
+-
 
 If you like TeXt, don't forget to give me a star :star2:.
 

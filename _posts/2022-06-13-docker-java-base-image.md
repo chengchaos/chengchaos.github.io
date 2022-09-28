@@ -1,7 +1,7 @@
 ---
 title: 自定义一个 Java 环境的 Docker 镜像 （Alpine + OpenJDK）
 key: 2022-06-13
-tags: docker,images,java,openjdk,alpine
+tags: docker images java openjdk alpine
 ---
 
 先做一个运行 Java 的 Docker 基础镜像。
@@ -9,8 +9,6 @@ tags: docker,images,java,openjdk,alpine
 <!--more-->
 
 ## 先手动测试
-
-
 
 ```sh
 docker rm alpine-java
@@ -56,11 +54,7 @@ docker commit alpine-java chengchao/alpine-java
 docker push chengchao/alpine-java
 ```
 
-
-
 ## 再创建 Dockerfile
-
-
 
 ```dockerfile
 FROM alpine
@@ -74,16 +68,11 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     rm -rf /tmp/* /var/check/apk/*
 ```
 
-
-
 build ：
 
  ```bash
  docker build . -t alpine-openjdk8:v2
  ```
-
-
-
 
 ## 参考(照抄)
 

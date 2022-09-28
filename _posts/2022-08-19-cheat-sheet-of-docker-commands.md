@@ -1,7 +1,7 @@
 ---
 title: A cheat sheet of docker commands
 key: 2022-08-19
-tags: docker kubectl
+tags: cheat-sheet docker kubectl
 ---
 
 默认情况下，容器以隔离方式运行。它们对同一台计算机上的其他进程或容器一无所知。若要允许容器间进行通信，请使用网络。

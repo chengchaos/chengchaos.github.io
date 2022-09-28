@@ -1,14 +1,14 @@
 ---
 title: kubernetes simple notes
 key: 2022-06-27
-tags: minikube suse
+tags: kubernetes k8s kubectl minikube suse
 ---
 
 Mninkube 是一个构建单节点集群的工具。
 
 <!--more-->
 
-## 安装 Minikube 
+## 安装 Minikube
 
 Minikube 是一个二进制文件，可以安装在 MAC、Linux 和 Windows 中。
 
@@ -18,9 +18,7 @@ Minikube 是一个二进制文件，可以安装在 MAC、Linux 和 Windows 中�
 
 阿里云： [https://developer.aliyun.com/article/221687](https://developer.aliyun.com/article/221687)
 
-
-
-### 1 安装 kubectl 
+### 1 安装 kubectl
 
 参考： [https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 
@@ -62,8 +60,6 @@ minikube start \
 
 **一次都没有安装成功， 那就放弃吧。 也不是必须要用这个东东。**
 
-
-
 ## Kubectl
 
 部署应用程序最简单的方式是使用 `kubectl run` 命令。此命令可以创建必要的组件且无需使用 json 或者 yaml 文件。
@@ -82,11 +78,9 @@ kubectl run my-kubia \
 pod/my-kubia created
 ```
 
-
-
 ### apply 一个 rc
 
-现在 `--generator=run/v1` 命令已经弃用， k8s文档：https://kubernetes.io/zh/docs/reference/kubectl/conventions/#%E7%94%9F%E6%88%90%E5%99%A8
+现在 `--generator=run/v1` 命令已经弃用， k8s文档：<https://kubernetes.io/zh/docs/reference/kubectl/conventions/#%E7%94%9F%E6%88%90%E5%99%A8>
 
 所以，现在只能用 YAML 文件的方式来启动一个 ReplicationController 了，
 
@@ -165,20 +159,18 @@ metadata:
 
 ### 一个简单的 YAML 描述文件
 
-
-
 ```yaml
 apiVersion: v1 # 藐视文件遵循 v1 版本的 kubernetes api
 kind: Pod      # 描述一个 Pod
 metadata:
-	name: kubia-manual # Pod 的名称
+ name: kubia-manual # Pod 的名称
 spec:
-	containers:
+ containers:
   - image: xxx/kubia
-  	name: kubia
-  	ports:
-  	- containerPort: 8280
-  		protocol: TCP
+   name: kubia
+   ports:
+   - containerPort: 8280
+    protocol: TCP
 ```
 
 > 在pod定义中指定端口纯粹是展示性的（informational）。忽略它们对于客户端是否可以通过端口连接到pod不会带来任何影响。如果容器通过绑定到地址0.0.0.0的端口接收连接，那么即使端口未明确列出在podspec中，其他pod也依旧能够连接到该端口。但明确定义端口仍是有意义的，在端口定义下，每个使用集群的人都可以快速查看每个pod对外暴露的端口。此外，我们将在本书的后续内容中看到，明确定义端口还允许你为每个端口指定一个名称，这样一来更加方便我们使用。
@@ -259,7 +251,7 @@ Kubia server starting ...
 
 ### port-forward 对 pod 进行端口转发
 
-如果想要在不通过 service 的情况下与某个特定的 pod 进行通信（出于调试或其他原因）,Kubernetes 将允许我们配置端口转发到该 pod。可以通过 `kubectl port-forward` 命令完成上述操作。 
+如果想要在不通过 service 的情况下与某个特定的 pod 进行通信（出于调试或其他原因）,Kubernetes 将允许我们配置端口转发到该 pod。可以通过 `kubectl port-forward` 命令完成上述操作。
 
 ```bash
 kubectl port-forward kubia-normal 7777:8280
@@ -292,11 +284,9 @@ spec:
     image: registry.cn-hangzhou.aliyuncs.com/chengchaos/kubia
     ports:
     - containerPort: 8280
-		  protocol: TCP
+    protocol: TCP
     imagePullPolicy: IfNotPresent
 ```
-
-
 
 `kubectl get pods` 命令默认不回列出任何标签， 可以使用 `--show-labels` 选项查看
 
@@ -360,11 +350,7 @@ kubia-rc-x6blp   1/1     Running   0          170m
 > - `‘env in (prod,devel)’` 带有 env 的标签，值是 prod 或 devel 的
 > - `'env notin (prod,devel)'` 带有 env 的标签，但是值不是 prod 或 devel 的
 
-
-
 ### 调度 pod 到一个节点
-
-
 
 ```yaml
 apiVersion: v1
@@ -384,8 +370,6 @@ spec:
     - containerPort: 8280
     imagePullPolicy: IfNotPresent
 ```
-
-
 
 ```bash
 kubectl label node centos702.chaos.luxe gpu=true
@@ -513,7 +497,7 @@ pod "kubia-manual-v2" deleted
 - 删除金丝雀 `kubectl delete po -l rel=canary`
 - 删除所有 pod ： `kubectl delete po --all`
 
-### delete 删除 namespace 
+### delete 删除 namespace
 
 也会删除里面的所有 pod
 
@@ -527,11 +511,8 @@ kubectl delete namespace custom-namespace2
 kubectl delete all --all
 ```
 
-
-
 ---
 
 If you like TeXt, don't forget to give me a star. :star2:
 
 [![Star This Project](https://img.shields.io/github/stars/kitian616/jekyll-TeXt-theme.svg?label=Stars&style=social)](https://github.com/kitian616/jekyll-TeXt-theme/)
-
