@@ -21,19 +21,17 @@ func Command(name string, arg ...string) *Cmd
 
 For example：
 
-
 ```go
 
 func Test_RunCommand001(t *testing.T) {
 
+   cmd := exec.Command("java", "-h")
+   output, err := cmd.CombinedOutput()
+   if err != nil {
+      log.Fatalln(err)
+   }
 
-	cmd := exec.Command("java", "-h")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	log.Println("result =>", string(output))
+   log.Println("result =>", string(output))
 
 }
 
@@ -43,76 +41,91 @@ func Test_RunCommand001(t *testing.T) {
 
 要实现外部命令执行结果的实时输出，需要使用 Cmd 结构的 StdoutPipe() 方法创建一个管道连接到命令执行的输出，然后用 for 循环从管道中实时读取命令执行的输出并打印到终端。具体代码如下：
 
-
 ```go
-func RunCommand(name string, arg ...string) error {
-	cmd := exec.Command(name, arg...)
-    // 命令的错误输出和标准输出都连接到同一个管道
-	stdout, err := cmd.StdoutPipe()
-	cmd.Stderr = cmd.Stdout
+package main
 
-	if err != nil {
-		return err
-	}
+import (
+   "fmt"
+   "io"
+   "os/exec"
+)
 
-	if err = cmd.Start(); err != nil {
-		return err
-	}
-    // 从管道中实时获取输出并打印到终端
-	for {
-		tmp := make([]byte, 1024)
-		_, err := stdout.Read(tmp)
-		fmt.Print(string(tmp))
-		if err != nil {
-			break
-		}
-	}
+func RunCommand(name string, arg ...string) (result []string, err error) {
 
-	if err = cmd.Wait(); err != nil {
-		return err
-	}
-	return nil
+   cmd := exec.Command(name, arg...)
+   out, err := cmd.StdoutPipe()
+   if err != nil {
+      return
+   }
+   defer out.Close()
+   // 命令的错误输出和标准输出都连接到同一个管道
+   cmd.Stderr = cmd.Stdout
+
+   if err = cmd.Start(); err != nil {
+      return
+   }
+   buff := make([]byte, 8)
+
+   for {
+      len, err := out.Read(buff)
+      if err == io.EOF {
+         break
+      }
+      result = append(result, string(buff[:len]))
+   }
+   cmd.Wait()
+   return
 }
+
+func main() {
+   result, err := RunCommand("java", "-version")
+   if err != nil {
+      fmt.Printf("error -> %s\n", err.Error())
+   }
+
+   for _, str := range result {
+      fmt.Print(str)
+   }
+   fmt.Println()
+}
+
+
 ```
-
-
-
 
 ## 重定向
 
 ```go
 func Test_RunCommandRedirect(t *testing.T) {
 
-	//var stdout io.ReadCloser
-	//var err error
+ //var stdout io.ReadCloser
+ //var err error
 
-	stdout, err :=os.OpenFile("stdout.log", os.O_CREATE|os.O_WRONLY, os.FileMode.Perm(0600))
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer stdout.Close()
+ stdout, err :=os.OpenFile("stdout.log", os.O_CREATE|os.O_WRONLY, os.FileMode.Perm(0600))
+ if err != nil {
+  log.Fatalln(err)
+ }
+ defer stdout.Close()
 
 
-	// 重定向标准输出到文件
-	cmd := exec.Command("java.exe", "-h")
-	cmd.Stdout = stdout
+ // 重定向标准输出到文件
+ cmd := exec.Command("java.exe", "-h")
+ cmd.Stdout = stdout
 
-	// 执行命令
-	if err := cmd.Start(); err != nil {
-		log.Fatalln(err)
-	}
+ // 执行命令
+ if err := cmd.Start(); err != nil {
+  log.Fatalln(err)
+ }
 }
 ```
 
 ## cmd 的 Start 方法和 Run 方法的区别
 
-Start 方法不会等待命令完成。
-Run 方法回阻塞等待命令完成。
+- `Start` 方法不会等待命令完成。
+- `Run` 方法回阻塞等待命令完成。
 
 ```go
 
 ```
-
 
 ## 运行时隐藏窗口
 
@@ -131,10 +144,8 @@ err := cmd.Run()
 
 参考：
 
-- https://blog.csdn.net/youngwhz1/article/details/88662172
-- https://blog.csdn.net/qianghaohao/article/details/96614079?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.opensearch_close&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.opensearch_close
-
-
+- <https://blog.csdn.net/youngwhz1/article/details/88662172>
+- <https://blog.csdn.net/qianghaohao/article/details/96614079?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.opensearch_close&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.opensearch_close>
 
 EOF
 
@@ -143,8 +154,3 @@ EOF
 Power by TeXt.
 
 <iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
-
-
-
-
-
