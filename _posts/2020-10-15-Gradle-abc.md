@@ -22,7 +22,7 @@ Gradle 是一种开源自动化构建工具，支持多语言环境，受 Ant、
 
 ## 安装
 
-下载地址： [https://gradle.org/releases/](https://gradle.org/releases/)
+下载地址：<https://gradle.org/releases/>
 
 以 Linux 举例：
 
@@ -63,7 +63,7 @@ build.gradle
 
 ```gradle
 task hello {
-      parintln "Hello World!"
+    println "Hello World!"
 }
 
 gradle -q hello
@@ -73,7 +73,7 @@ gradle -q hello
 
 以上脚本定义了一个独立的 task 叫做 hello，并且加入了一个 action，当执行 `gradle hello` 时，Gradle 执行叫做 hello 的 task，即执行了我们提供的 action。
 
-这个 action 时一个包含了一些 Grovvy 代码的闭包（Closure）。
+这个 action 是一个包含了一些 Grovvy 代码的闭包（Closure）。
 
 > task 块内可以定义前置、后置执行的方法（闭包）`doFirst` 、 `doLast`， 注意，定义多个时不能保证执行顺序。
 
@@ -130,16 +130,82 @@ version=0.0.1
 group=com.cnblogs.hellxz
 ```
 
+## Java 构建入门
 
+### 生成Java项目
 
+使用 Maven 时我们可以通过以下命令来创建一个简单的 Java 项目
 
+```bash
+mvn archetype:generate \
+  -DgroupId=xxx \
+  -DartifactId=yyy \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DarchetypeCatalog=local \
+  -DinteractiveMode=false
 
+```
 
+Maven 有的 Gradle 自然也不会落下，我们可以使用 init task来初始化一个 Java 项目
 
+```bash
+chengchao@web1:~/temp/gradle_temp> gradle init
 
+Select type of project to generate:
+  1: basic
+  2: application
+  3: library
+  4: Gradle plugin
+Enter selection (default: basic) [1..4] 2
 
+Select implementation language:
+  1: C++
+  2: Groovy
+  3: Java
+  4: Kotlin
+  5: Swift
+Enter selection (default: Java) [1..5] 3
 
+Select build script DSL:
+  1: Groovy
+  2: Kotlin
+Enter selection (default: Groovy) [1..2] 1
 
+Select test framework:
+  1: JUnit 4
+  2: TestNG
+  3: Spock
+  4: JUnit Jupiter
+Enter selection (default: JUnit 4) [1..4] 1
+
+Project name (default: gradle_temp):
+Source package (default: gradle_temp):
+
+> Task :init
+Get more help with your project: https://docs.gradle.org/6.4.1/userguide/tutorial_java_projects.html
+
+BUILD SUCCESSFUL in 50s
+2 actionable tasks: 2 executed
+
+]
+chengchao@web1:~/temp/gradle_temp> ls
+build.gradle  gradle  gradlew  gradlew.bat  settings.gradle  src
+chengchao@web1:~/temp/gradle_temp> tree src
+src
+├── main
+│   ├── java
+│   │   └── gradle_temp
+│   │       └── App.java
+│   └── resources
+└── test
+    ├── java
+    │   └── gradle_temp
+    │       └── AppTest.java
+    └── resources
+
+8 directories, 2 files
+
+```
 
 参考：
 
