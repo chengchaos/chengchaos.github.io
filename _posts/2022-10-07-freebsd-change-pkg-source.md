@@ -1,12 +1,8 @@
 
 ---
-
 title: FreeBSD 更换 PKG 源
-
 key: 2021-10-07
-
 tags: FreeBSD pkg
-
 ---
 
 FreeBSD 有四类源，pkg、ports、portsnap、update。http://freebsd.cn 暂不可用。
