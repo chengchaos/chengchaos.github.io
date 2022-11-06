@@ -18,7 +18,7 @@ tags: asp
 
 首先我们来安装WINSOWS2000自带的IIS作为服务器。（WINSOWS98的PWS也可以，但是不推荐，安装大致和2000相同，这里就不详细说了。） 
 
-![1.1](images/20201209/1.1.png)
+![1.1](https://www.chaos.luxe/blog/static/images/1.1.png)
 先是控制面板－添加或删除程序。 
 
 
@@ -659,3 +659,5 @@ EOF
 ---
 
 Power by TeXt.
+
+
