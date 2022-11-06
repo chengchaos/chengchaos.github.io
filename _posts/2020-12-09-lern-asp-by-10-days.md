@@ -19,46 +19,40 @@ tags: asp
 首先我们来安装WINSOWS2000自带的IIS作为服务器。（WINSOWS98的PWS也可以，但是不推荐，安装大致和2000相同，这里就不详细说了。） 
 
 ![1.1](https://www.chaos.luxe/blog/static/images/1.1.png)
+
 先是控制面板－添加或删除程序。 
 
+![img](https://www.chaos.luxe/blog/static/images/1.2.png)
 
-
-![1.2](images/20201209/1.2.png)
 然后是添加删除windows组件－选中IIS组件前面的勾
 
+![img](https://www.chaos.luxe/blog/static/images/1.3.png)
 
-
-![1.3](images/20201209/1.3.png)
 装好以后打开控制面板中的管理工具，会发现多了两个图标，打开IIS管理器
 
+![img](https://www.chaos.luxe/blog/static/images/1.4.png)
 
-
-![1.4](images/20201209/1.4.png)
 选择默认WEB站点，然后右键属性或者直接按快捷键
 
+![img](https://www.chaos.luxe/blog/static/images/1.5.png)
 
-
-![1.5](images/20201209/1.5.png)
 大家不要头痛，里面只有三个页面需要修改，先是WEB站点，如果用户有固定IP，可以分配一个IP
 
+![img](https://www.chaos.luxe/blog/static/images/1.6.png)
 
-
-![1.6](images/20201209/1.6.png)
 接下来在注目录中选择一个自己硬盘上面的文件夹存放网站，选中读取、写入
 
+![img](https://www.chaos.luxe/blog/static/images/1.7.png)
 
-
-![1.7](images/20201209/1.7.png)
 在文档中添加默认的页面，比如打 www.sina.com.cn 新浪就是调用了一个默认文档
 
+![img](https://www.chaos.luxe/blog/static/images/1.8.png)
 
-
-![1.8](images/20201209/1.8.png)
 接下来也是最关键的：
 
 在刚才你定义的一个文件夹里面新建一个文件，可以用记事本建立一个TXT文件然后改名为ASP,里面的内容如下 
 
-```vbscript
+```html
 <%response.write  "hello  world!"%> 
 ```
 
@@ -75,10 +69,11 @@ tags: asp
 
 首先，让我们来看一下 DREAMWEAVER 的表单元素。
 
-![2.1](images/20201209/2.1.png)
+![img](https://www.chaos.luxe/blog/static/images/2.1.png)
+
 表单元素要放在一个表单域里面，建立一个表单域。然后修改动作里面的文件为要接受这个表单变量的ASP文件。方法有两种，一种是POST，这个方法传送的变量不会在浏览器的地址栏里面显示，可以大批量传送数据；GET则是会在浏览器地址栏里面显示的，等一会举例子。
 
-![2.3](images/20201209/2.2.png)
+![img](https://www.chaos.luxe/blog/static/images/2.2.png)
 
 下面我们来一个一个看表单元素。1、文本域，这个是最基本的，传送的是文本信息，一般用户名，密码都要用这个传送，不过要是密码的话要在类型里面选择密码，这样就会以*代替显示出来的字符，文本域的名字很重要，以后会用到这个名字所以一般不用默认的名字。现在举一个例子：如果文本域的名字是name的话，用来传送网上用户登记的名字，在表单域里面，传送到reg.asp，用POST方法，那么在reg.asp里面这样得到变量<%name=request.form("name")%>如果要显示变量再家加一句，response.write name，这样就形成了一个从客户端到浏览器再回到客户端的过程。如果方法用的是GET的话，那么就改为name=request.querystring("name")实际上两者可以统一为name=request("name")。下面看看按钮，按钮里面无非两种，一种是提交表单的按钮，一种是重新输入的按钮。单选按钮，一个按钮有一个值。在列表里面同样，添加列表选项和值。下面举一个例子，实际上各种表单元素都是差不多的。下面是DREAMWEAVER里面的代码：
 
@@ -123,7 +118,8 @@ response.write city
 %> 
 ```
 
-![2.3](images/20201209/2.3.png)
+![img](https://www.chaos.luxe/blog/static/images/2.3.png)
+
 等学会了数据库以后，是不是觉得做一个留言簿很简单？
 
 ## 第三天
@@ -132,41 +128,31 @@ response.write city
 
 首先，大家要安装OFFICE里面的ACCEES（我的演示是OFFICE  XP版本），安装过程这里就不说了，安装好以后会出现下图的菜单。 
 
-![3.1](images/20201209/3.1.png)
+![img](https://www.chaos.luxe/blog/static/images/3.1.png)
 
 单击打开ACCEES 
 
-
-
-![3.2](images/20201209/3.2.png)
+![img](https://www.chaos.luxe/blog/static/images/3.2.png)
 
 安空数据库，新建一个数据库，文件名字可以叫 gustbook.mdb，我这里叫 example3.mdb （为了安全起见，文件名复杂一点好，因为 ACCESS 数据库可以被下载的！！） 
 
-![3.3](images/20201209/3.3.png)
+![img](https://www.chaos.luxe/blog/static/images/3.3.png)
 
 使用设计器创建新的表，一个数据库MDB文件里面可以有多个表
 
-
-
-![3.4](images/20201209/3.4.png)
+![img](https://www.chaos.luxe/blog/static/images/3.4.png)
 
 填写字段名字然后选择字段类型，一条记录可以有很多字段，可以有很多字段类型，字段大小的意思就是这个字段最多可以容纳的字符树，当这个字段没有任何信息是，ACCEES会用默认值代替（没有任何信息不是空的意思），一般必填字段和允许空字符串分别设置为否、是，以防止出错
 
-
-
-![3.5](images/20201209/3.5.png)
+![img](https://www.chaos.luxe/blog/static/images/3.5.png)
 
 按照上图大家分别建立几个字段，在时间中默认值为=now()就是这个字段不需要填写，系统直接以当前时间代替
 
-
-
-![3.6](images/20201209/3.6.png) 
+![img](https://www.chaos.luxe/blog/static/images/3.6.png)
 
 所以的字段都建立以后，关闭这个窗口，系统会出现上图的提示，选择是，主键是记录的标识，为了以后简单，大家可以把编号改为ID，还有在ACCEES里面尽量不要用中文表示字段名字
 
-
-
-![3.7](images/20201209/3.7.png)
+![img](https://www.chaos.luxe/blog/static/images/3.7.png)
 
 最后，把这个表的名字设置为guestbook，然后双击打开这个表，观看表里面的记录 好了，大家不要急，这个数据库以后有用的，大家不要删除。
 
@@ -232,7 +218,7 @@ rs.open exec,conn,1,1
 
 好了今天就结束了，大家可以多实践，可以先下载我的示例看一下，调试一下。下面是我机器上面的结果图片。 
 
-![4.1](images/20201209/4.1.png)
+![img](https://www.chaos.luxe/blog/static/images/4.1.png)
 
 
 
