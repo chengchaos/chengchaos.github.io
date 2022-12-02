@@ -3,6 +3,7 @@ title: MAC 设置 DNS 地址
 key: 2022-12-01
 tags: MAC DNS CLI
 ---
+建议关键字 mac dns cli MAC DNS CLI
 
 Omitted ...
 
