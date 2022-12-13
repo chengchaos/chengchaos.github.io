@@ -4,11 +4,13 @@ key: 2022-06-13
 tags: docker images java openjdk alpine
 ---
 
+> Suggested Keywords: docker images java openjdk alpine
+
 先做一个运行 Java 的 Docker 基础镜像。
 
 <!--more-->
 
-## 先手动测试
+## 0x01 手动测试
 
 ```sh
 docker rm alpine-java
@@ -54,9 +56,11 @@ docker commit alpine-java chengchao/alpine-java
 docker push chengchao/alpine-java
 ```
 
-## 再创建 Dockerfile
+## 0x02 Dockerfile
 
-```dockerfile
+创建 Dockerfile, 内容如下
+
+```Dockerfile
 FROM alpine
 MAINTAINER Cheng,Chao Chao.Cheng@partner.bmw-brilliance.cn
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
@@ -68,13 +72,23 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     rm -rf /tmp/* /var/check/apk/*
 ```
 
-build ：
+构建， 命令如下
 
  ```bash
  docker build . -t alpine-openjdk8:v2
  ```
+ 
+## 0x03 java 启动
 
-## 参考(照抄)
+```Dockerfile
+FROM xxx
+COPY start.sh /
+COPY app.jar /
+CMD ["bash", "-c", "java -XshowSettings:vm -jar /app.jar"]
+```
+## 0x04 其他
+
+## 0x05 参考(照抄)
 
 - [https://blog.csdn.net/java1856905/article/details/89379780](https://blog.csdn.net/java1856905/article/details/89379780)
 - [https://blog.csdn.net/john1337/article/details/113846075](https://blog.csdn.net/john1337/article/details/113846075)
@@ -84,3 +98,5 @@ build ：
 If you like TeXt, don't forget to give me a star. :star2:
 
 [![Star This Project](https://img.shields.io/github/stars/kitian616/jekyll-TeXt-theme.svg?label=Stars&style=social)](https://github.com/kitian616/jekyll-TeXt-theme/)
+
+

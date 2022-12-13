@@ -1,4 +1,4 @@
----
+·---
 title: docker-compose安装 (2020最新版)
 key: 2021-08-15
 tags: docker docker-compose
@@ -239,3 +239,5 @@ DEPLOYMENT=$1
 MODULE=$2
 kubectl set image deployments/${DEPLOYMENT} ${MODULE}=${IMAGE}
 ```
+
+

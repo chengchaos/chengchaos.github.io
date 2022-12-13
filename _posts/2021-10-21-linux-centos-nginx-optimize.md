@@ -4,6 +4,12 @@ key: 2021-10-16
 tags: linux centos nginx optimize
 ---
 
+> Suggested Keywords: nginx optimize Linux linux
+
+Summarize
+
+Omitted ...
+
 转载: [https://blog.csdn.net/qq_34412985/article/details/108293437](https://blog.csdn.net/qq_34412985/article/details/108293437)
 
 <!--more-->
@@ -315,3 +321,5 @@ fastcgi_cache_path/usr/local/nginx1.10/fastcgi_cache levels=1:2 keys_zone=cache_
 - fastcgi_cache缓存减少了nginx与php的通信的次数，更减轻了php和数据库(mysql)的压力。
 
 EOF
+
+
