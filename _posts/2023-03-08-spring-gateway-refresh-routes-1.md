@@ -1,5 +1,5 @@
 ---
-title: Spring-cloud-gateway 动态路由（方案1）
+title: Spring cloud gateway 动态路由（方案1）
 key: 2023-03-08
 tags: spring cloud gateway refresh route
 ---
