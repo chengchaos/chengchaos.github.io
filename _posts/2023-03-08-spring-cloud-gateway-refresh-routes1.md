@@ -22,13 +22,16 @@ Spring gateway 配置路由主要有两种方式，一种是用 yaml 配置文�
 
 `RouteDefinitionLocator` 接口就是路由器的装载器， 只有一个方法，就是获取路由信息：
 
-```java
+
+```
 public interface RouteDefinitionLocator {
-	Flux<RouteDefinition> getRouteDefinitions();
+    Flux<RouteDefinition> getRouteDefinitions();
 }
+
 ```
 
-`RouteDefinitionLocator` 接口有多个实现类， 分别对应不同配置方式的路由装载：
+
+这个 `RouteDefinitionLocator` 接口有多个实现类， 分别对应不同配置方式的路由装载：
 
 - `CachingRouteDefinitionLocator`: 是 `RouteDefinitionLocator` 包装类，提供缓存功能。
 - `CompositeRouteDefinitionLocator`: 组合过关 RouteDefinitionLocator 的实现，为 RouteDefinitionLocator 提供统一的入口。
@@ -47,7 +50,8 @@ DiscoveryClientRouteDefinitionLocator-->|注册中心加载初始化| CompositeR
 
 > 参考： <https://www.jianshu.com/p/b02c7495eb5e>
 
-```java
+
+```
 public class CachingRouteLocator
         implements Ordered, RouteLocator, ApplicationListener<RefreshRoutesEvent>, ApplicationEventPublisherAware {
 
@@ -88,7 +92,7 @@ public class CachingRouteLocator
 
 通过下面的代码，可以看到如果没有 `RouteDefinitionRepository` 的实例，则默认用 `InMemoryRouteDefinitionRepository`。而做动态路由的关键就在这里。即通过自定义的 `RouteDefinitionRepository` 类，来提供路由配置信息。
 
-```java
+```
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(name = "spring.cloud.gateway.enabled", matchIfMissing = true)
 @EnableConfigurationProperties
@@ -108,7 +112,7 @@ public class GatewayAutoConfiguration {
 
 例如：
 
-```java
+```
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
 import org.springframework.stereotype.Component;
@@ -168,7 +172,7 @@ spring:
 
 封装到 java 对象中：
 
-```java
+```
 import jakarta.annotation.Resource;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
@@ -251,7 +255,7 @@ public class DynamicRouteService implements ApplicationEventPublisherAware {
 
 gateway 是自带接口能增删改查配置的，这个网上有比较多的教程，随便找个看看就明白了。譬如：
 
-```java
+```
 package com.example.demo.services;
 
 import jakarta.annotation.Resource;
