@@ -6,11 +6,11 @@ tags: linux docker mongodb rabbitmq postgres
 
 > Suggest search： linux docker mongodb rabbitmq postgres
 
-Spring gateway 配置路由主要有两种方式，一种是用 yaml 配置文件，一种是写代码里，这两种方式都是不支持动态配置的。
+这是我在开发环境安装一些以来组件的笔记.
 
 <!--more-->
 
-Ubuntu Server 安装 Docker
+## 0x00 Ubuntu Server 安装 Docker
 
 ```bash
 sudo apt install docker.io
@@ -78,11 +78,11 @@ docker run -d \
 docker exec -it mypgsql bash
 ```
 
-## pg_demp
+## 0x04 pg_demp 使用
 
 关于pg_dump:
 
-- pg_dump:  将一个PostgreSQL数据库抽出到一个脚本文件或者其它归档文件中。
+- pg_dump:  将一个 PostgreSQL 数据库抽出到一个脚本文件或者其它归档文件中。
 - pg_dump 是一个用于备份 PostgreSQL 数据库的实用工具，即使当前数据库正在使用，也能够生成一致性的备份，且不会阻塞其他用户访问数据库(包括读、写)。
 - PostgreSQL 提供的一个工具 pg_dump,逻辑导出数据，生成 sql 文件或其他格式文件。
 - pg_dump 是一个客户端工具，可以远程或本地导出逻辑数据，恢复数据至导出时间点。
@@ -97,9 +97,9 @@ docker exec -it mypgsql bash
 - 要从这样的脚本恢复，需要将其提供给 psql。脚本文件甚至可以用来在其他机器或者其他架构上重构数据库;进行一些必要的修改，甚至可以在其他数据库上使用。
 - pg_dumpall 在给定的群集中备份每个数据库, 并保留群集范围内的数据, 如角色和表空间定义。
 
-关于pg_restore：
+关于 pg_restore：
 
-- PostgreSQL提供的一个工具pg_restore用来导入数据
+- PostgreSQL 提供的一个工具 pg_restore 用来导入数据
 
 > 原文链接：https://blog.csdn.net/justlpf/article/details/91789787
 
@@ -118,7 +118,7 @@ xz dum.sql ## 压缩
 xzcat /data/dum.sql.xz | psql -h host -U user dbname
 ```
 
-## 0x04 参考
+## 0x05 参考
 
 
 EOF
