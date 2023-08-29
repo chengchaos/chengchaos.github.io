@@ -21,8 +21,7 @@ highlight_theme: default # "default" (default), "tomorrow", "tomorrow-night", "t
 url     : https://chengchaos.github.io/ # the base hostname & protocol for your site e.g. https://www.someone.com
 baseurl : # does not include hostname
 title   : "Red Dragonfly"
-description: > # this means to ignore newlines until "Language & timezone"
-   "程超的學習筆記" 
+description: "程超 开发 编程 收集 笔记 个人" # > # this means to ignore newlines until "Language & timezone"
 
 ## => Language and Timezone
 ##############################
