@@ -1,12 +1,12 @@
 ---
 title: 在 CentOS 中编译安装 Python 3
 key: 2023-08-21
-tags: linux python install
+tags: centos linux compile install python
 ---
 
-> Suggest search： linux python install ceotos 编译
+> Search suggest: centos linux compile install python 编译 安装
 
-linux 中编译 python 3 还是挺方便的， 这里是一个笔记。
+现在看在linux 中编译 python 3 还是挺方便的， 这里是一个笔记。
 
 <!--more-->
 
@@ -98,5 +98,3 @@ Successfully installed pip-23.2.1
 - <https://www.cnblogs.com/shangping/p/10756718.html>
 
 EOF
-
-

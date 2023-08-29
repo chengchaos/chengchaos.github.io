@@ -4,7 +4,7 @@ key: 2023-07-17
 tags: Ubuntu disabie IPv6
 ---
 
-> Suggest search： Ubuntu disabie IPv6
+> Search suggest： disabie IPv6 Ubuntu
 
 
 
@@ -52,5 +52,3 @@ GATEWAY=19.37.33.1
 - <https://linux.cn/article-12689-1.html>
 
 EOF
-
-
