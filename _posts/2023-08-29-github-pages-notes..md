@@ -98,6 +98,16 @@ hexo generate
 
 ```bash
 
+    location /blog/ {
+        proxy_pass http://blog;
+    }
+
+    location /hexo/ {
+        alias /works/hexo/public/;
+    }
+
 ```
+
+this access policy has taken effect, thank you very much.
 
 EOF
