@@ -69,7 +69,7 @@ Search suggest: linux nmcli network team
 
 应用拓扑同 mode 0,和 mode 2一样，不过这种模式除了配置 port channel 之外还要在 port channel 聚合口下开启 LACP 功能，成功协商后，两端可以正常通信。否则不能使用。
 
-## 0x02 创建网络组 team 接口
+## 0x02 创建 team
 
 语法： `nmcli con add type team con-name CNAME ifname INAME [config JSON]`
 
@@ -87,7 +87,7 @@ nmcli connection add type team con-name team0 ifname team0 config
  {"runner":{"name":"activebackup"}} ipv4.method manual ipv4.addresses 192.168.32.100/24 connection.autoconnect yes
 ```
 
-## 0x03 三、创建port接口
+## 0x03 创建 port
 
 语法：`nmcli connection add type team-slave con-name CNAME ifname INAME masterTEAM`
 
@@ -104,14 +104,14 @@ nmcli connection add con-name team0-ens37 type team-slave ifname ens37 master te
 # 把 ens37 网卡创建为 team0 网络组的子接口
 ```
 
-## 0x04 四、启用 team0 下创建的两个子接口
+## 0x04 启用 team0 的两个 port
 
 ```bash
 nmcli connection up team0-ens33
 nmcli connection up team0-ens37
 ```
 
-## 五、删除网络组team
+## 0x05 删除 team
 
 语法： 
 
@@ -120,7 +120,7 @@ nmcli connection up team0-ens37
 - 3、 `nmcli connection delete team0-ens33 / nmcli connection delete team0-ens37`
 - 4、 `nmcli connection show` (查看网络组 删除后就看不到了)
 
-## 六、也可以：全手动配置team双网卡：
+## 0x06 也可以：全手动配置 team 双网卡
 
 ```bash
 vi /etc/sysconfig/network-scripts/team
