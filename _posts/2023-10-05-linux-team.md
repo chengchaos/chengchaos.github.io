@@ -6,7 +6,7 @@ tags: Linux network
 
 > 本文主要记录了怎样设置 Linux 的 team 。
 
-Search suggest: linux Systemd systemctl
+Search suggest: linux nmcli network team
 
 <!--more-->
 ## 0x01 介绍
@@ -303,5 +303,5 @@ nameserver 114.114.114.114
 
 - [网卡 team配置](https://www.cnblogs.com/backups/p/linux_team.html)
 
-__EOF__
+_EOF_
 
