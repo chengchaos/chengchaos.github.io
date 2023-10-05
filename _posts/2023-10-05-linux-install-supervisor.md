@@ -301,6 +301,6 @@ files = supervisord.d/*.ini
 以下是参考链接。
 
 - [Linux上用supervisor运行java的方法](https://blog.csdn.net/grfstc/article/details/127425170)
-- 
+
 __EOF__
 
