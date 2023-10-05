@@ -266,6 +266,9 @@ team0-eth0   0d6b9a6c-2405-4353-8e1e-d5cd74028db0  ethernet  eth0
 eth0         e684cb85-db50-4e25-b17d-995cf44e8f13  ethernet  --
 
 # nmcli c modify ipv4.dns team0 "114.114.114.114 8.8.8.8"
+# nmcli device modify team0 ipv4.gateway 192.168.1.1
+# nmcli c modify team0 ipv4.gateway 192.168.1.1
+# nmcli device show
 
 # cat /etc/sysconfig/network-scripts/ifcfg-team0
 TEAM_CONFIG="{\"runner\":{\"name\":\"activebackup\"}}"
@@ -302,6 +305,16 @@ nameserver 114.114.114.114
 以下是参考链接。
 
 - [网卡 team配置](https://www.cnblogs.com/backups/p/linux_team.html)
+
+设置笔记本电脑合上盖子不休眠
+
+```bash
+sudo vim /etc/systemd/logind.conf
+
+#HandleLidSwitch=suspend
+HandleLidSwitch=ignore
+```
+
 
 _EOF_
 
