@@ -316,5 +316,5 @@ HandleLidSwitch=ignore
 ```
 
 
-_EOF_
+~~EOF~~
 
