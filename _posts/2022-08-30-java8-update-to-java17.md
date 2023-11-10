@@ -118,4 +118,12 @@ java 16 也是一个改动很大的版本，这个版本默认对 jdk 内部的�
 
 原文连接: [java 8 - java 17 升级指北](https://www.cnblogs.com/fulu/p/15787771.html)
 
-EOF
+## Appendix
+
+```bash
+java -Xmx1g -XshowSettings:all -jar app.jar
+```
+
+~~EOF~~
+
+
