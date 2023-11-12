@@ -58,6 +58,21 @@ server {
 }
 ```
 
+## 多个域名的情况
+
+```conf
+set $cors_origin "";
+
+if ($http_origin ~* "^https://homologation.bmw-brilliance.cn$") {
+    $cors_origin $http_origin;
+}
+if ($http_origin ~* "^https://crh-int.bmw-brilliance.ch$") {
+    $cors_origin $http_origin;
+}
+
+add_header Access-Control-Allow-Origin $cors_origin always;
+```
+
 参考：
 
 - [Nginx的跨域配置](https://www.cnblogs.com/kevinblandy/p/13294320.html)
@@ -69,3 +84,5 @@ EOF
 Power by TeXt.
 
 <iframe src="https://ghbtns.com/github-btn.html?user=kitian616&repo=jekyll-TeXt-theme&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+
+
