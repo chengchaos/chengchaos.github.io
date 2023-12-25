@@ -1,5 +1,6 @@
 ---
 title: Spring Cloud Gateway 熔断降级
+key: 2023-12-25
 tags: Spring Cloud Gateway
 article_header:
   type: cover
