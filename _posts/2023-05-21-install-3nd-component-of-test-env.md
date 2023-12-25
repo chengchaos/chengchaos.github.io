@@ -1,7 +1,7 @@
 ---
 title: 安装开发环境的依赖组建
 key: 2023-03-08
-tags: linux docker mongodb rabbitmq postgres
+tags: linux docker mongodb rabbitmq postgres redis
 ---
 
 > Suggest search： linux docker mongodb rabbitmq postgres
@@ -118,7 +118,17 @@ xz dum.sql ## 压缩
 xzcat /data/dum.sql.xz | psql -h host -U user dbname
 ```
 
-## 0x05 参考
+## 0x05 docker 安装 redis
+
+```bash
+docker run --restart=always \
+  -p 6379:6379 \
+  --name myredis \
+  -d redis:5 \
+  --requirepass 'Jiaban((6'
+```
+
+## 0x06 参考和照抄
 
 
 EOF
