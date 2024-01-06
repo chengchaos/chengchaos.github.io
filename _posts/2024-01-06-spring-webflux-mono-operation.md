@@ -4,11 +4,10 @@ key: 2024-01-06
 tags: java spring-webflux mono
 ---
 
-2024 年上班的第一天，貌似一切又都回到了当初，上一天班开会半天，然后 debug 半天。午饭都没有吃上，晚上又开始做 Audi 的东西……
+2024 年上班后的第一个周末，本来想加班吧单位的事情做了，但是没动力。于是就整理一下常用的操作符。
 
-中午媳妇给我发了儿子在家里的儿童游乐场玩游戏的两个视频，看着他玩的非常开心，我心里多少好受了一些，家里有游乐场，又有妈妈姥姥哥哥姐姐陪他玩，看起来比呆在我身边要好。 
+Just so so.
 
-今天记录一下 PostgreSQL 数据用 `\copy` 命令或者 `COPY` 语句实现 CSV 文件的导入导出。
 
 <!--more-->
 
@@ -716,6 +715,6 @@ Process finished with exit code 0
 
 ## 参考和抄袭:
 
-- [https://blog.csdn.net/jiang_huixin/article/details/119813106](https://blog.csdn.net/jiang_huixin/article/details/119813106)
+
 
 
