@@ -28,10 +28,12 @@ Mono 值提供了 Flux 操作符的子集，并可以通过一些特殊操作符
 
 和 Flux 类似的：
 
-- `Mono.just("chengchao")`
+- `Mono<T> just(T data)`
+- `justOrEmpty(@Nullable Optional<? extends T> data)`
+- `Mono<T> justOrEmpty(@Nullable T data)`
 - `Mono.empty()`
-- `Mono.never()`
-- `Mono<T> defer(Supplier<? extends Mono<? extends T>> supplier) `
+- `Mono<T> never()`
+- `Mono<T> defer(Supplier<? extends Mono<? extends T>> supplier)`
 
 Mono 特有的：
 
@@ -41,7 +43,8 @@ Mono 特有的：
 - `fromRunnable()`
 - `fromSupplier()`
 - `Mono<T> create(Consumer<MonoSink<T>> callback)`
-
+- `Mono<Tuple2<T1, T2>> zip(Mono<? extends T1> p1, Mono<? extends T2> p2)`
+- `Mono<T> ignoreElements(Publisher<T> source)`
 
 #### `Mono.delay(Duration.ofSeconds(2))`
 
@@ -96,6 +99,113 @@ c.b.cheng.demo.webflux.WebFluxTest,monoTest2
 
 
 ### 操作符
+
+### `P as(Function<? super Mono<T>, P> transformer)`
+
+转换这个 Mono 到一个目标类型
+
+`mono.as(Flux::from).subscribe()`
+
+```c
+
+    @Test
+    void test20() {
+        Integer i = Mono.just("1st")
+                .log("mono-as")
+                .subscribeOn(Schedulers.boundedElastic())
+                .as(m -> {
+                    String block = m.block();
+                    if (block == null) {
+                        return -2;
+                    }
+                    try {
+                        return Integer.parseInt(block);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                    }
+                    return -1;
+                });
+        logger.info("i => {}", i);
+        Assertions.assertTrue(true);
+    }
+
+```
+
+#### `Mono<Void> and(Publisher<?> other)`
+
+Join the termination signals from this mono and another source into the returned void mono
+
+```c
+
+    @Test
+    void test21() {
+        Mono<String> mono1 = Mono.fromCallable(() -> {
+            TimeUnit.SECONDS.sleep(2L);
+            logger.info("数据准备完成");
+            return "mono1";
+        });
+
+        Flux.interval(Duration.ofMillis(0), Duration.ofMillis(100))
+                .log("flux-2")
+                .take(2)
+                .reduce(Long::sum)
+                .and(mono1)
+                .subscribe();
+        Assertions.assertTrue(true);
+    }
+```
+
+#### `Mono<E> cast(Class<E> clazz)`
+
+Cast the current Mono produced type into a target produced type.
+
+```c
+    @Test
+    void test22() {
+        Mono<Object> mono1 = Mono.fromCallable(() -> {
+            logger.info("数据准备完成");
+            return "mono1";
+        });
+
+        Mono<String> stringMono = mono1.cast(String.class);
+        stringMono.subscribe(System.out::println);
+
+        Assertions.assertTrue(true);
+    }
+```
+
+#### `Mono<T> defaultIfEmpty(T defaultV)`
+
+Provide a default single value if this mono is completed without any data.
+
+```c
+  @Test
+    void test23() {
+
+        Mono<Object> mono1 = Mono.fromSupplier(() -> {
+            ThreadLocalRandom random = ThreadLocalRandom.current();
+            int c = random.nextInt(100);
+            logger.info("c = {}", c);
+            if (c % 2 == 0){
+                return "OK";
+            }
+            return null;
+        });
+
+        Mono<String> stringMono = mono1.cast(String.class)
+                .defaultIfEmpty("Empty");
+
+        stringMono.subscribe(System.out::println);
+
+        Assertions.assertTrue(true);
+    }
+```
+
+### `Flux<T> expand(Function<? super T, ? extends Publisher<? extends T>> expander)`
+
+Recursively expand elements into a graph and emit all the resulting element using a breadth-first traversal strategy.
+
+
 
 #### `Flux#buffer` 和 `Flix#bufferTimeout`
 
@@ -329,7 +439,7 @@ c.b.cheng.demo.webflux.WebFluxTest,monoTest2
     }
 ```
 
-### `Mono<V> then(Mono<V> other)`
+#### `Mono<V> then(Mono<V> other)`
 
 执行完当前的 Mono 然后执行另外一个。
 
