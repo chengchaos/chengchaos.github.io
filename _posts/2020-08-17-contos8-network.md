@@ -98,7 +98,7 @@ OBJECT
 
 网络管理一般使用 `nmclli c` ，用法如下：
 
-```
+```bash
 $ nmcli c -h
 Usage: nmcli connection { COMMAND | help }
 
