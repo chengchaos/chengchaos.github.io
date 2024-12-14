@@ -169,36 +169,67 @@ Future 接口中，它们唯一的不同是 `join` 不会抛出任何检测到�
 【CompletableFuture 的 get 方法需要捕获的 ExecutionException 都是任务执行期间发生的？】
 
 ```java
-public static void test2() throws Exception {
-    CompletableFuture<String> completableFuture = new CompletableFuture();
-    new Thread(new Runnable() {
-        @Override 
-        public void run() {
-            try {
-                System.out.println("task doning ...");
+package c.b.cheng.demo.ollama;
+
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * <p>
+ * <strong>
+ * Describe the function in one sentence.
+ * </strong><br /><br />
+ * As the title says.
+ * </p>
+ *
+ * @author Cheng, Chao - 2024/12/15 01:37 <br />
+ * @see Object
+ * @since 1.0
+ */
+class NormalTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NormalTest.class);
+
+    @Test
+    void test2() throws Exception {
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    System.out.println("task doning ...");
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
-                throw new RuntimeException("抛出一个异常");
-            } catch (Exception e) {
-                // 发生异常，使用 completeExceptionlly 方法
-                // 把异常风窗起来
-                // get 这个 Future 的方法会得到
-                // 一个 ExceutionException
-                completableFuture.completeExceptionlly(e);
-            }   
-        }
-    }).start();
+                    throw new RuntimeException("抛出一个异常");
+                } catch (Exception e) {
+                    // 发生异常，使用 completeExceptionally 方法
+                    // 把异常风窗起来
+                    // get 这个 Future 的方法会得到
+                    // 一个 ExecutionException
+                    completableFuture.completeExceptionally(e);
+                }
+            }
+        }).start();
 
-    String result = completableFuture.get();
-    System.err.println("计算结果: "+ result);
-    
+        try {
+            String result = completableFuture.get();
+            System.out.println("计算结果: " + result);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+    }
 }
+
 ```
 
-### 工厂方法
+### 工厂方法 (runAsync, supplyAsync)
 
 `CompletableFuture.completedFuture` 是一个静态辅助方法，用来返回一个已经计算好的 CompletableFuture。
 
@@ -222,7 +253,7 @@ public static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier, Executo
 
 `supplyAsync` 方法以 `Supplier<U>` 函数式接口类型为参数，CompletableFuture 的计算结果类型为 `U`。
 
-### 完成
+### 完成 (wiehComplete, execptionally, handle))
 
 **`whenComplete` 和 `exceptionally` 和 `handle`**
 
@@ -286,7 +317,7 @@ public <U> CompletableFuture<U> handleAsync(BiFunction<? super T,Throwable,? ext
 
 同样，不以 Async 结尾的方法由原来的线程计算，以 Async 结尾的方法由默认的线程池 `ForkJoinPool.commonPool()` 或者指定的线程池 `executor` 运行。
 
-## 转换
+## 转换 (thenApply)
 
 **`thenApply`**
 
@@ -351,7 +382,7 @@ System.out.println(f.get()); //"1000"
 
 它们与 `handle` 方法的区别在于 `handle` 方法会处理正常计算值和异常，因此它可以屏蔽异常，避免异常继续抛出。而 `thenApply` 方法只是用来处理正常值，因此一旦有异常就会抛出。
 
-## 消费
+## 消费 (thenAccept)
 
 前面的方法是当计算完成的时候，会生成新的计算结果(`thenApply`, `handle`)，或者返回同样的计算结果 `whenComplete`；此外 CompletableFuture 还提供了一种处理结果的方法，只对结果执行某些操作（Action）,而不返回新的计算值，因此计算值为 `Void`:
 
@@ -435,7 +466,7 @@ public CompletableFuture<Void> thenRunAsync(Runnable action, Executor executor)
 
 > 因此，你可以根据方法的参数的类型来加速你的记忆。`Runnable` 类型的参数会忽略计算的结果，`Consumer` 是纯消费计算结果，`BiConsumer` 会组合另外一个 `CompletionStage` 纯消费，`Function` 会对计算结果做转换，`BiFunction` 会组合另外一个 `CompletionStage` 的计算结果做转换。
 
-## 组合 Compose
+## 组合 Compose (thenCompose)
 
 **组成 `thenCompose`** ：一个接着一个的执行。
 
