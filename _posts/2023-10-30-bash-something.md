@@ -44,12 +44,12 @@ A Post with Header Image, See [Page layout](https://tianqi.name/jekyll-TeXt-them
 相当于 bash 内建命令source，如：
 
 ```bash
-    #!/bin/bash
-    . data-file
-    #包含data-file;
+#!/bin/bash
+. data-file
+#包含data-file;
 ```
 
-\2. 作为文件名的一部分，在文件名的开头，表示该文件为隐藏文件，ls一般不显示出来（ls -a 可以显示）；
+\2. 作为文件名的一部分，在文件名的开头，表示该文件为隐藏文件，`ls` 一般不显示出来（`ls -a` 可以显示）；
 
 \3. 作为目录名，一个点代表当前目录，两个点号代表上层目录（当前目录的父目录）。注意，两个以上的点不出现，除非你用引号（单/双）包围作为点号字符本身；
 
@@ -75,25 +75,29 @@ A Post with Header Image, See [Page layout](https://tianqi.name/jekyll-TeXt-them
 
 \1. 用在连接一连串的数学表达式中，这串数学表达式均被求值，但只有最后一个求值结果被返回。如：
 
+```bash
 #!/bin/bash
 let t1=((a=5+1, b=7+2))
 echo t1=$t1, a=$a, b=$b
 ## 这个$t1=$b；
+```
 
 \2. 用于参数替代中，表示首字母小写，如果是两个逗号，则表示全部小写，注意，这个特性在bash version 4的时候被添加的。
 
+```sh
 a="ATest"
 echo ${a,}
 echo ${a,,}
 ## 前面输出aTest，后面输出的是atest。
+```
 
 8. / 斜线-目录/除法
 
 斜线，斜杆（Filename path separator [forward slash]）。
 
 1.作为路径的分隔符，路径中仅有一个斜杆表示根目录，以斜杆开头的路径表示从根目录开始的路径；
-
 2.在作为运算符的时候，表示除法符号。如：a=4/2
+
 9. \ 反斜线-转义
 
 反斜线，反斜杆(escape [backslash])。
@@ -101,7 +105,8 @@ echo ${a,,}
 \1. 放在特殊符号之前，转义特殊符号的作用，仅表示特殊符号本身，这在字符串中常用；
 
 \2. 放在一行指令的最末端，表示紧接着的回车无效（其实也就是转义了Enter），后继新行的输入仍然作为当前指令的一部分。
-10. ` 反引号/后引号-命令替换
+
+10. 反引号/后引号-命令替换
 
 反引号，后引号（Command substitution[backquotes])。
 
@@ -110,6 +115,7 @@ echo ${a,,}
 如：a=dirname '/tmp/x.log' 。
 
 返回的结果会赋值给a，注意，此处特地使用了反引号和单引号，注意区别。
+
 11. : 冒号-空命令
 
 冒号(null command [colon])。
@@ -129,6 +135,7 @@ echo ${a,,}
 \6. 你也可以作为域分隔符，比如环境变量$PATH中，或者passwd中，都有冒号的作为域分隔符的存在；
 
 \7. 你也可以将冒号作为函数名，不过这个会将冒号的本来意义转变（如果你不小心作为函数名，你可以使用unset -f : 来取消function的定义）。
+
 12. ! 感叹号-取反
 
 感叹号（reverse (or negate) [bang],[exclamation mark])。
@@ -144,12 +151,16 @@ echo ${a,,}
 \4. 在命令行中，可以用于历史命令机制的调用，你可以试试!$,!#，或者!-3看看，不过要注意，这点特性不能在脚本文件里面使用（被禁用）。
 
 感叹号的使用(转义) 
+
+```sh
 #!/bin/bash 
 test='hello!@#$%-test'    # 注意,等号两边不能有空格,否则会将叹号当做历史命令调用来处理 
 echo  $test 
 echo "you !!!" 
 test2="test2!" 
 echo $test2 
+```
+
 注意:    shell编程里,等号两边不应该有空格(跟其他任何语言都不同,这是bash/sh等的特例). 
 
 13. * 星号-通配符/乘法
@@ -161,9 +172,11 @@ echo $test2
 \2. 正则表达式中可以作为字符限定符，表示其前面的匹配规则匹配任意次；
 
 \3. 算术运算中表示乘法。
+
 14. ** 双星号-求幂
 
 双星号(double asterisk)。算术运算中表示求幂运算。
+
 15. ? 问号-条件测试/通配符
 
 问号（test operator/wildcard[Question mark])。
@@ -177,6 +190,7 @@ echo $test2
 \4. 作为通配符，用于匹配文件名扩展特性中，用于匹配单个字符；
 
 \5. 正则表达式中，表示匹配其前面规则0次或者1次。
+
 16. $ 美元符-变量/行末
 
 美元符号(Variable substitution[Dollar sign])。
@@ -189,54 +203,63 @@ echo $test2
 参数替换(Variable substitution)。
 
 用于在字符串中表示变量。
-17. ${!#} ${@🅰️b} 参数的操作
+
+17. ${!#} ${@:a:b} 参数的操作
 
 ./example.sh -a 1 -b 2 -c 3 -d
 
 参数总个数不确定,从脚本参数的第n个位置开始取参数
 
-参数位置 获取技巧 ${@🅰️b}
+参数位置 获取技巧 ${@:a:b}
 
 $# 表示参数个数,如 echo $#
 
 1.格式
 
-${!#}   取最后一个参数 
-${@:a:b}  从第a个参数开始取,合计取b个. 如取到最后一个,则":b"可以不写.有些类似python的切片方式. 
+```sh
+${!#}     # 取最后一个参数 
+${@:a:b}  # 从第a个参数开始取,合计取b个. 如取到最后一个,则":b"可以不写.有些类似python的切片方式. 
+```
 
 2.常见示例 ${!#} ${@:1:$#-1}
 
+```sh
 ./t.sh 1001 1002 1003 1004 1005 目的要赋值给变量a=1005 , b="1001 1002 1003 1004",则脚本内容为
 
 a=${!#}        
 #取最后一个参数 
-
+```
+```sh
 b=${@:1:$#-1}     
 #从第1个参数开始,合计取$#-1个.
-其中$@是列表形式列出所有的传入参数;
-然后:1是从第一个参数开始，后面不加任何东西的话是一直到结尾;
-若加:$#-1是"$#参数总个数-1"，即从第1个参数开始,合计取$#-1个参数. 
+```
 
-若要取倒数第二个参数即c=1004： c=${@😒#-1:1} #@:开始位置(倒数第2个):合计取1个
+其中 `$@` 是列表形式列出所有的传入参数;
+然后 `:1` 是从第一个参数开始，后面不加任何东西的话是一直到结尾;
+若加 `:$#-1` 是"$#参数总个数-1"，即从第1个参数开始,合计取$#-1个参数. 
+
+若要取倒数第二个参数即 `c=1004： c=${@😒#-1:1} #@:开始位置(倒数第2个):合计取1个`
 
 从第3个参数位置获取: directory=${@:3:$#} #从第3个参数开始,取所有(取$#个,显然取不到这么多个,但取到最后的时候,shell自动会判断结束)
 
 其他示例说明:
 
+```sh
 a=${@:2:$#-2} 
-从第2个开始,合计取参数个数减2个
+# 从第2个开始,合计取参数个数减2个
 
 b=${!#} 
-取最后一个
+# 取最后一个
 
 c=${@:$#-3:$#} 
-取倒数第3个位置开始,取参数总个数这么多.
-(能够取到的参数肯定比参数总个数少,因为是从倒数第三个开始取的.除非从第一个开始取);
+# 取倒数第3个位置开始,取参数总个数这么多.
+# (能够取到的参数肯定比参数总个数少,因为是从倒数第三个开始取的.除非从第一个开始取);
 
 d=${@:$#-3} 
-取倒数第3个位置开始,全部取完.同上;
+# 取倒数第3个位置开始,全部取完.同上;
+```
 
-18. ${var:offset:number}-字符串切片
+18. `${var:offset:number}` - 字符串切片
 
 扩展 字符串切片
 
@@ -246,6 +269,7 @@ d=${@:$#-3}
 
 格式:
 
+```sh
 ${var:offset:number}
 
 ${var: length}
@@ -259,16 +283,18 @@ angwe
 
 [root@c7-server ~]# echo ${name: -4}
 long
+```
 
-19. ${var^^} ${var,,}-字符大小写转换
+19. `${var^^} ${var,,}` - 字符大小写转换
 
 字符大小写转换
 
 格式:
 
-${var^^}：将变量var中的所有小写字符转换成大写。
-
-${var,,}：将变量var中的所有大写字符转换成小写。
+```sh
+${var^^}：# 将变量var中的所有小写字符转换成大写。
+${var,,}：# 将变量var中的所有大写字符转换成小写。
+```
 
 [root@c7-server ~]# name=RenDanChaoXian[root@c7-server ~]# echo ${name^^}RENDANCHAOXIAN[root@c7-server ~]# echo ${name,,}rendanchaoxian
 
@@ -401,6 +427,7 @@ scriptname >>filename 把scriptname的输出（同>)追加到文件filenmae中�
 其作用有点类似管道，但和管道在用法上又有些不同，管道是作为子进程的方式来运行的，这个命令会在/dev/fd/下面产生类似/dev/fd/63,/dev/fd/62这类临时文件，用来传递数据。
 
 Mitchell个人猜测之所以用这种方法来传递，是因为前后两个不属于同一个进程，因此需要用共享文件的方式来传递资料(这么说其实管道也应该有同样的文件?)。网上有人说这个只是共享文件而已，但是经过测试，发现虽然有/dev/fd/63这样的文件产生，但是这个文件其实是指向pipe:[43434]这样的通道的链接。
+
 35. << 双小于号 后继内容重定向到左侧命令的输入
 
 双小于号(here-document [double less then marks] 双小于标记 )。
@@ -455,13 +482,19 @@ grep a <<< "$VARIABLE" 意思就是在VARIABLE这个变量值里查找字符a
 
 示例
 
-chenxin@yunwei-01:~$ aaa='this is bbb'chenxin@yunwei-01:~$ grep bbb <<< $aaathis is bbbchenxin@yunwei-01:~$ grep bbb << $aaa  #两个就不行> ;> <> ^C
+```bash
+chenxin@yunwei-01:~$ aaa='this is bbb'
+chenxin@yunwei-01:~$ grep bbb <<< $aaa
+this is bbb
+chenxin@yunwei-01:~$ grep bbb << $aaa  #两个就不行> ;> <> ^C
 
+```
 37. >, < 什么意思?
 
 小于，大于号(ASCII Comparison)。
 
 ASCII比较，进行的是变量的ASCII比较，字串？数字?呃...这个...不就是ASCII比较么？
+
 38. <...> 用于标记单词的分界
 
 词界符(word boundary)。
@@ -471,6 +504,7 @@ ASCII比较，进行的是变量的ASCII比较，字串？数字?呃...这个...
 比如：
 
 the会匹配there，another，them等等，如果仅仅要匹配the，就可以使用这个词界符，<the>就只能匹配the了。
+
 39. | 管道
 
 管道(pipe)。
@@ -488,11 +522,13 @@ the会匹配there，another，them等等，如果仅仅要匹配the，就可以�
 如： cat filename | ls -al | sort 。
 
 想想这个的输出? 同时，管道是以子进程来运行的，所以管道并不能引起变量改变。
+
 40. >| 强制重定向
 
 强制重定向(force redirection)。
 
 这会强制重写已经存在的文件。
+
 41. & 与
 
 与号(Run job in background[ampersand])。
@@ -500,22 +536,32 @@ the会匹配there，another，them等等，如果仅仅要匹配the，就可以�
 如果命令后面跟上一个&符号，这个命令将会在后台运行。
 
 有的时候，脚本中在一条在后台运行的命令可能会引起脚本挂起，等待输入，出现这种情况可以在原有的脚本后面使用wait命令来修复。
+
 42. &&，|| 逻辑操作符
 
 逻辑操作符(logical operator)。
 
 在测试结构中，可以用这两个操作符来进行连接两个逻辑值。
 
-||是当测试条件有一个为真时返回0（真），全假为假；
+`||` 是当测试条件有一个为真时返回0（真），全假为假；
 
-&&是当测试条件两个都为真时返回真(0)，有假为假。
+`&&` 是当测试条件两个都为真时返回真(0)，有假为假。
+
 43. - 减号
 
 减号，连字符(Hyphen/minus/dash)。
 
 \1. 作为选项，前缀[option, prefix]使用。用于命令或者过滤器的选项标志；操作符的前缀。如：
 
-## COMMAND -[选项列表]ls -alsort -dfu $fileset -- $variable if [ $file -ot $file2 ]then    echo "$file is older than $file2."fi
+```bash
+## COMMAND -[选项列表]
+ls -al
+sort -dfu $fileset -- $variable 
+if [ $file -ot $file2 ]
+then
+echo "$file is older than $file2."
+fi
+```
 
 \2. 用于stdin或者stdout的重定向的源或目的[dash].
 
@@ -530,12 +576,14 @@ var="-n"echo $var## 试试看有什么输出？
 \3. 表示先前的工作目录(previous working directory)，因此，如果你cd到其他目录下要放回前一个路径的时候，可以使用cd -来达到目的，其实，这里的[-]使用的是环境变量的$OLDPWD，注意：这里的[-]和前一点是不同的；
 
 \4. 减号或者负号，用在算术操作中。
+
 43. -- 双减号
 
-shell中的 -- 含义 (两个横线的含义)
+shell 中的 `--` 含义 (两个横线的含义)
 
 两个横线代表选项的结束，两个横线后面的部分都会被认为是参数了，而不再是前面的命令的选项了。
 
+```bash
 [admin@ip-10-0-1-23 ~]$ echo -- -e hello
 
 -- -e hello
@@ -543,20 +591,24 @@ shell中的 -- 含义 (两个横线的含义)
 [admin@ip-10-0-1-23 ~]$ echo -e hello
 
 hello
+# echo -- -e hello 和echo -e hello 是不一样的，前者-e是一个普通参数，后者-e则是echo的一个选项.
 
-echo -- -e hello和echo -e hello是不一样的，前者-e是一个普通参数，后者-e则是echo的一个选项.
+```
+
 
 在你的这个场合下，set -- mysqld表示重设脚本的参数为mysqld，会影响到$argv变量和$1，$#等和参数有关的变量(-- 表示将任何剩余的参数分配给位置参数, 如果没有剩余的参数, 就会将位置参数复位).
 
 -- 代表后面的字符不是set命令的选项( 比如 set -- "$@" "-h",表示用set指令将参数追加一个-h).
 
+```bash
 Chanix-LGdeMacBook-Pro:shell_test chanix$ echo $@
 
 Chanix-LGdeMacBook-Pro:shell_test chanix$ set -- "$@" "-h"
 
 Chanix-LGdeMacBook-Pro:shell_test chanix$ echo $@
-
 -h
+```
+
 44. = 等号
 
 等号(Equals)。
@@ -564,6 +616,7 @@ Chanix-LGdeMacBook-Pro:shell_test chanix$ echo $@
 \1. 赋值操作，给变量赋值，在等号两侧禁止有空格；
 
 \2. 在比较测试中作为比较符出现，这里要注意，如果在[]中括号中作为比较出现，需要有空格符在等号左右两侧,如 [ $a==$b ]。
+
 45. + 加号
 
 加号(Plus)。
@@ -575,6 +628,7 @@ Chanix-LGdeMacBook-Pro:shell_test chanix$ echo $@
 3.在命令或过滤器中作为选项标记，在某些命令或者内置命令中使用+来启用某些选项，使用-来禁止；
 
 \4. 在参数替换(parameter substitution)中，+前缀表示替代值(当变量为空的时候，使用+后面的值)
+
 56. % 百分号-求模/模式匹配
 
 百分号(modulo[percent sign])。
@@ -583,7 +637,20 @@ Chanix-LGdeMacBook-Pro:shell_test chanix$ echo $@
 
 2.在参数替换(parameter substitution)中，可以作为模式匹配。例子：
 
-p=b*9var="abcd12345abc479"echo ${var%p}, ${var%%p}##从右边开始查找(想想从左是那个符号?)##任何在b和9之间的内容（含）##第一个是找到最短的符合匹配项##后一个是找最大符合的匹配项（贪婪匹配?)#经测试,以上说法不对呢...chenxin@yunwei-01:~$ p=b*9chenxin@yunwei-01:~$ var="abcd12345abc479"chenxin@yunwei-01:~$ echo ${var%p}, ${var%%p}abcd12345abc479, abcd12345abc479
+```bash
+p=b*9
+var="abcd12345abc479"
+echo ${var%p}, ${var%%p}
+##从右边开始查找(想想从左是那个符号?)
+##任何在b和9之间的内容（含）
+##第一个是找到最短的符合匹配项
+##后一个是找最大符合的匹配项（贪婪匹配?)#经测试,以上说法不对呢...
+chenxin@yunwei-01:~$ p=b*9
+chenxin@yunwei-01:~$ var="abcd12345abc479"
+chenxin@yunwei-01:~$ echo ${var%p}, ${var%%p}
+abcd12345abc479, abcd12345abc479
+
+```
 
 57. ~ 波浪号
 
@@ -592,13 +659,23 @@ p=b*9var="abcd12345abc479"echo ${var%p}, ${var%%p}##从右边开始查找(想想
 这个和内部变量$HOME是一样的。
 
 默认表示当前用户的家目录（主目录），这个和~/效果一致，如果波浪号后面跟用户名，表示是该用户的家目录。
+
 58. ~+ 同$PWD
 
 当前的工作目录(current working directory)。
 
 这个和内置变量$PWD一样。
 
-chenxin@yunwei-01:~$ echo ~+/home/chenxinchenxin@yunwei-01:~$ pwd/home/chenxinchenxin@yunwei-01:~$ echo $pwdchenxin@yunwei-01:~$ echo $PWD/home/chenxin
+```bash
+chenxin@yunwei-01:~$ echo ~+
+/home/chenxin
+chenxin@yunwei-01:~$ pwd
+/home/chenxin
+chenxin@yunwei-01:~$ echo $pwd
+
+chenxin@yunwei-01:~$ echo $PWD
+/home/chenxin
+```
 
 59. ~-
 
@@ -608,16 +685,19 @@ chenxin@yunwei-01:~$ echo ~+/home/chenxinchenxin@yunwei-01:~$ pwd/home/chenxinch
 
 经测试,以上说法并不符...
 
+```bash
 chenxin@yunwei-01:~$ echo ~-
 ~-
 chenxin@yunwei-01:~$ echo $OLDPWD
 
 chenxin@yunwei-01:~$ 
+```
 
 60. =~ 在[[]]中匹配
 
 Bash 版本3中有介绍，这个是正则表达式匹配。可用在[[]]测试中，比如：
 
+```sh
 var="this is a test message."
 [[ "$var" =~ tf*message ]] && echo "Sir. Found that." || echo "Sorry Sir. No match be found."
 ##你可以修改中间的正则表达式匹配项，正则表达式可以但不一定需要使用双引号括起来。
@@ -638,6 +718,7 @@ Sorry Sir. No match be found.
 
 chenxin@yunwei-01:~$ [[ "$var" =~ th.*message ]] && echo "Sir. Found that." || echo "Sorry Sir. No match be found."
 Sir. Found that.
+```
 
 61. ^ 脱字符
 
@@ -653,6 +734,7 @@ Sir. Found that.
 
 示例
 
+```sh
 chenxin@yunwei-01:~$ var="this is a test message."
 
 chenxin@yunwei-01:~$ echo ${var^}
@@ -663,6 +745,7 @@ THIS IS A TEST MESSAGE.
 
 chenxin@yunwei-01:~$ echo ${var}
 this is a test message.
+```
 
 62. 空白-空格/tab/空行
 
