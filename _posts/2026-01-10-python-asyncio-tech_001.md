@@ -1,7 +1,7 @@
 ---
-title: 2026-01-10-python-asyncio-tech_001
-key: 2025-08-29
-tags: 新概念2 Lesson 10
+title: Python asyncio 教程
+key: 2026-01-10
+tags: Python asyncio
 ---
 
 Python asyncio 教程
