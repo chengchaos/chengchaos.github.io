@@ -32,6 +32,7 @@ tags: Windows Python Embeddable
 
 ```sh
 python get-pip.py
+
 ```
 
 ## 0x04. 安装第三方库
@@ -39,10 +40,12 @@ python get-pip.py
 使用 pip 为嵌入式 Python 安装所需的第三方库：
 
 ```sh
+pip install virtualenv
 D:\python-embedded\python.exe -m pip install 包名
 
 ## 例如安装 numpy：
 D:\python-embedded\python.exe -m pip install numpy
+
 
 ```
 
