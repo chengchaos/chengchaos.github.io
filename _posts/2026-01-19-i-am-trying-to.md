@@ -35,7 +35,7 @@ stay hungry, stay foolish.
 
 stuff // 东西.
 
-I'm gonna tyr -- I'm na ...  都不读 gon 了. (陈述句, 疑问句读出来)
+I'm gonna try -- I'm na ...  都不读 gon 了. (陈述句, 疑问句读出来)
 
 名/动/形/副 要重读.
 

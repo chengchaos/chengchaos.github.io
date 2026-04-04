@@ -1,5 +1,5 @@
 ---
-title: 打卡文件
+title: 打开文件
 key: 2026-01-26
 tags: Python open-file
 ---
