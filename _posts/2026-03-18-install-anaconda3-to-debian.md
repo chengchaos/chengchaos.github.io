@@ -380,7 +380,7 @@ plt.ylabel('Training Accuracy')
 
 ## Appendix
 
-- [https](https://scikit-learn.org/stable/)
-- [https](https://jupyter.org/)
+- [scikit-learn.org](https://scikit-learn.org/stable/)
+- [httpjupyter.orgs](https://jupyter.org/)
 - [Python](https://www.python.org)
 - [Anaconda](https://www.anaconda.com)
