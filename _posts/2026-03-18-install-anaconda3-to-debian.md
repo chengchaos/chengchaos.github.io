@@ -10,9 +10,16 @@ tags: Anaconda Debian Linux install
 
 ## 1. 下载
 
+地址: 
+
+- https://www.anaconda.com/
+- https://www.anaconda.com/download/success?reg=skipped
+
 ## 2. 安装
 
-下载完是一个巨大的文件, 扩展名居然是 `.sh`, 就运行了.
+下载完是一个巨大的文件, 扩展名居然是 `.sh`.
+
+好吧, 我们运行它.
 
 ```sh
 file Anaconda3-2025.12-1-Linux-x86_64.sh 
@@ -55,7 +62,7 @@ Thank you for installing Anaconda3!
 
 ```
 
-## 3 开发环境
+## 3 创建开发环境
 
 ```sh
 conda create -n env_name
@@ -72,9 +79,28 @@ conda init --reverse $SHELL
 
 ```
 
+上面是配置命令示例, 我的配置是:
+
+```sh
+conda create -n sklearn
+Please update conda by running
+
+    $ conda update -n base -c defaults conda
+
+
+
+## Package Plan ##
+
+  environment location: /home/chengchao/anaconda3/envs/sklearn
+
+conda activate sklearn
+## 需要先激活 base 环境.
+## 才能激活自定义的开发环境
+```
+
 ## 4 配置
 
-[知乎](https://zhuanlan.zhihu.com/p/454069514)
+我参考了这里: [知乎](https://zhuanlan.zhihu.com/p/454069514)
 
 ```sh
 ## 创建一个新的开发环境：
@@ -124,14 +150,11 @@ Executing transaction: done
 
 配置
 
-
 ```sh
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 conda config --set show_channel_urls yes
 ```
-
-
 
 ### 安装 jupyter notebook
 
@@ -139,7 +162,6 @@ conda config --set show_channel_urls yes
 conda install jupyter notebook
 conda install numpy
 conda install scikit-learn
-
 
 jupyter notebook --generate-config
 Writing default config to: '/home/chengchao/.jupyter/jupyter_notebook_config.py'    
@@ -170,6 +192,10 @@ c.ServerApp.port = 8899
 # c.ServerApp.notebook_dir = ''
 
 # c.ServerApp.password = ''
+# 编辑配置文件，添加以下内容
+echo "c.ServerApp.token = ''" >> ~/.jupyter/jupyter_notebook_config.py
+echo "c.ServerApp.allow_unauthenticated_access = True" >> ~/.jupyter/jupyter_notebook_config.py
+echo "c.ServerApp.allow_origin = '*'" >> ~/.jupyter/jupyter_notebook_config.py
 
 
 # 服务器端口对外开放，才能远程访问
@@ -178,7 +204,7 @@ $ nohup jupyter notebook --allow-root&
 chengchao@mac15d:~/notebooks$ cat start.sh 
 #!/usr/bin/env bash
 
-/home/chengchao/anaconda3/envs/sklearn/bin/jupyter \
+/home/chengchao/anaconda3/envs/sklearn/bin/jupyter notebook \
     --ip=0.0.0.0 \
     --port=8899 \
     --no-browser \
@@ -210,6 +236,145 @@ conda update jupyterthemes
 
 jt -t oceans16 -f fira -fs 17 -cellw 90% -ofs 14 -dfs 14 -T
 
+jt -t oceans16 -f 'fira' -fs 15 -cellw 90% -ofs 15 -dfs 15 -T
+
+```
+
+
+## 5 调用 scikit-learn
+
+### 5.1 What is iris data set?
+
+统计学和 ML 的示例. (petal ) + (speal)
+
+| 花萼长度 | 花萼宽度 | 花瓣长度 | 花瓣宽度 | 种类 |
+| ------- | -------- | ------- | ------- | ---  |
+| 5.1     | 3.5      | 1.4     | 0.2     | xxx  |
+
+
+使用 scikit-learn 进行数据处理的四个关键点
+
+1. 区分开数据属性和数据结果
+2. 属性数据和结果数据都是可以**量化**的
+3. 运算过程中, 属性数据与结果数据的类型都是 NumPy 数组
+4. 属性数据与结果数据的维度是对应的. (输入 10 行, 输出也是 10 行)
+
+
+
+### 5.2 load iris data set
+
+```python
+
+from sklearn imiport datasets
+iris = datasets.load_iris()
+
+print(type(iris.data))
+print(iris.data.shape)
+print(type(iris.target))
+print(iris.target.shape)
+
+
+```
+
+### 5.3 分类问题
+
+根据数据集目标的特征或者属性, 划分到已有的类别中.
+
+
+常用算法:
+
+K近邻(KNN), 逻辑回归, 决策树, 朴素贝叶斯
+
+
+### 5.3 KNN
+
+```python
+## 加载 Iris 数据
+
+from sklearn import datasets
+iris = datasets.load_iris()
+
+## 赋值
+X = iris.data
+y = iris.target
+
+print(X.shape)
+print(y.shape)
+
+## 建模
+# 1. 引入模型
+from sklearn.neighbors import KNeighborsClassifier
+# 2. 创建实例
+knn = KNeighborsClassifier(n_neighbors=1)
+print(f"knn => {knn}")
+
+# 3. 模型训练
+knn.fit(X, y)
+
+# 4. 预测
+knn.predict([
+    [1, 2, 3, 4]
+])
+
+x_test = [[1, 2,3, 4],[2, 4, 1, 2]]
+knn.predict(x_test)
+
+knn_5 = KNeighborsClassifier(n_neighbors=5)
+knn_5.fit(X, y)
+knn_5.predict(x_test)
+
+# 确认模型结构
+print(knn_5)
+```
+
+## 模型评估准确率
+
+- 最大化训练准确率通常会导致模型**复杂化**(比如增加维度), 通常会降低模型的通用性.
+- 过度复杂模型容易导致训练数据的**过度拟合**.
+- 模型训练的目标是为了预测**新数据**.
+
+评估流程: 分离训练数据与测试数据
+
+1. 把数据分成两部分: 训练集/测试集
+2. 用训练集训练数据
+3. 用测试集测试模型.
+4. (KNN) k 越小模型越复杂.
+
+```python
+from sklearn.metrics import accuracy_score
+y_pred = knn_5.predict(X)
+print(accuracy_score(y, y_pred))
+
+
+
+
+## 数据分离
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.4)
+print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
+
+
+## K： 1 ~ 25
+# 遍历
+# 建立 Model / 训练 / 预测 / 对测试集准确率的计算。
+k_range = list(range(1, 26))
+score_train = []
+score_test = []
+for k in k_range:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+    y_train_pred = knn.predict(X_train)
+    y_test_pred = knn.predict(X_test)
+    score_train.append(accuracy_score(y_train, y_train_pred))
+    score_test.append(accuracy_score(y_test, y_test_pred))
+
+
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+plt.plot(k_range, score_train)
+plt.xlabel('K(KNN model)')
+plt.ylabel('Training Accuracy')
 ```
 
 
