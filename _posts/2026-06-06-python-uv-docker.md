@@ -28,23 +28,27 @@ CMD ["uv", "run", "my_app"]
 
 优化 在 .dockerignore 中添加 .venv，避免本地虚拟环境被打包进镜像。
 
-方法二：基于 Python 官方镜像安装 uv
+## 0x02 方法二：基于 Python 官方镜像安装 uv
 
 步骤：
 
 安装 uv 二进制文件
 
+```sh
 FROM python:3.12-slim-bookworm
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-复制
+```
+
 安装依赖与项目
 
+```sh
 ADD . /app
 WORKDIR /app
 RUN uv sync --locked
 CMD ["uv", "run", "my_app"]
-复制
-最佳实践 使用 --no-install-project 分离依赖安装层，加快构建。 指定 uv 版本或 SHA256 以保证可复现构建。
+```
+
+最佳实践 使用 `--no-install-project` 分离依赖安装层，加快构建。 指定 `uv` 版本或 `SHA256` 以保证可复现构建。
 
 方法三：多阶段构建减少最终镜像体积
 
@@ -52,24 +56,26 @@ CMD ["uv", "run", "my_app"]
 
 构建阶段安装依赖
 
+```sh
 FROM python:3.12-slim AS builder
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /app
 RUN uv sync --locked --no-editable
 ADD . /app
 RUN uv sync --locked --no-editable
-复制
+```
+
 生产阶段仅复制虚拟环境
 
+```sh
 FROM python:3.12-slim
 COPY --from=builder /app/.venv /app/.venv
 CMD ["/app/.venv/bin/my_app"]
-复制
-✅ 验证方式：构建并运行容器，确保 uv run 能正常执行项目命令。 💡 提示：结合 docker compose watch 可实现热更新开发环境。
+```
+
+✅ 验证方式：构建并运行容器，确保 `uv run` 能正常执行项目命令。 💡 提示：结合 `docker compose watch` 可实现热更新开发环境。
 
 了解详细信息:
-1 -
-uv.doczh.com
-2 -
-juejin.cn
+- uv.doczh.com
+- juejin.cn
 
