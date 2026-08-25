@@ -55,6 +55,11 @@ For example:
 pip config set global.extra-index-url "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
 ```
 
+```sh
+pip install xcsc_tushare --target=D:\\GJZQ_QMT_TC\\bin.x64\\Lib\\site-packages
+
+```
+
 ### 0x15 Best Practices
 
 - Always ensure HTTPS is used for secure connections.
@@ -74,7 +79,7 @@ By following these steps, you can significantly improve your Python package inst
 
 #### 1. 全局配置 (uv.toml)
 
-如果你希望这台电脑上所有的 uv 操作默认都使用国内源，请修改全局 uv.toml。
+如果希望这台电脑上所有的 uv 操作默认都使用国内源，请修改全局 uv.toml。
 
 在 Linux / macOS 下：
 配置文件路径为：`~/.config/uv/uv.toml`
@@ -106,3 +111,47 @@ Set-Content -Path "$uvConfigDir\uv.toml" -Value $configContent
 ```
 
 (注意：default = true 表示将该源作为默认源，替换官方的 PyPI。)
+
+## UV 常用命令
+
+```sh
+
+# 查看可以安装的 python
+uv python list
+
+# 安装指定的 python 版本
+uv python install cpython-3.8.20
+
+# 创建虚拟环境
+cd my_ project_dir
+uv venv
+
+# 指定 python 版本
+uv venv --python=3.8.20 .venv
+
+# 代替 pip
+uv pip install requests flask
+
+uv pip install -r requirements.txt
+
+uv pip list
+
+uv pip freeze > requirements.txt
+
+
+# 运行
+uv run python script.py
+
+uv run -m scripts.init
+
+# 指定 python 版本
+uv run --python=3.12 python script.py
+
+# uvx 临时工具
+# 不安装环境
+
+uvx black .
+uvx ruff check .
+uvx pytest
+
+```
