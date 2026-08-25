@@ -112,7 +112,7 @@ Set-Content -Path "$uvConfigDir\uv.toml" -Value $configContent
 
 (注意：default = true 表示将该源作为默认源，替换官方的 PyPI。)
 
-## UV 常用命令
+### 0x22 UV 常用命令
 
 ```sh
 
